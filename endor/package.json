@@ -26,6 +26,9 @@
   },
   "homepage": "https://github.com/hammer-io/yggdrasil#readme",
   "dependencies": {
+    "babel-cli": "6.26.0",
+    "babel-plugin-transform-async-to-generator": "6.24.1",
+    "babel-preset-env": "1.6.0",
     "body-parser": "1.18.2",
     "cookie-parser": "1.4.3",
     "eslint": "4.8.0",
@@ -33,6 +36,7 @@
     "eslint-plugin-import": "2.7.0",
     "debug": "2.6.9",
     "express": "4.15.5",
+    "mocha": "3.5.3",
     "morgan": "1.9.0"
   },
   "engines": {
