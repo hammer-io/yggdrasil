@@ -1,0 +1,38 @@
+{
+  "name": "yggdrasil",
+  "version": "0.0.0",
+  "private": false,
+  "main": "src/index.js",
+  "scripts": {
+    "start": "npm run build && node dist/index.js",
+    "test": "npm run build && mocha --compilers js:babel-register --require babel-polyfill",
+    "lint": "eslint src/. --ext .js",
+    "build": "babel src --out-dir dist",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hammer-io/yggdrasil.git"
+  },
+  "authors": [
+    "Erica Clark <clarkerican@gmail.com",
+    "Jack Meyer <jackcmeyer@gmail.com> (www.jackcmeyer.com)",
+    "Nischay Venkatram <nischay.v@gmail.com> (www.nischayv.com)",
+    "Nathan Karasch <nathankarasch@gmail.com> (krashdev.com)"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hammer-io/yggdrasil/issues"
+  },
+  "homepage": "https://github.com/hammer-io/yggdrasil#readme",
+  "dependencies": {
+    "body-parser": "1.18.2",
+    "cookie-parser": "1.4.3",
+    "debug": "2.6.9",
+    "express": "4.15.5",
+    "morgan": "1.9.0"
+  },
+  "engines": {
+    "node": ">= 5"
+  }
+}

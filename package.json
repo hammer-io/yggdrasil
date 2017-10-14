@@ -2,14 +2,6 @@
   "name": "yggdrasil",
   "version": "0.0.0",
   "private": false,
-  "main": "src/index.js",
-  "scripts": {
-    "start": "npm run build && node dist/index.js",
-    "test": "npm run build && mocha --compilers js:babel-register --require babel-polyfill",
-    "lint": "eslint src/. --ext .js",
-    "build": "babel src --out-dir dist",
-    "prepublishOnly": "npm run build"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/hammer-io/yggdrasil.git"
@@ -22,16 +14,11 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hammer-io/tyr/issues"
+    "url": "https://github.com/hammer-io/yggradsil/issues"
   },
   "homepage": "https://github.com/hammer-io/yggdrasil#readme",
   "dependencies": {
-    "babel-polyfill": "6.26.0",
-    "body-parser": "1.18.2",
-    "cookie-parser": "1.4.3",
-    "debug": "2.6.9",
-    "express": "4.15.5",
-    "morgan": "1.9.0"
+    "babel-polyfill": "6.26.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
@@ -39,8 +26,7 @@
     "babel-preset-env": "1.6.0",
     "eslint": "4.8.0",
     "eslint-config-airbnb-base": "12.0.1",
-    "eslint-plugin-import": "2.7.0",
-    "mocha": "3.5.3"
+    "eslint-plugin-import": "2.7.0"
   },
   "engines": {
     "node": ">= 5"
