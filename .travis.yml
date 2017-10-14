@@ -3,7 +3,7 @@ node_js:
   - '5'
 
 env:
-  - TEST_DIR=server
+  - TEST_DIR=endor
 script: cd $TEST_DIR && npm install && npm run lint && npm test
 
 notifications:
