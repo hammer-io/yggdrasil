@@ -1,0 +1,34 @@
+{
+  "name": "yggdrasil",
+  "version": "0.0.0",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hammer-io/yggdrasil.git"
+  },
+  "authors": [
+    "Erica Clark <clarkerican@gmail.com",
+    "Jack Meyer <jackcmeyer@gmail.com> (www.jackcmeyer.com)",
+    "Nischay Venkatram <nischay.v@gmail.com> (www.nischayv.com)",
+    "Nathan Karasch <nathankarasch@gmail.com> (krashdev.com)"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hammer-io/yggradsil/issues"
+  },
+  "homepage": "https://github.com/hammer-io/yggdrasil#readme",
+  "dependencies": {
+    "babel-polyfill": "6.26.0"
+  },
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-plugin-transform-async-to-generator": "6.24.1",
+    "babel-preset-env": "1.6.0",
+    "eslint": "4.8.0",
+    "eslint-config-airbnb-base": "12.0.1",
+    "eslint-plugin-import": "2.7.0"
+  },
+  "engines": {
+    "node": ">= 5"
+  }
+}

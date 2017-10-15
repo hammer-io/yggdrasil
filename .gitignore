@@ -1,0 +1,17 @@
+.idea/
+node_modules/
+
+
+endor/logs
+endor/*.log
+endor/pids
+endor/*.pid
+endor/*.seed
+endor/lib-cov
+endor/coverage
+endor/.grunt
+endor/.lock-wscript
+endor/build/Release
+endor/npm-debug.lo
+endor/node_modules
+endor/dist/
