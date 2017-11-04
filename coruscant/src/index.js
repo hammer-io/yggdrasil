@@ -1,16 +1,18 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-import App from './components/app';
-import reducers from './reducers';
+import { getStore } from './store'
+import App from './containers/app';
 
-const createStoreWithMiddleware = applyMiddleware()(createStore);
-
-ReactDOM.render(
-  <Provider store={createStoreWithMiddleware(reducers)}>
-    <App />
-  </Provider>,
-  document.querySelector('.container')
-);
+export default class Root extends React.Component {
+  render() {
+    return (
+      <Provider store={getStore()}>
+        <Router>
+          <Route path="/" component={App} />
+        </Router>
+      </Provider>
+    );
+  }
+}
