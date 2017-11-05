@@ -8,6 +8,6 @@ export default class App extends Component {
         <p>Hello</p>
         <Example />
       </div>
-    );
+    )
   }
 }
