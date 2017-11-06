@@ -15,3 +15,5 @@ endor/build/Release
 endor/npm-debug.lo
 endor/node_modules
 endor/dist/
+
+dbConfig.json
