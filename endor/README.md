@@ -45,3 +45,24 @@ and fill it with the following contents (updating as necessary for your local da
 
 Finally, run `npm run createDB && npm run initDB` to create the database and
 initialize the tables within it.
+
+### Querying the Data Model
+
+- [Sequelize Querying Tutorial](http://docs.sequelizejs.com/manual/tutorial/querying.html)
+- [Various Sequelize Query Methods](http://docs.sequelizejs.com/class/lib/model.js~Model.html)
+
+**Example Usage:**
+
+```ecmascript 6
+import sequelize from './db/sequelize';
+
+sequelize.User.findAll({
+  where: { firstName: 'Bob' }
+}).then(users => {
+  users.forEach(user => {
+    console.log(user.dataValues);
+  });
+}).catch(err => {
+  console.error(err);
+});
+```
