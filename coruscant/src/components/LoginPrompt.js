@@ -12,11 +12,6 @@ class Login extends Component {
     }
 
     handleClick(event) {
-        var self = this;
-        console.log({
-            "username": this.state.username,
-            "password": this.state.password
-        });
         this.props.login();
     }
 
