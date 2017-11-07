@@ -10,7 +10,8 @@
     "build": "babel src --out-dir dist",
     "prepublishOnly": "npm run build",
     "createDB": "echo \"CREATE SCHEMA IF NOT EXISTS \\`hammer_endor\\` DEFAULT CHARACTER SET utf8 ;\" | mysql -u root -p",
-    "initDB": "npm run build && node dist/db/init_database.js"
+    "initDB": "npm run build && node dist/db/init_database.js",
+    "importTestData": "npm run build && node dist/db/import_test_data.js"
   },
   "repository": {
     "type": "git",
