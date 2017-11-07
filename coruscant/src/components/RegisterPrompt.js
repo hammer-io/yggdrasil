@@ -58,10 +58,10 @@ class Register extends Component {
         var validPassword = this.checkPassword(this.state.password);
         var validUsername = this.checkUsername(this.state.username);
         if (validEmail && validPassword && validUsername) {
-            console.log({
+            console.log("Do things to register the user", {
                 "email": this.state.email,
-                "username": this.state.username,
-                "password": this.state.password
+                "username": this.state.username
+                // "password": this.state.password
             });
             this.setState({success: true});
         }
