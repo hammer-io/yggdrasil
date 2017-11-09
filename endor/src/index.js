@@ -12,7 +12,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', index);
+app.use('/', express.static('docs'));
+
+// API ENDPOINTS //
+app.use('/api/v1', [index]);
+
+
+// END API ENDPOINTS //
 
 // catch 404 and forward to error handler
 app.use((err, req, res) => {
