@@ -61,24 +61,24 @@ const Project = model.define('project', {
   license: STRING,
   authors: STRING
 });
-Tool.hasOne(Project, { as: 'containerizationTool' });
-Tool.hasOne(Project, { as: 'continuousIntegrationTool' });
-Tool.hasOne(Project, { as: 'deploymentTool' });
-Tool.hasOne(Project, { as: 'webFramework' });
+Project.belongsTo(Tool, { as: 'containerizationTool' });
+Project.belongsTo(Tool, { as: 'continuousIntegrationTool' });
+Project.belongsTo(Tool, { as: 'deploymentTool' });
+Project.belongsTo(Tool, { as: 'webFramework' });
 
 
 const ProjectOwner = model.define('projectOwner', {
-  // Defined below
+  // ASSOCIATIONS DEFINED BELOW
 });
-Project.belongsToMany(User, { through: 'projectOwner' });
-User.belongsToMany(Project, { through: 'projectOwner' });
+Project.belongsToMany(User, { as: 'owners', through: 'projectOwner' });
+User.belongsToMany(Project, { as: 'projectsOwned', through: 'projectOwner' });
 
 
 const ProjectContributor = model.define('projectContributor', {
-  // Defined below
+  // ASSOCIATIONS DEFINED BELOW
 });
-Project.belongsToMany(User, { through: 'projectContributor' });
-User.belongsToMany(Project, { through: 'projectContributor' });
+Project.belongsToMany(User, { as: 'contributors', through: 'projectContributor' });
+User.belongsToMany(Project, { as: 'projectsContributed', through: 'projectContributor' });
 
 
 // --------------------------- MODEL DEFINITION END ---------------------------
