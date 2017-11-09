@@ -1,7 +1,6 @@
 .idea/
 node_modules/
 
-
 endor/logs
 endor/*.log
 endor/pids
@@ -17,3 +16,6 @@ endor/node_modules
 endor/dist/
 
 dbConfig.json
+
+.DS_Store
+*/.DS_Store

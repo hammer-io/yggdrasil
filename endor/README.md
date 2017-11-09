@@ -20,6 +20,23 @@ A web API to generate node.js applications in an opinionated way.
 
 `npm run lint`: runs the linter
 
+
+### Documentation
+
+Documentation is generated and displayed using [apidoc](http://apidocjs.com/).
+
+### Generate Documenation
+Prereq: `npm install apidoc -g`
+1. `cd /endor/`
+2. `apidoc -i src/ docs/`
+
+### View Documentation
+1. `cd /endor/`
+2. `npm start`
+3. visit `localhost:3000/`
+
+
+
 ### Setting up the Database
 
 First, create a file named "dbConfig.json" in the root directory of the project,

@@ -37,6 +37,7 @@
     "eslint-plugin-import": "2.7.0"
   },
   "dependencies": {
+    "apidoc": "^0.17.6",
     "body-parser": "1.18.2",
     "cookie-parser": "1.4.3",
     "debug": "2.6.9",
