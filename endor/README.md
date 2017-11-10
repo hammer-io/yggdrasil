@@ -70,16 +70,23 @@ initialize the tables within it.
 
 **Example Usage:**
 
-```ecmascript 6
+```javascript
 import sequelize from './db/sequelize';
 
+// Query the model for all users with username = 'Jack'
+// and then print all projects owned by those users
 sequelize.User.findAll({
-  where: { firstName: 'Bob' }
-}).then(users => {
-  users.forEach(user => {
-    console.log(user.dataValues);
+  where: { firstName: 'Jack' }
+}).then((users) => {
+  users.forEach((user) => {
+    console.log(`[*] ${user.dataValues.username} owns the following:`);
+    user.getProjectsOwned().then((projects) => {
+      projects.forEach((project) => {
+        console.log(`[*] ${project.dataValues.projectName}`);
+      });
+    })
   });
-}).catch(err => {
+}).catch((err) => {
   console.error(err);
 });
 ```
