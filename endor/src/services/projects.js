@@ -55,6 +55,57 @@ export async function getProjectsByUser(user) {
 }
 
 /**
+ * Creates a new project
+ *
+ * @param project the values of the project
+ * @param user the user id or username of the user creating the project
+ * @returns the created project if successful, null otherwise
+ */
+export async function createProject(project, user) {
+  // if no user to create for, then
+  const userFound = await sequalize.User.findOne({
+    where: {
+      $or: {
+        id: user,
+        username: user
+      }
+    }
+  });
+
+  if (userFound === null) {
+    return null;
+  }
+
+  // create
+  const projectCreated = await sequalize.Project.create(project);
+  await projectCreated.addOwners(userFound);
+
+  return projectCreated;
+}
+
+/**
+ * Updates an existing project
+ * @param project the project values
+ * @param projectId the project id to update
+ * @returns the updated project if it was updated, null otherwise.
+ */
+export async function updateProject(project, projectId) {
+  // update
+  if (projectId) {
+    const foundProject = await sequalize.Project.findById(projectId);
+    if (foundProject === null) {
+      return null;
+    }
+
+    const projectUpdated = await foundProject.update(project);
+    return projectUpdated;
+  }
+
+  return null;
+}
+
+
+/**
  * Soft deletes a project by id
  * @param id project id
  * @param isForceDelete determines if it should be soft deleted or hard deleted

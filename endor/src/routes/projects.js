@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import express from 'express';
 import * as projectService from './../services/projects';
 import * as responseHelper from '../utils/response-helper';
@@ -171,8 +172,10 @@ router.get('/user/projects', (req, res) => {
  }
  */
 router.get('/users/:user/projects', async (req, res) => {
+  const user = req.params.user;
+
   try {
-    const projects = await projectService.getProjectsByUser(req.params.user);
+    const projects = await projectService.getProjectsByUser(user);
     if (projects === null) {
       responseHelper.notFound(res);
     } else {
@@ -212,8 +215,9 @@ router.get('/users/:user/projects', async (req, res) => {
  *  }
  */
 router.get('/projects/:projectId', async (req, res) => {
+  const projectId = req.params.projectId;
   try {
-    const project = await projectService.getProjectById(req.params.projectId);
+    const project = await projectService.getProjectById(projectId);
 
     if (project == null) {
       responseHelper.notFound(res);
@@ -226,9 +230,9 @@ router.get('/projects/:projectId', async (req, res) => {
 });
 
 /**
- * @api {post} /projects/projects Create a project
+ * @api {post} /projects/projects Create a project for an authenticated user
  * @apiVersion 1.0.0
- * @apiName post project
+ * @apiName post project for authenticated user
  * @apiGroup Projects
  *
  * @apiPermission authenticated user
@@ -275,8 +279,78 @@ router.get('/projects/:projectId', async (req, res) => {
  *    "webFrameworkId": 4
  *  }
  */
-router.post('/user/projects', (req, res) => {
-  res.send('/user/projects');
+router.post('/user/projects', async (req, res) => {
+  const userId = 1; // TODO authenticate user
+  try {
+    const projectCreated = await projectService.createProject(req.body, userId);
+    res.send(projectCreated);
+  } catch (error) {
+    console.log(error);
+    responseHelper.internalError(res, error);
+  }
+});
+
+/**
+ * @api {post} /user/:user/projects Create a project
+ * @apiVersion 1.0.0
+ * @apiName post project for user
+ * @apiGroup Projects
+ *
+ * @apiPermission authenticated user
+ *
+ * @apiParam {String} user the username or userid of the user to create a project for
+ * @apiParam {String} projectName the name of the project
+ * @apiParam {String} description the description to the project
+ * @apiParam {String} version the version of the project
+ * @apiParam {String} license the name of the license
+ * @apiParam {[String]} authors a list of author names
+ * @apiParam {String} containerizationTool the name of the containerization tool or <None>
+ * @apiParam {String} continuousIntegrationTool the name of the continuous integration tool or
+ * <None>
+ * @apiParam {String} deploymentTool the name of the deployment tool or <None>
+ * @apiParam {String} webFramework the name of the web framework or <None>
+ *
+ * @apiParamExample {json} Request Example:
+ * {
+ *  "projectName": "hammer-io",
+ *  "description": "Hit it with a Hammer!",
+ *  "version": "0.0.1",
+ *  "license": "MIT",
+ *  "authors": ["Holmgang"],
+ *  "containerizationTool": "Docker",
+ *  "continuousIntegrationTool": "TravisCI",
+ *  "deploymentTool": "Heroku",
+ *  "webFramework": "ExpressJS"
+ * }
+ *
+ *
+ * @apiSuccess {Object} project the created project
+ * @apiSuccessExample {json} Success-Response:
+ *  {
+ *    "id": 1,
+ *    "projectName": "hammer-io",
+ *    "description": "Hit it with a Hammer!",
+ *    "version": "0.0.1",
+ *    "license": "MIT",
+ *    "authors": "Holmgang",
+ *    "createdAt": "2017-11-12T17:08:30.000Z",
+ *    "updatedAt": "2017-11-12T17:08:30.000Z",
+ *    "containerizationToolId": 2,
+ *    "continuousIntegrationToolId": 1,
+ *    "deploymentToolId": 3,
+ *    "webFrameworkId": 4
+ *  }
+ */
+router.post('/user/:user/projects', async (req, res) => {
+  const project = req.body;
+  const user = req.params.user;
+  try {
+    const projectCreated = await projectService.createProject(project, user);
+    res.send(projectCreated);
+  } catch (error) {
+    console.log(error);
+    responseHelper.internalError(res, error);
+  }
 });
 
 /**
@@ -306,8 +380,16 @@ router.post('/user/projects', (req, res) => {
  *    "webFrameworkId": null
  *  }
  */
-router.patch('/projects/:id', (req, res) => {
-  res.send('/projects/:id');
+router.patch('/projects/:id', async (req, res) => {
+  const projectToUpdate = req.body;
+  const projectId = req.params.id;
+
+  try {
+    const projectUpdated = await projectService.updateProject(projectToUpdate, projectId);
+    res.send(projectUpdated);
+  } catch (error) {
+    responseHelper.internalError(res, error);
+  }
 });
 
 /**
@@ -323,8 +405,9 @@ router.patch('/projects/:id', (req, res) => {
  * Status: 204 No Content
  */
 router.delete('/projects/:id', async (req, res) => {
+  const projectId = req.params.id;
   try {
-    const project = await projectService.deleteProjectById(req.params.id, false);
+    const project = await projectService.deleteProjectById(projectId, false);
     if (project === null) {
       responseHelper.notFound(res);
     } else if (project.deletedAt === null) {
