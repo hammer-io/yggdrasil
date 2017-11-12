@@ -36,3 +36,20 @@ export async function getProjectsByUserId(userId) {
 
   return projects;
 }
+
+/**
+ * Soft deletes a project by id
+ * @param id project id
+ * @param isForceDelete determines if it should be soft deleted or hard deleted
+ * @returns the project that was deleted
+ */
+export async function deleteProjectById(id, isForceDelete) {
+  const project = await sequalize.Project.findById(id);
+  if (project === null) {
+    return null;
+  }
+
+  await project.destroy({ force: isForceDelete });
+  return project;
+}
+

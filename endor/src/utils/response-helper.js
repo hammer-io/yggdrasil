@@ -19,3 +19,11 @@ export function internalError(res, error) {
   log.error(error);
   res.status(500).send({ message: 'Internal Error', status: 500 });
 }
+
+/**
+ * Throw the no content message. Typically used on successful deletions
+ * @param res the response
+ */
+export function noContent(res) {
+  res.status(204).send( {message: 'No Content', status: 204 });
+}

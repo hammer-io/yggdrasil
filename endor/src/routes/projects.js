@@ -1,6 +1,6 @@
 import express from 'express';
 import * as projectService from './../services/projects';
-import * as errorHelper from './../utils/error-helper';
+import * as responseHelper from '../utils/response-helper';
 
 const router = express.Router();
 
@@ -36,7 +36,7 @@ router.get('/projects', async (req, res) => {
     const projects = await projectService.getAllProejcts();
     res.send(projects);
   } catch (error) {
-    errorHelper.internalError(res, error);
+    responseHelper.internalError(res, error);
   }
 });
 
@@ -104,12 +104,12 @@ router.get('/user/projects', (req, res) => {
     const projects = projectService.getProjectsByUserId(userId);
 
     if (projects === null) {
-      errorHelper.notFound(res);
+      responseHelper.notFound(res);
     } else {
       res.send(projects);
     }
   } catch (error) {
-    errorHelper.internalError(res, error);
+    responseHelper.internalError(res, error);
   }
 });
 
@@ -174,12 +174,12 @@ router.get('/users/:userId/projects', async (req, res) => {
   try {
     const projects = await projectService.getProjectsByUserId(req.params.userId);
     if (projects === null) {
-      errorHelper.notFound(res);
+      responseHelper.notFound(res);
     } else {
       res.send(projects);
     }
   } catch (error) {
-    errorHelper.internalError(res, error);
+    responseHelper.internalError(res, error);
   }
 });
 
@@ -215,12 +215,12 @@ router.get('/projects/:projectId', async (req, res) => {
     const project = await projectService.getProjectById(req.params.projectId);
 
     if (project == null) {
-      errorHelper.notFound(res);
+      responseHelper.notFound(res);
     } else {
       res.send(project);
     }
   } catch (error) {
-    errorHelper.internalError(res);
+    responseHelper.internalError(res);
   }
 });
 
@@ -318,11 +318,22 @@ router.patch('/projects/:id', (req, res) => {
  * @apiPermission project owner
  *
  * @apiSuccess {Object} project the deleted project
- * @apiSuccessExample {json} Success-Resonse
+ * @apiSuccessExample {json} Success-Response
  * Status: 204 No Content
  */
-router.delete('/projects/:id', (req, res) => {
-  res.send('/projects/:id');
+router.delete('/projects/:id', async (req, res) => {
+  try {
+    const project = await projectService.deleteProjectById(req.params.id, false);
+    if (project === null) {
+      responseHelper.notFound(res);
+    } else if (project.deletedAt === null) {
+      responseHelper.internalError(res, new Error('Project was not deleted'));
+    } else {
+      responseHelper.noContent(res);
+    }
+  } catch (error) {
+    responseHelper.internalError(res, error);
+  }
 });
 
 module.exports = router;
