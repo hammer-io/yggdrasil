@@ -101,7 +101,7 @@ router.get('/user/projects', (req, res) => {
   const userId = 1; // TODO get userId from authenticated request
 
   try {
-    const projects = projectService.getProjectsByUserId(userId);
+    const projects = projectService.getProjectsByUser(userId);
 
     if (projects === null) {
       responseHelper.notFound(res);
@@ -119,7 +119,7 @@ router.get('/user/projects', (req, res) => {
  * @apiName get projects for user
  * @apiGroup Projects
  *
- * @apiParam {String} userId the user id to find by
+ * @apiParam {String} user the user id or the username to find by
  *
  * @apiSuccess {[Object]} projects the list of projects for a given user
  * @apiSuccessExample {json} Success-Response:
@@ -170,15 +170,16 @@ router.get('/user/projects', (req, res) => {
      ]
  }
  */
-router.get('/users/:userId/projects', async (req, res) => {
+router.get('/users/:user/projects', async (req, res) => {
   try {
-    const projects = await projectService.getProjectsByUserId(req.params.userId);
+    const projects = await projectService.getProjectsByUser(req.params.user);
     if (projects === null) {
       responseHelper.notFound(res);
     } else {
       res.send(projects);
     }
   } catch (error) {
+    console.log(error);
     responseHelper.internalError(res, error);
   }
 });

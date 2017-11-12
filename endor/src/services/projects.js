@@ -27,17 +27,25 @@ export async function getProjectById(id) {
  * @param userId the userId to find by
  * @returns the projects for the user separated by owned and contributed
  */
-export async function getProjectsByUserId(userId) {
-  const user = await sequalize.User.findById(userId);
+export async function getProjectsByUser(user) {
+  console.log(user);
+  const userFound = await sequalize.User.findOne({
+    where: {
+      $or: {
+        id: user,
+        username: user
+      }
+    }
+  });
 
   // if the user was not found, return null
-  if (user === null) {
-    log.error(`user id of ${userId} was not found`);
+  if (userFound === null) {
+    log.error(`user with ${user} could not be found`);
     return null;
   }
 
-  const projectsOwned = await user.getProjectsOwned();
-  const projectsContributed = await user.getProjectsContributed();
+  const projectsOwned = await userFound.getProjectsOwned();
+  const projectsContributed = await userFound.getProjectsContributed();
 
   const projects = {};
   projects.owned = projectsOwned;
