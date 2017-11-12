@@ -1,4 +1,6 @@
 import express from 'express';
+import * as projectService from './../services/projects';
+import * as errorHelper from './../utils/error-helper';
 
 const router = express.Router();
 
@@ -29,8 +31,13 @@ const router = express.Router();
  *  }
  * ]
  */
-router.get('/projects', (req, res) => {
-  res.send('/projects');
+router.get('/projects', async (req, res) => {
+  try {
+    const projects = await projectService.getAllProejcts();
+    res.send(projects);
+  } catch (error) {
+    errorHelper.internalError(res, error);
+  }
 });
 
 /**
@@ -43,25 +50,67 @@ router.get('/projects', (req, res) => {
  *
  * @apiSuccess {Object[]} projects list of projects for authenticated user
  * @apiSuccessExample {json} Success-Response:
- * [
- *  {
- *    "id": 1,
- *    "projectName": "TMNT",
- *    "description": "You gotta know what a crumpet is to understand cricket!",
- *    "version": "1.2.3",
- *    "license": "MIT",
- *    "authors": "Casey Jones, Raphael",
- *    "createdAt": "2017-11-12T17:08:30.000Z",
- *    "updatedAt": "2017-11-12T17:08:30.000Z",
- *    "containerizationToolId": null,
- *    "continuousIntegrationToolId": 1,
- *    "deploymentToolId": 3,
- *    "webFrameworkId": null
- *  }
- * ]
+ {
+     "owned": [
+         {
+             "id": 1,
+             "projectName": "TMNT",
+             "description": "You gotta know what a crumpet is to understand cricket!",
+             "version": "1.2.3",
+             "license": "MIT",
+             "authors": "Casey Jones, Raphael",
+             "createdAt": "2017-11-12T17:08:30.000Z",
+             "updatedAt": "2017-11-12T17:08:30.000Z",
+             "containerizationToolId": null,
+             "continuousIntegrationToolId": 1,
+             "deploymentToolId": 3,
+             "webFrameworkId": null,
+             "projectOwner": {
+                 "createdAt": "2017-11-12T17:08:30.000Z",
+                 "updatedAt": "2017-11-12T17:08:30.000Z",
+                 "projectId": 1,
+                 "userId": 3
+             }
+         }
+     ],
+     "contributed": [
+         {
+             "id": 1,
+             "projectName": "TMNT",
+             "description": "You gotta know what a crumpet is to understand cricket!",
+             "version": "1.2.3",
+             "license": "MIT",
+             "authors": "Casey Jones, Raphael",
+             "createdAt": "2017-11-12T17:08:30.000Z",
+             "updatedAt": "2017-11-12T17:08:30.000Z",
+             "containerizationToolId": null,
+             "continuousIntegrationToolId": 1,
+             "deploymentToolId": 3,
+             "webFrameworkId": null,
+             "projectContributor": {
+                 "createdAt": "2017-11-12T17:08:30.000Z",
+                 "updatedAt": "2017-11-12T17:08:30.000Z",
+                 "projectId": 1,
+                 "userId": 3
+             }
+         }
+     ]
+ }
  */
 router.get('/user/projects', (req, res) => {
-  res.send('/user/projects');
+  const userId = 1; // TODO get userId from authenticated request
+
+  try {
+    const projects = projectService.getProjectsByUserId(userId);
+
+    if (projects === null) {
+      errorHelper.notFound(res);
+    } else {
+      res.send(projects);
+    }
+  } catch (error) {
+    errorHelper.internalError(res, error);
+  }
 });
 
 /**
@@ -74,25 +123,64 @@ router.get('/user/projects', (req, res) => {
  *
  * @apiSuccess {[Object]} projects the list of projects for a given user
  * @apiSuccessExample {json} Success-Response:
- * [
- *  {
- *    "id": 1,
- *    "projectName": "TMNT",
- *    "description": "You gotta know what a crumpet is to understand cricket!",
- *    "version": "1.2.3",
- *    "license": "MIT",
- *    "authors": "Casey Jones, Raphael",
- *    "createdAt": "2017-11-12T17:08:30.000Z",
- *    "updatedAt": "2017-11-12T17:08:30.000Z",
- *    "containerizationToolId": null,
- *    "continuousIntegrationToolId": 1,
- *    "deploymentToolId": 3,
- *    "webFrameworkId": null
- *  }
- * ]
+ {
+     "owned": [
+         {
+             "id": 1,
+             "projectName": "TMNT",
+             "description": "You gotta know what a crumpet is to understand cricket!",
+             "version": "1.2.3",
+             "license": "MIT",
+             "authors": "Casey Jones, Raphael",
+             "createdAt": "2017-11-12T17:08:30.000Z",
+             "updatedAt": "2017-11-12T17:08:30.000Z",
+             "containerizationToolId": null,
+             "continuousIntegrationToolId": 1,
+             "deploymentToolId": 3,
+             "webFrameworkId": null,
+             "projectOwner": {
+                 "createdAt": "2017-11-12T17:08:30.000Z",
+                 "updatedAt": "2017-11-12T17:08:30.000Z",
+                 "projectId": 1,
+                 "userId": 3
+             }
+         }
+     ],
+     "contributed": [
+         {
+             "id": 1,
+             "projectName": "TMNT",
+             "description": "You gotta know what a crumpet is to understand cricket!",
+             "version": "1.2.3",
+             "license": "MIT",
+             "authors": "Casey Jones, Raphael",
+             "createdAt": "2017-11-12T17:08:30.000Z",
+             "updatedAt": "2017-11-12T17:08:30.000Z",
+             "containerizationToolId": null,
+             "continuousIntegrationToolId": 1,
+             "deploymentToolId": 3,
+             "webFrameworkId": null,
+             "projectContributor": {
+                 "createdAt": "2017-11-12T17:08:30.000Z",
+                 "updatedAt": "2017-11-12T17:08:30.000Z",
+                 "projectId": 1,
+                 "userId": 3
+             }
+         }
+     ]
+ }
  */
-router.get('/users/:userId/projects', (req, res) => {
-  res.send('/user/:userId/projects');
+router.get('/users/:userId/projects', async (req, res) => {
+  try {
+    const projects = await projectService.getProjectsByUserId(req.params.userId);
+    if (projects === null) {
+      errorHelper.notFound(res);
+    } else {
+      res.send(projects);
+    }
+  } catch (error) {
+    errorHelper.internalError(res, error);
+  }
 });
 
 /**
@@ -122,8 +210,18 @@ router.get('/users/:userId/projects', (req, res) => {
  *    "webFrameworkId": null
  *  }
  */
-router.get('/projects/:projectId', (req, res) => {
-  res.send('/projects/:projectId');
+router.get('/projects/:projectId', async (req, res) => {
+  try {
+    const project = await projectService.getProjectById(req.params.projectId);
+
+    if (project == null) {
+      errorHelper.notFound(res);
+    } else {
+      res.send(project);
+    }
+  } catch (error) {
+    errorHelper.internalError(res);
+  }
 });
 
 /**
