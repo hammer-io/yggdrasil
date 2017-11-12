@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 
 import index from './routes/index';
+import projects from './routes/projects';
 
 const app = express();
 
@@ -12,10 +13,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', express.static('docs'));
+app.use('/', express.static('doc'));
 
 // API ENDPOINTS //
-app.use('/api/v1', [index]);
+app.use('/api/v1', [index, projects]);
 
 
 // END API ENDPOINTS //
