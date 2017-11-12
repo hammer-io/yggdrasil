@@ -3,11 +3,20 @@ import { getActiveLogger } from '../utils/winston';
 
 const log = getActiveLogger();
 
+/**
+ * Gets all of the projects in the system
+ * @returns all of the projects in the system
+ */
 export async function getAllProejcts() {
   const projects = await sequalize.Project.findAll();
   return projects;
 }
 
+/**
+ * Gets project by id
+ * @param id the id to find by
+ * @returns the project with the given id
+ */
 export async function getProjectById(id) {
   const project = await sequalize.Project.findById(id);
   return project;
@@ -16,7 +25,7 @@ export async function getProjectById(id) {
 /**
  * Finds projects for a user
  * @param userId the userId to find by
- * @returns
+ * @returns the projects for the user separated by owned and contributed
  */
 export async function getProjectsByUserId(userId) {
   const user = await sequalize.User.findById(userId);

@@ -25,5 +25,5 @@ export function internalError(res, error) {
  * @param res the response
  */
 export function noContent(res) {
-  res.status(204).send( {message: 'No Content', status: 204 });
+  res.status(204).send({ message: 'No Content', status: 204 });
 }
