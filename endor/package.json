@@ -45,9 +45,10 @@
     "mocha": "3.5.3",
     "morgan": "1.9.0",
     "mysql2": "^1.4.2",
-    "sequelize": "^4.22.5"
+    "sequelize": "^4.22.5",
+    "winston": "^3.0.0-rc1"
   },
   "engines": {
-    "node": ">= 5"
+    "node": ">= 6"
   }
 }
