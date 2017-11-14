@@ -217,7 +217,7 @@ router.get('/projects/:projectId', async (req, res, next) => {
 });
 
 /**
- * @api {post} /projects/projects Create a project for an authenticated user
+ * @api {post} user/projects Create a project for an authenticated user
  * @apiVersion 1.0.0
  * @apiName post project for authenticated user
  * @apiGroup Projects
@@ -228,7 +228,7 @@ router.get('/projects/:projectId', async (req, res, next) => {
  * @apiParam {String} description the description to the project
  * @apiParam {String} version the version of the project
  * @apiParam {String} license the name of the license
- * @apiParam {[String]} authors a list of author names
+ * @apiParam {[String]} authors a string of comma separated values
  * @apiParam {String} containerizationTool the name of the containerization tool or <None>
  * @apiParam {String} continuousIntegrationTool the name of the continuous integration tool or
  * <None>
@@ -241,11 +241,11 @@ router.get('/projects/:projectId', async (req, res, next) => {
  *  "description": "Hit it with a Hammer!",
  *  "version": "0.0.1",
  *  "license": "MIT",
- *  "authors": ["Holmgang"],
- *  "containerizationTool": "Docker",
- *  "continuousIntegrationTool": "TravisCI",
- *  "deploymentTool": "Heroku",
- *  "webFramework": "ExpressJS"
+ *  "authors": "Holmgang, Jack",
+ *  "containerizationTool": "2",
+ *  "continuousIntegrationTool": "1",
+ *  "deploymentTool": "3",
+ *  "webFramework": "4"
  * }
  *
  *
@@ -257,7 +257,7 @@ router.get('/projects/:projectId', async (req, res, next) => {
  *    "description": "Hit it with a Hammer!",
  *    "version": "0.0.1",
  *    "license": "MIT",
- *    "authors": "Holmgang",
+ *    "authors": "Holmgang, Jack",
  *    "createdAt": "2017-11-12T17:08:30.000Z",
  *    "updatedAt": "2017-11-12T17:08:30.000Z",
  *    "containerizationToolId": 2,
@@ -296,7 +296,7 @@ router.post(
  * @apiParam {String} description the description to the project
  * @apiParam {String} version the version of the project
  * @apiParam {String} license the name of the license
- * @apiParam {[String]} authors a list of author names
+ * @apiParam {[String]} authors a string of comma separated values
  * @apiParam {String} containerizationTool the name of the containerization tool or <None>
  * @apiParam {String} continuousIntegrationTool the name of the continuous integration tool or
  * <None>
@@ -309,11 +309,11 @@ router.post(
  *  "description": "Hit it with a Hammer!",
  *  "version": "0.0.1",
  *  "license": "MIT",
- *  "authors": ["Holmgang"],
- *  "containerizationTool": "Docker",
- *  "continuousIntegrationTool": "TravisCI",
- *  "deploymentTool": "Heroku",
- *  "webFramework": "ExpressJS"
+ *  "authors": "Holmgang, Jack",
+ *  "containerizationTool": "2",
+ *  "continuousIntegrationTool": "1",
+ *  "deploymentTool": "3",
+ *  "webFramework": "4"
  * }
  *
  *
