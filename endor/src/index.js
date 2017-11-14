@@ -32,6 +32,7 @@ app.use((req, res) => {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
+// eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.json({
