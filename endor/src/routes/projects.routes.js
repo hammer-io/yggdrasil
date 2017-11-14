@@ -1,5 +1,6 @@
 /* eslint-disable prefer-destructuring */
 import express from 'express';
+import { check, validationResult } from 'express-validator/check';
 import * as projectService from '../services/projects.service';
 import * as responseHelper from '../utils/response-helper';
 
@@ -264,15 +265,22 @@ router.get('/projects/:projectId', async (req, res, next) => {
  *    "webFrameworkId": 4
  *  }
  */
-router.post('/user/projects', async (req, res, next) => {
-  const userId = 1; // TODO authenticate user
-  try {
-    const projectCreated = await projectService.createProject(req.body, userId);
-    res.send(projectCreated);
-  } catch (error) {
-    next(error);
+router.post(
+  '/user/projects', [
+    check('projectName').exists().withMessage('Project name is required.'),
+    check('description').exists().withMessage('Project description is required.'),
+    check('version').exists().withMessage('Project version is required.').matches(/^(\d+\.)?(\d+\.)?(\*|\d+)/),
+  ],
+  async (req, res, next) => {
+    const userId = 1; // TODO authenticate user
+    try {
+      const projectCreated = await projectService.createProject(req.body, userId);
+      res.send(projectCreated);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 /**
  * @api {post} /user/:user/projects Create a project
@@ -325,16 +333,29 @@ router.post('/user/projects', async (req, res, next) => {
  *    "webFrameworkId": 4
  *  }
  */
-router.post('/user/:user/projects', async (req, res, next) => {
-  const project = req.body;
-  const user = req.params.user;
-  try {
-    const projectCreated = await projectService.createProject(project, user);
-    res.send(projectCreated);
-  } catch (error) {
-    next(error);
+router.post(
+  '/users/:user/projects', [
+    check('projectName').exists().withMessage('Project name is required.'),
+    check('description').exists().withMessage('Project description is required.'),
+    check('version').exists().withMessage('Project version is required.').matches(/^(\d+\.)?(\d+\.)?(\*|\d+)/),
+  ],
+
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.mapped() });
+    }
+
+    const project = req.body;
+    const user = req.params.user;
+    try {
+      const projectCreated = await projectService.createProject(project, user);
+      res.send(projectCreated);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 /**
  * @api {patch} /projects/:id Update a project
@@ -363,17 +384,22 @@ router.post('/user/:user/projects', async (req, res, next) => {
  *    "webFrameworkId": null
  *  }
  */
-router.patch('/projects/:id', async (req, res, next) => {
-  const projectToUpdate = req.body;
-  const projectId = req.params.id;
+router.patch(
+  '/projects/:id', [
+    check('version').exists().withMessage('Project version is required.').matches(/^(\d+\.)?(\d+\.)?(\*|\d+)/)
+  ],
+  async (req, res, next) => {
+    const projectToUpdate = req.body;
+    const projectId = req.params.id;
 
-  try {
-    const projectUpdated = await projectService.updateProject(projectToUpdate, projectId);
-    res.send(projectUpdated);
-  } catch (error) {
-    next(error);
+    try {
+      const projectUpdated = await projectService.updateProject(projectToUpdate, projectId);
+      res.send(projectUpdated);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 /**
  * @api {delete} /projects/:id Delete a project
