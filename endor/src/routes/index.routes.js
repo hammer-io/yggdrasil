@@ -9,6 +9,15 @@ const router = express.Router();
  * @apiGroup Index
  */
 router.get('/', (req, res) => {
+  res.send([{
+    name: 'endor',
+    version: 'v1.0.0',
+    api_url: `http://${req.get('host')}/api/v1/`,
+    documentation_url: `http://${req.get('host')}`
+  }])
+});
+
+router.get('/v1', (req, res) => {
   res.send({
     name: 'endor',
     version: 'v1.0.0',
@@ -19,8 +28,5 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('api', (req, res) => {
-
-})
 
 module.exports = router;
