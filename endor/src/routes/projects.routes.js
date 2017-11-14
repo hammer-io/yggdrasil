@@ -99,11 +99,12 @@ router.get('/projects', async (req, res, next) => {
      ]
  }
  */
-router.get('/user/projects', (req, res, next) => {
+router.get('/user/projects', async (req, res, next) => {
   const userId = 1; // TODO get userId from authenticated request
 
   try {
-    const projects = projectService.getProjectsByUser(userId);
+    const projects = await projectService.getProjectsByUser(userId);
+    console.log(projects);
     res.send(projects);
   } catch (error) {
     next(error);
