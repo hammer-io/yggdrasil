@@ -112,7 +112,7 @@ router.get('/user/projects', async (req, res, next) => {
 });
 
 /**
- * @api {get} /users/:userId/projects Get a project by user id
+ * @api {get} /users/:user/projects Get a project by user id
  * @apiVersion 1.0.0
  * @apiName get projects for user
  * @apiGroup Projects
@@ -217,7 +217,7 @@ router.get('/projects/:projectId', async (req, res, next) => {
 });
 
 /**
- * @api {post} user/projects Create a project for an authenticated user
+ * @api {post} /user/projects Create a project for an authenticated user
  * @apiVersion 1.0.0
  * @apiName post project for authenticated user
  * @apiGroup Projects
@@ -284,7 +284,7 @@ router.post(
 );
 
 /**
- * @api {post} /user/:user/projects Create a project
+ * @api {post} /users/:user/projects Create a project
  * @apiVersion 1.0.0
  * @apiName post project for user
  * @apiGroup Projects
