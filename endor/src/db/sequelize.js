@@ -60,6 +60,8 @@ const Project = model.define('project', {
   version: STRING,
   license: STRING,
   authors: STRING
+}, {
+  paranoid: true
 });
 Project.belongsTo(Tool, { as: 'containerizationTool' });
 Project.belongsTo(Tool, { as: 'continuousIntegrationTool' });

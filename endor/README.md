@@ -28,7 +28,7 @@ Documentation is generated and displayed using [apidoc](http://apidocjs.com/).
 ### Generate Documenation
 Prereq: `npm install apidoc -g`
 1. `cd /endor/`
-2. `apidoc -i src/ docs/`
+2. `apidoc -i src/`
 
 ### View Documentation
 1. `cd /endor/`
