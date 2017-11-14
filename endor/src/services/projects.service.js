@@ -1,5 +1,7 @@
 import sequalize from './../db/sequelize';
 import { getActiveLogger } from '../utils/winston';
+import UserNotFoundException from '../error/UserNotFoundException';
+import ProjectNotFoundException from '../error/ProjectNotFoundException';
 
 const log = getActiveLogger();
 
@@ -7,27 +9,35 @@ const log = getActiveLogger();
  * Gets all of the projects in the system
  * @returns all of the projects in the system
  */
-export async function getAllProejcts() {
+export async function getAllProjects() {
+  log.info('ProjectService: find all projects');
   const projects = await sequalize.Project.findAll();
   return projects;
 }
 
 /**
  * Gets project by id
- * @param id the id to find by
+ * @param projectId the id to find by
  * @returns the project with the given id
  */
-export async function getProjectById(id) {
-  const project = await sequalize.Project.findById(id);
+export async function getProjectById(projectId) {
+  log.info(`ProjectService: get project with id ${projectId}`);
+  const project = await sequalize.Project.findById(projectId);
+  if (project === null) {
+    throw new ProjectNotFoundException(`Project with id ${projectId} not found`);
+  }
+
+
   return project;
 }
 
 /**
  * Finds projects for a user
- * @param userId the userId to find by
+ * @param user the userId to find by
  * @returns the projects for the user separated by owned and contributed
  */
 export async function getProjectsByUser(user) {
+  log.info(`ProjectService: get projects for user ${user}`);
   console.log(user);
   const userFound = await sequalize.User.findOne({
     where: {
@@ -38,10 +48,8 @@ export async function getProjectsByUser(user) {
     }
   });
 
-  // if the user was not found, return null
   if (userFound === null) {
-    log.error(`user with ${user} could not be found`);
-    return null;
+    throw new UserNotFoundException(`User with ${user} could not be found.`)
   }
 
   const projectsOwned = await userFound.getProjectsOwned();
@@ -62,7 +70,7 @@ export async function getProjectsByUser(user) {
  * @returns the created project if successful, null otherwise
  */
 export async function createProject(project, user) {
-  // if no user to create for, then
+  log.info(`ProjectService: create project for user ${user}`);
   const userFound = await sequalize.User.findOne({
     where: {
       $or: {
@@ -72,8 +80,9 @@ export async function createProject(project, user) {
     }
   });
 
+  // if the user was not found, throw error
   if (userFound === null) {
-    return null;
+    throw new UserNotFoundException(`User with ${user} could not be found.`)
   }
 
   // create
@@ -90,11 +99,11 @@ export async function createProject(project, user) {
  * @returns the updated project if it was updated, null otherwise.
  */
 export async function updateProject(project, projectId) {
-  // update
+  log.info(`ProjectService: update project with id ${projectId}`);
   if (projectId) {
     const foundProject = await sequalize.Project.findById(projectId);
     if (foundProject === null) {
-      return null;
+      throw new ProjectNotFoundException(`Project with id ${projectId} not found`);
     }
 
     const projectUpdated = await foundProject.update(project);
@@ -107,14 +116,15 @@ export async function updateProject(project, projectId) {
 
 /**
  * Soft deletes a project by id
- * @param id project id
+ * @param projectId project id
  * @param isForceDelete determines if it should be soft deleted or hard deleted
  * @returns the project that was deleted
  */
-export async function deleteProjectById(id, isForceDelete) {
-  const project = await sequalize.Project.findById(id);
+export async function deleteProjectById(projectId, isForceDelete) {
+  log.info(`ProjectService: delete project with id ${projectId}`);
+  const project = await sequalize.Project.findById(projectId);
   if (project === null) {
-    return null;
+    throw new ProjectNotFoundException(`Project with id ${projectId} not found`);
   }
 
   await project.destroy({ force: isForceDelete });

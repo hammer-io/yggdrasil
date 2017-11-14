@@ -1,6 +1,6 @@
 /* eslint-disable prefer-destructuring */
 import express from 'express';
-import * as projectService from './../services/projects';
+import * as projectService from '../services/projects.service';
 import * as responseHelper from '../utils/response-helper';
 
 const router = express.Router();
@@ -32,12 +32,12 @@ const router = express.Router();
  *  }
  * ]
  */
-router.get('/projects', async (req, res) => {
+router.get('/projects', async (req, res, next) => {
   try {
-    const projects = await projectService.getAllProejcts();
+    const projects = await projectService.getAllProjects();
     res.send(projects);
   } catch (error) {
-    responseHelper.internalError(res, error);
+    next(error);
   }
 });
 
@@ -98,19 +98,14 @@ router.get('/projects', async (req, res) => {
      ]
  }
  */
-router.get('/user/projects', (req, res) => {
+router.get('/user/projects', (req, res, next) => {
   const userId = 1; // TODO get userId from authenticated request
 
   try {
     const projects = projectService.getProjectsByUser(userId);
-
-    if (projects === null) {
-      responseHelper.notFound(res);
-    } else {
-      res.send(projects);
-    }
+    res.send(projects);
   } catch (error) {
-    responseHelper.internalError(res, error);
+    next(error);
   }
 });
 
@@ -171,19 +166,14 @@ router.get('/user/projects', (req, res) => {
      ]
  }
  */
-router.get('/users/:user/projects', async (req, res) => {
+router.get('/users/:user/projects', async (req, res, next) => {
   const user = req.params.user;
 
   try {
     const projects = await projectService.getProjectsByUser(user);
-    if (projects === null) {
-      responseHelper.notFound(res);
-    } else {
-      res.send(projects);
-    }
+    res.send(projects);
   } catch (error) {
-    console.log(error);
-    responseHelper.internalError(res, error);
+    next(error);
   }
 });
 
@@ -214,18 +204,13 @@ router.get('/users/:user/projects', async (req, res) => {
  *    "webFrameworkId": null
  *  }
  */
-router.get('/projects/:projectId', async (req, res) => {
+router.get('/projects/:projectId', async (req, res, next) => {
   const projectId = req.params.projectId;
   try {
     const project = await projectService.getProjectById(projectId);
-
-    if (project == null) {
-      responseHelper.notFound(res);
-    } else {
-      res.send(project);
-    }
+    res.send(project);
   } catch (error) {
-    responseHelper.internalError(res);
+    next(error)
   }
 });
 
@@ -279,14 +264,13 @@ router.get('/projects/:projectId', async (req, res) => {
  *    "webFrameworkId": 4
  *  }
  */
-router.post('/user/projects', async (req, res) => {
+router.post('/user/projects', async (req, res, next) => {
   const userId = 1; // TODO authenticate user
   try {
     const projectCreated = await projectService.createProject(req.body, userId);
     res.send(projectCreated);
   } catch (error) {
-    console.log(error);
-    responseHelper.internalError(res, error);
+    next(error);
   }
 });
 
@@ -341,15 +325,14 @@ router.post('/user/projects', async (req, res) => {
  *    "webFrameworkId": 4
  *  }
  */
-router.post('/user/:user/projects', async (req, res) => {
+router.post('/user/:user/projects', async (req, res, next) => {
   const project = req.body;
   const user = req.params.user;
   try {
     const projectCreated = await projectService.createProject(project, user);
     res.send(projectCreated);
   } catch (error) {
-    console.log(error);
-    responseHelper.internalError(res, error);
+    next(error);
   }
 });
 
@@ -380,7 +363,7 @@ router.post('/user/:user/projects', async (req, res) => {
  *    "webFrameworkId": null
  *  }
  */
-router.patch('/projects/:id', async (req, res) => {
+router.patch('/projects/:id', async (req, res, next) => {
   const projectToUpdate = req.body;
   const projectId = req.params.id;
 
@@ -388,7 +371,7 @@ router.patch('/projects/:id', async (req, res) => {
     const projectUpdated = await projectService.updateProject(projectToUpdate, projectId);
     res.send(projectUpdated);
   } catch (error) {
-    responseHelper.internalError(res, error);
+    next(error);
   }
 });
 
@@ -404,19 +387,13 @@ router.patch('/projects/:id', async (req, res) => {
  * @apiSuccessExample {json} Success-Response
  * Status: 204 No Content
  */
-router.delete('/projects/:id', async (req, res) => {
+router.delete('/projects/:id', async (req, res, next) => {
   const projectId = req.params.id;
   try {
-    const project = await projectService.deleteProjectById(projectId, false);
-    if (project === null) {
-      responseHelper.notFound(res);
-    } else if (project.deletedAt === null) {
-      responseHelper.internalError(res, new Error('Project was not deleted'));
-    } else {
-      responseHelper.noContent(res);
-    }
+    await projectService.deleteProjectById(projectId, false);
+    responseHelper.noContent(res);
   } catch (error) {
-    responseHelper.internalError(res, error);
+    next(error);
   }
 });
 
