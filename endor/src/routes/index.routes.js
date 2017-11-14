@@ -12,10 +12,15 @@ router.get('/', (req, res) => {
   res.send({
     name: 'endor',
     version: 'v1.0.0',
-    documentation_url: req.get('host'),
-    users_url: `${req.get('host')}/users`,
-    projects_url: `${req.get('host')}/projects`
+    documentation_url: `http://${req.get('host')}`,
+    user_url: `http://${req.get('host')}/api/v1/user`,
+    users_url: `http://${req.get('host')}/api/v1/users`,
+    projects_url: `http://${req.get('host')}/api/v1/projects`
   });
 });
+
+router.get('api', (req, res) => {
+
+})
 
 module.exports = router;

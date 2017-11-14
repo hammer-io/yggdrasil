@@ -19,13 +19,24 @@ app.use('/api/v1', index);
 app.use('/api/v1', projects);
 // END API ENDPOINTS //
 
+app.use('/api', (req, res, next) => {
+  res.send(
+    [{
+      name: 'endor',
+      version: 'v1.0.0',
+      api_url: `http://${req.get('host')}/api/v1/`,
+      documentation_url: `http://${req.get('host')}`
+    }]
+  )
+});
+
 // default 404 handler
 // for url's that don't match a defined pattern
 app.use((req, res) => {
   res.status(404).send({
     status: 404,
     message: 'Not Found',
-    documentation_url: req.get('host')
+    documentation_url: `http://${req.get('host')}`
   });
 });
 
