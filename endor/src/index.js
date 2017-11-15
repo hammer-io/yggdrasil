@@ -3,20 +3,29 @@ import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import index from './routes/index.routes';
-import projects from './routes/projects.routes';
+import * as projects from './routes/projects.routes';
+import ProjectService from './services/projects.service';
+import sequalize from './db/sequelize';
+import {getActiveLogger} from './utils/winston';
 
 const app = express();
 
+// middleware //
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', express.static('doc'));
+// dependency injections //
+const projectService = new ProjectService(sequalize.User, sequalize.Project, getActiveLogger());
+projects.setProjectService(projectService);
+// end dependency injections //
+
 
 // API ENDPOINTS //
+app.use('/', express.static('doc'));
 app.use('/api', index);
-app.use('/api/v1', projects);
+app.use('/api/v1', projects.router);
 // END API ENDPOINTS //
 
 // default 404 handler
