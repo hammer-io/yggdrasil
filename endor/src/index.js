@@ -6,7 +6,7 @@ import index from './routes/index.routes';
 import * as projects from './routes/projects.routes';
 import ProjectService from './services/projects.service';
 import sequalize from './db/sequelize';
-import {getActiveLogger} from './utils/winston';
+import { getActiveLogger } from './utils/winston';
 
 const app = express();
 
