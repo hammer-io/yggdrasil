@@ -123,6 +123,33 @@ export default class ProjectService {
   }
 
   /**
+   * Adds a contributor to a new project
+   * @param projectId the project id for the project
+   * @param user the user to add as a contributor
+   * @returns {Array} the list of contributors after the addition
+   */
+  async addContributorToProject(projectId, user) {
+    const userFound = await this.userRepository.findOne({
+      where: {
+        $or: {
+          id: user,
+          username: user
+        }
+      }
+    });
+
+    // if the user was not found, throw error
+    if (userFound === null) {
+      throw new UserNotFoundException(`User with ${user} could not be found.`)
+    }
+
+    const project = await this.getProjectById(projectId);
+    await project.addContributors(userFound);
+    const contributors = project.getContributors();
+    return contributors;
+  }
+
+  /**
    * Updates an existing project
    * @param project the project values
    * @param projectId the project id to update
