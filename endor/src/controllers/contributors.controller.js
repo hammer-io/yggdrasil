@@ -44,7 +44,7 @@ export async function checkIfUserIsContributor(req, res, next) {
 }
 
 /**
- * HJandles the POST /projects/:id/contributors/:user endpoint
+ * Handles the POST /projects/:id/contributors/:user endpoint
  * @param req the request
  * @param res the response
  * @param next the next middleware
@@ -55,6 +55,23 @@ export async function addContributorToProject(req, res, next) {
     const user = req.params.user;
     const contributors = await projectService.addContributorToProject(projectId, user);
     res.status(201).send(contributors);
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Handles the DELETE /projects/:id/contributors/:user endpoint
+ * @param req the request
+ * @param res the response
+ * @param next the next middleware
+ */
+export async function deleteContributorFromProject(req, res, next) {
+  try {
+    const projectId = req.params.id;
+    const user = req.params.user;
+    await projectService.deleteContributorFromProject(projectId, user);
+    responseHelper.noContent(res);
   } catch (error) {
     next(error);
   }

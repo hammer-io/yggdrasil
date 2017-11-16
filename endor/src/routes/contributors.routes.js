@@ -92,6 +92,22 @@ router.get('/projects/:id/contributors/:user', contributorsController.checkIfUse
 router.post('/projects/:id/contributors/:user', contributorsController.addContributorToProject);
 
 /**
+ * @api {delete} /projects/:id/contributors/:user Remove contributor from project
+ * @apiVersion 1.0.0
+ * @apiName remove contributor from project
+ * @apiGroup Contributors
+ *
+ * @apiPermission project owner
+ *
+ * @apiParam {String} id the id of the project
+ * @apiParam {String} user user id or username of the user to add as a contributor
+ *
+ * @apiSuccessExample {json} Success-Response
+ * Status: 204 No Content
+ */
+router.delete('/projects/:id/contributors/:user', contributorsController.deleteContributorFromProject);
+
+/**
  * Set dependencies for the contributors routes
  * @param newProjectService the project service dependency
  */
