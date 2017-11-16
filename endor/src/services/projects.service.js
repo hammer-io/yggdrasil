@@ -1,6 +1,5 @@
 import UserNotFoundException from '../error/UserNotFoundException';
 import ProjectNotFoundException from '../error/ProjectNotFoundException';
-import { getProjectsByUser } from '../controllers/projects.controller';
 
 export default class ProjectService {
   constructor(userRepository, projectRepository, log) {
@@ -87,9 +86,8 @@ export default class ProjectService {
   async checkIfUserIsContributorOnProject(projectId, user) {
     const projectContributors = await this.getContributorsByProjectId(projectId);
     console.log(projectContributors);
-    const filteredContributors = projectContributors.filter((userObject) => {
-      return userObject.id === parseInt(user, 10) || userObject.username === user;
-    });
+    const filteredContributors = projectContributors.filter(userObject =>
+      userObject.id === parseInt(user, 10) || userObject.username === user);
 
     return filteredContributors.length > 0;
   }

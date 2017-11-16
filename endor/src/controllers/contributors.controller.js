@@ -1,4 +1,6 @@
 /* eslint-disable prefer-destructuring */
+import * as responseHelper from './../utils/response-helper';
+import ContributorNotFoundException from '../error/ContributorNotFoundException';
 let projectService = {};
 
 /**
@@ -29,7 +31,12 @@ export async function checkIfUserIsContributor(req, res, next) {
     const user = req.params.user;
     const isUserAContributor =
       await projectService.checkIfUserIsContributorOnProject(projectId, user);
-    res.send(isUserAContributor);
+
+    if (isUserAContributor) {
+      responseHelper.noContent(res);
+    } else {
+      throw new ContributorNotFoundException(`User ${projectId} not found as a contributor on project with id ${projectId}`);
+    }
   } catch (error) {
     next(error);
   }
