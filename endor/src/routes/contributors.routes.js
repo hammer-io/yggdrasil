@@ -39,6 +39,29 @@ let projectService = {};
  */
 router.get('/projects/:id/contributors', contributorsController.getContributorsByProjectId);
 
+/**
+ * @api {get} /projects/:id/contributors/:user Check if a user is a contributor
+ * @apiVersion 1.0.0
+ * @apiName check if project is contributor
+ * @apiGroup Contributors
+ *
+ * @apiPermission none
+ *
+ * @apiParam {String} id the id of the project
+ * @apiParam {String} user user id or username
+ *
+ * @apiSuccessExample {json} Success-Response
+ * Status: 204 No Content
+ *
+ * @apiErrorExample {json} Error-Response
+ * Status: 404 Not Found
+ */
+router.get('/projects/:id/contributors/:user', contributorsController.checkIfUserIsContributor);
+
+/**
+ * Set dependencies for the contributors routes
+ * @param newProjectService the project service dependency
+ */
 export function setDependencies(newProjectService) {
   projectService = newProjectService;
   contributorsController.setProjectService(projectService);
