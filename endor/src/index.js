@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import index from './routes/index.routes';
 import * as projects from './routes/projects.routes';
+import * as contributors from './routes/contributors.routes';
 import ProjectService from './services/projects.service';
 import sequalize from './db/sequelize';
 import { getActiveLogger } from './utils/winston';
@@ -19,13 +20,14 @@ app.use(cookieParser());
 // dependency injections //
 const projectService = new ProjectService(sequalize.User, sequalize.Project, getActiveLogger());
 projects.setProjectService(projectService);
+contributors.setDependencies(projectService);
 // end dependency injections //
 
 
 // API ENDPOINTS //
 app.use('/', express.static('doc'));
 app.use('/api', index);
-app.use('/api/v1', projects.router);
+app.use('/api/v1', [projects.router, contributors.router]);
 // END API ENDPOINTS //
 
 // default 404 handler

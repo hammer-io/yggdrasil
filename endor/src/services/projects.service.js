@@ -35,6 +35,18 @@ export default class ProjectService {
   }
 
   /**
+   * Gets the contributors for a project
+   * @param projectId the project id to get contributors for
+   * @returns {Array} the project contributors
+   */
+  async getContributorsByProjectId(projectId) {
+    this.log.info(`ProjectService: get contributors for project with id ${projectId}`);
+    const project = await this.getProjectById(projectId);
+    const contributors = project.getContributors();
+    return contributors;
+  }
+
+  /**
    * Finds projects for a user
    * @param user the userId to find by
    * @returns the projects for the user separated by owned and contributed
