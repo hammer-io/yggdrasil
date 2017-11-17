@@ -8,6 +8,7 @@ import * as contributors from './routes/contributors.routes';
 import ProjectService from './services/projects.service';
 import sequalize from './db/sequelize';
 import { getActiveLogger } from './utils/winston';
+import * as owners from './routes/owners.routes';
 
 const app = express();
 
@@ -21,13 +22,14 @@ app.use(cookieParser());
 const projectService = new ProjectService(sequalize.User, sequalize.Project, getActiveLogger());
 projects.setProjectService(projectService);
 contributors.setDependencies(projectService);
+owners.setDependencies(projectService);
 // end dependency injections //
 
 
 // API ENDPOINTS //
 app.use('/', express.static('doc'));
 app.use('/api', index);
-app.use('/api/v1', [projects.router, contributors.router]);
+app.use('/api/v1', [projects.router, contributors.router, owners.router]);
 // END API ENDPOINTS //
 
 // default 404 handler
