@@ -1,10 +1,18 @@
 /* eslint-disable prefer-destructuring */
-import express from 'express';
-import { check, validationResult } from 'express-validator/check';
-import * as projectService from '../services/projects.service';
-import * as responseHelper from '../utils/response-helper';
 
-const router = express.Router();
+/**
+ * The project routes. Maps any endpoint dealing with projects to their respective middleware
+ * and controllers.
+ */
+
+import express from 'express';
+import * as projectController from '../controllers/projects.controller';
+import * as projectValidator from '../middlewares/projects.middleware';
+
+export const router = express.Router();
+
+// the project service
+let projectService = {};
 
 /**
  * @api {get} /projects Get all public projects
@@ -33,14 +41,7 @@ const router = express.Router();
  *  }
  * ]
  */
-router.get('/projects', async (req, res, next) => {
-  try {
-    const projects = await projectService.getAllProjects();
-    res.send(projects);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get('/projects', projectController.getAllProjects);
 
 /**
  * @api {get} /user/projects Get projects for an authenticated user
@@ -99,17 +100,7 @@ router.get('/projects', async (req, res, next) => {
      ]
  }
  */
-router.get('/user/projects', async (req, res, next) => {
-  const userId = 1; // TODO get userId from authenticated request
-
-  try {
-    const projects = await projectService.getProjectsByUser(userId);
-    console.log(projects);
-    res.send(projects);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get('/user/projects', projectController.getProjectByAuthenticatedUser);
 
 /**
  * @api {get} /users/:user/projects Get a project by user id
@@ -168,16 +159,7 @@ router.get('/user/projects', async (req, res, next) => {
      ]
  }
  */
-router.get('/users/:user/projects', async (req, res, next) => {
-  const user = req.params.user;
-
-  try {
-    const projects = await projectService.getProjectsByUser(user);
-    res.send(projects);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get('/users/:user/projects', projectController.getProjectsByUser);
 
 /**
  * @api {get} /projects/:projectId Get project by id
@@ -206,15 +188,7 @@ router.get('/users/:user/projects', async (req, res, next) => {
  *    "webFrameworkId": null
  *  }
  */
-router.get('/projects/:projectId', async (req, res, next) => {
-  const projectId = req.params.projectId;
-  try {
-    const project = await projectService.getProjectById(projectId);
-    res.send(project);
-  } catch (error) {
-    next(error)
-  }
-});
+router.get('/projects/:projectId', projectController.getProjectById);
 
 /**
  * @api {post} /user/projects Create a project for an authenticated user
@@ -266,22 +240,7 @@ router.get('/projects/:projectId', async (req, res, next) => {
  *    "webFrameworkId": 4
  *  }
  */
-router.post(
-  '/user/projects', [
-    check('projectName').exists().withMessage('Project name is required.'),
-    check('description').exists().withMessage('Project description is required.'),
-    check('version').exists().withMessage('Project version is required.').matches(/^(\d+\.)?(\d+\.)?(\*|\d+)/),
-  ],
-  async (req, res, next) => {
-    const userId = 1; // TODO authenticate user
-    try {
-      const projectCreated = await projectService.createProject(req.body, userId);
-      res.send(projectCreated);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+router.post('/user/projects', projectValidator.checkCreateProject(), projectController.createProjectForAuthenticatedUser);
 
 /**
  * @api {post} /users/:user/projects Create a project
@@ -334,29 +293,7 @@ router.post(
  *    "webFrameworkId": 4
  *  }
  */
-router.post(
-  '/users/:user/projects', [
-    check('projectName').exists().withMessage('Project name is required.'),
-    check('description').exists().withMessage('Project description is required.'),
-    check('version').exists().withMessage('Project version is required.').matches(/^(\d+\.)?(\d+\.)?(\*|\d+)/),
-  ],
-
-  async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.mapped() });
-    }
-
-    const project = req.body;
-    const user = req.params.user;
-    try {
-      const projectCreated = await projectService.createProject(project, user);
-      res.send(projectCreated);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+router.post('/users/:user/projects', projectValidator.checkCreateProject(), projectController.createProjectForUser);
 
 /**
  * @api {patch} /projects/:id Update a project
@@ -385,22 +322,7 @@ router.post(
  *    "webFrameworkId": null
  *  }
  */
-router.patch(
-  '/projects/:id', [
-    check('version').exists().withMessage('Project version is required.').matches(/^(\d+\.)?(\d+\.)?(\*|\d+)/)
-  ],
-  async (req, res, next) => {
-    const projectToUpdate = req.body;
-    const projectId = req.params.id;
-
-    try {
-      const projectUpdated = await projectService.updateProject(projectToUpdate, projectId);
-      res.send(projectUpdated);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+router.patch('/projects/:id', projectValidator.checkUpdateProject(), projectController.updateProjectById);
 
 /**
  * @api {delete} /projects/:id Delete a project
@@ -414,14 +336,13 @@ router.patch(
  * @apiSuccessExample {json} Success-Response
  * Status: 204 No Content
  */
-router.delete('/projects/:id', async (req, res, next) => {
-  const projectId = req.params.id;
-  try {
-    await projectService.deleteProjectById(projectId, false);
-    responseHelper.noContent(res);
-  } catch (error) {
-    next(error);
-  }
-});
+router.delete('/projects/:id', projectController.deleteProjectById);
 
-module.exports = router;
+/**
+ * Sets the project service dependency for the controller
+ * @param newProjectService the project service dependency
+ */
+export function setProjectService(newProjectService) {
+  projectService = newProjectService;
+  projectController.setProjectService(projectService)
+}
