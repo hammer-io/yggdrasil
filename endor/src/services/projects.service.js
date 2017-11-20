@@ -1,9 +1,15 @@
-import UserNotFoundException from '../error/UserNotFoundException';
 import ProjectNotFoundException from '../error/ProjectNotFoundException';
 
 export default class ProjectService {
-  constructor(userRepository, projectRepository, log) {
-    this.userRepository = userRepository;
+  /**
+   * Project Service constructor
+   * @param projectRepository the project data source to inject (more than likely something from
+   * sequalize)
+   * @param userService the user service to inject
+   * @param log the logging mechanism to inject
+   */
+  constructor(projectRepository, userService, log) {
+    this.userService = userService;
     this.projectRepository = projectRepository;
     this.log = log
   }
@@ -65,18 +71,7 @@ export default class ProjectService {
    */
   async getProjectsByUser(user) {
     this.log.info(`ProjectService: get projects for user ${user}`);
-    const userFound = await this.userRepository.findOne({
-      where: {
-        $or: {
-          id: user,
-          username: user
-        }
-      }
-    });
-
-    if (userFound === null) {
-      throw new UserNotFoundException(`User with ${user} could not be found.`)
-    }
+    const userFound = await this.userService.getUserByIdOrUsername(user);
 
     const projectsOwned = await userFound.getProjectsOwned();
     const projectsContributed = await userFound.getProjectsContributed();
@@ -128,19 +123,7 @@ export default class ProjectService {
    */
   async createProject(project, user) {
     this.log.info(`ProjectService: create project for user ${user}`);
-    const userFound = await this.userRepository.findOne({
-      where: {
-        $or: {
-          id: user,
-          username: user
-        }
-      }
-    });
-
-    // if the user was not found, throw error
-    if (userFound === null) {
-      throw new UserNotFoundException(`User with ${user} could not be found.`)
-    }
+    const userFound = await this.userService.getUserByIdOrUsername(user);
 
     // create
     const projectCreated = await this.projectRepository.create(project);
@@ -157,19 +140,7 @@ export default class ProjectService {
    */
   async addContributorToProject(projectId, user) {
     this.log.info(`ProjectService: adding user ${user} as an contributor to project with id ${projectId}`);
-    const userFound = await this.userRepository.findOne({
-      where: {
-        $or: {
-          id: user,
-          username: user
-        }
-      }
-    });
-
-    // if the user was not found, throw error
-    if (userFound === null) {
-      throw new UserNotFoundException(`User with ${user} could not be found.`)
-    }
+    const userFound = await this.userService.getUserByIdOrUsername(user);
 
     const project = await this.getProjectById(projectId);
     await project.addContributors(userFound);
@@ -185,19 +156,7 @@ export default class ProjectService {
    */
   async addOwnerToProject(projectId, user) {
     this.log.info(`ProjectService: adding user ${user} as an owner to project with id ${projectId}`);
-    const userFound = await this.userRepository.findOne({
-      where: {
-        $or: {
-          id: user,
-          username: user
-        }
-      }
-    });
-
-    // if the user was not found, throw error
-    if (userFound === null) {
-      throw new UserNotFoundException(`User with ${user} could not be found.`)
-    }
+    const userFound = await this.userService.getUserByIdOrUsername(user);
 
     const project = await this.getProjectById(projectId);
     await project.addOwners(userFound);
@@ -254,19 +213,7 @@ export default class ProjectService {
     this.log.info(`ProjectService: delete contributor ${user} from project with id ${projectId}`);
     const project = await this.getProjectById(projectId);
 
-    const userFound = await this.userRepository.findOne({
-      where: {
-        $or: {
-          id: user,
-          username: user
-        }
-      }
-    });
-
-    // if the user was not found, throw error
-    if (userFound === null) {
-      throw new UserNotFoundException(`User with ${user} could not be found.`)
-    }
+    const userFound = await this.userService.getUserByIdOrUsername(user);
 
     await project.removeContributors(userFound);
     return project.getContributors();
@@ -276,20 +223,7 @@ export default class ProjectService {
     this.log.info(`ProjectService: delete contributor ${user} from project with id ${projectId}`);
     const project = await this.getProjectById(projectId);
 
-    const userFound = await this.userRepository.findOne({
-      where: {
-        $or: {
-          id: user,
-          username: user
-        }
-      }
-    });
-
-    // if the user was not found, throw error
-    if (userFound === null) {
-      throw new UserNotFoundException(`User with ${user} could not be found.`)
-    }
-
+    const userFound = await this.userService.getUserByIdOrUsername(user);
     await project.removeOwners(userFound);
     return project.getOwners();
   }
