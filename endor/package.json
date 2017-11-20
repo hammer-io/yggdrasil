@@ -42,10 +42,15 @@
     "cookie-parser": "1.4.3",
     "debug": "2.6.9",
     "express": "4.15.5",
+    "express-validator": "4.3.0",
+    "helmet": "3.9.0",
+    "joi": "13.0.1",
     "mocha": "3.5.3",
     "morgan": "1.9.0",
     "mysql2": "^1.4.2",
-    "sequelize": "^4.22.5"
+    "sequelize": "^4.22.5",
+    "passport": "0.4.0",
+    "passport-http-bearer": "^1.0.1"
   },
   "engines": {
     "node": ">= 5"

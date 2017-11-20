@@ -1,12 +1,15 @@
 import express from 'express';
+import helmet from 'helmet';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 
 import index from './routes/index';
+import user from './routes/auth';
 
 const app = express();
 
+app.use(helmet());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -16,7 +19,7 @@ app.use('/', express.static('docs'));
 
 // API ENDPOINTS //
 app.use('/api/v1', [index]);
-
+app.use('/api/v1/auth', user);
 
 // END API ENDPOINTS //
 
