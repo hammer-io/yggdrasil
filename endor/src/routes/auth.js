@@ -9,6 +9,7 @@ const { matchedData, sanitize } = require('express-validator/filter');
 
 const router = express.Router();
 
+<<<<<<< HEAD
 
 router.post(
   '/login',
