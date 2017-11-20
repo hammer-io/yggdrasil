@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "apidoc": "^0.17.6",
+    "bcrypt": "^1.0.3",
     "body-parser": "1.18.2",
     "cookie-parser": "1.4.3",
     "debug": "2.6.9",
@@ -45,6 +46,11 @@
     "mocha": "3.5.3",
     "morgan": "1.9.0",
     "mysql2": "^1.4.2",
+<<<<<<< Updated upstream
+=======
+    "passport": "0.4.0",
+    "passport-http-bearer": "^1.0.1",
+>>>>>>> Stashed changes
     "sequelize": "^4.22.5"
   },
   "engines": {

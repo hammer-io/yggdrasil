@@ -25,6 +25,11 @@ const User = model.define('user', {
   lastName: STRING
 });
 
+const Credentials = model.define('credentials', {
+  password: STRING,
+  salt: STRING
+});
+Credentials.belongsTo(User, { as: 'user', through: 'username' });
 
 const ToolType = {
   CONTAINERIZATION: 'containerization',
@@ -89,6 +94,7 @@ module.exports.model = model;
 
 // Model Objects
 module.exports.User = User;
+module.exports.Credentials = Credentials;
 module.exports.Tool = Tool;
 module.exports.Project = Project;
 module.exports.ProjectOwner = ProjectOwner;
