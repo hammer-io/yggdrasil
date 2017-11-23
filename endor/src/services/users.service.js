@@ -74,7 +74,7 @@ export default class UserService {
 
     // check duplicate username
     if (user.username) {
-      if (this.isDuplicateUsername(user.username)) {
+      if (await this.isDuplicateUsername(user.username)) {
         errors.push(new RequestParamError('username', `User with username ${user.username} already exists.`));
       }
     }
@@ -84,7 +84,7 @@ export default class UserService {
         errors.push(new RequestParamError('email', 'Must be a valid email.'));
       }
 
-      if (this.isDuplicateEmail(user.email)) {
+      if (await this.isDuplicateEmail(user.email)) {
         errors.push(new RequestParamError('email', `User with email ${user.email} already exists.`));
       }
     }
@@ -155,7 +155,7 @@ export default class UserService {
 
     const errors = await this.validateUser(user, true);
     if (errors.length !== 0) {
-      return new InvalidRequestException(errors);
+      throw new InvalidRequestException(errors);
     }
 
     const userCreated = await this.userRepository.create(user);
@@ -173,7 +173,7 @@ export default class UserService {
 
     const errors = await this.validateUser(user, false);
     if (errors.length !== 0) {
-      return new InvalidRequestException(errors);
+      throw new InvalidRequestException(errors);
     }
 
     const foundUser = await this.getUserByIdOrUsername(userIdOrUsername);
