@@ -1,8 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 import { check } from 'express-validator/check';
 
-let userService = {};
-
 /**
  * Middleware for the POST /users route
  * @returns {Array} the middlewares
@@ -32,8 +30,4 @@ export function checkUpdateUser() {
       .trim()
       .normalizeEmail(),
   ]
-}
-
-export function setDependencies(newUserService) {
-  userService = newUserService;
 }

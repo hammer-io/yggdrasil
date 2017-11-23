@@ -162,5 +162,4 @@ router.delete('/users/:user', usersController.deleteUserById);
 export function setDependencies(newUserService) {
   userService = newUserService;
   usersController.setDependencies(userService);
-  userValidator.setDependencies(userService);
 }
