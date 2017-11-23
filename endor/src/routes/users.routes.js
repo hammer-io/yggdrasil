@@ -140,7 +140,7 @@ router.post('/users', userValidator.checkCreateUser(), usersController.createUse
       "updatedAt": "2017-11-14T20:26:47.000Z"
     }
  */
-router.patch('/users/:user', usersController.updateUserByIdOrUsername);
+router.patch('/users/:user', userValidator.checkUpdateUser(), usersController.updateUserByIdOrUsername);
 
 /**
  * @api {delete} /users/:user delete a user
