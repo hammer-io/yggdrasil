@@ -41,6 +41,8 @@ describe('Testing User Service', () => {
         lastName: 'Bravo'
       }
     ]);
+
+
   });
 
   describe('get user by username or id', async () => {
@@ -256,7 +258,6 @@ describe('Testing User Service', () => {
         const userCreated = await userService.updateUser('BobSagat', newUser);
         expect(userCreated).to.be('undefined');
       } catch (error) {
-        console.log(error);
         expect(error.errors.length).to.equal(1);
         expect(error.errors[0].field).to.equal('username');
         expect(error.errors[0].message).to.equal('User with username BobSagat already exists.');
@@ -395,7 +396,6 @@ describe('Testing User Service', () => {
       };
 
       const errors = await userService.validateUser(newUser, false);
-      console.log(errors);
 
       expect(errors.filter(e => e.field === 'username' && e.message === 'User with username' +
         ' BobSagat already exists.').length === 1).to.equal(true);
