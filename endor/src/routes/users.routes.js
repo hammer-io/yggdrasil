@@ -141,7 +141,7 @@ router.post('/users', usersController.createUser);
       "updatedAt": "2017-11-14T20:26:47.000Z"
     }
  */
-router.patch('/users/:user', usersController.updateUserByIdOrUsername);
+router.patch('/users/:user', userValidator.checkUpdateUser(), usersController.updateUserByIdOrUsername);
 
 /**
  * @api {delete} /users/:user delete a user
@@ -163,5 +163,4 @@ router.delete('/users/:user', usersController.deleteUserById);
 export function setDependencies(newUserService) {
   userService = newUserService;
   usersController.setDependencies(userService);
-  userValidator.setDependencies(userService);
 }

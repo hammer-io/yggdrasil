@@ -1,27 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 import { check } from 'express-validator/check';
 
-let userService = {};
-
-function checkDuplicateUsername(value) {
-  try {
-    return userService.getUserByIdOrUsername(value).then((user) => {
-      throw new Error(`User with username ${user.email} already exists.`);
-    });
-  } catch (err) {
-    return false;
-  }
-}
-
-function checkDuplicateEmail(value) {
-  try {
-    return userService.getUserByEmail(value).then((user) => {
-      throw new Error(`User with email ${user.email} already exists.`);
-    });
-  } catch (err) {
-    return false;
-  }
-}
 
 /**
  * Middleware for the POST /users route
@@ -29,12 +8,10 @@ function checkDuplicateEmail(value) {
  */
 export function checkCreateUser() {
   return [
-    check('username').exists().withMessage('Username is required.')
-      .custom(value => checkDuplicateUsername(value)),
+    check('username').exists().withMessage('Username is required.'),
     check('email')
       .exists().withMessage('Email is required.')
       .isEmail().withMessage('Must be a valid email.')
-      .custom(value => checkDuplicateEmail(value))
       .trim()
       .normalizeEmail(),
     check('firstName').exists().withMessage('First Name is required.'),
@@ -48,15 +25,10 @@ export function checkCreateUser() {
  */
 export function checkUpdateUser() {
   return [
-    check('username').custom(value => checkDuplicateUsername(value)),
+    check('username'),
     check('email')
       .isEmail().withMessage('Must be a valid email.')
-      .custom(value => checkDuplicateEmail(value))
       .trim()
       .normalizeEmail(),
   ]
-}
-
-export function setDependencies(newUserService) {
-  userService = newUserService;
 }

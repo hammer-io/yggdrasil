@@ -98,7 +98,7 @@ export default class UserService {
     return errors;
   }
 
-  async validateCredentials(password) {
+  async  validateCredentials(password) {
     const errors = [];
 
     if (password === null || password.length < 8 || !password.match(/\d+/g)) {
@@ -229,7 +229,7 @@ export default class UserService {
 
     const errors = await this.validateUser(user, false);
     if (errors.length !== 0) {
-      return new InvalidRequestException(errors);
+      throw new InvalidRequestException(errors);
     }
 
     const foundUser = await this.getUserByIdOrUsername(userIdOrUsername);
