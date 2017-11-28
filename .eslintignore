@@ -1,4 +1,5 @@
 # /node_modules/* and /bower_components/* ignored by default
 
-endor/test/test.js
+endor/test/*
+coruscant/test/*
 dist/*
