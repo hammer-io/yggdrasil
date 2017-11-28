@@ -2,11 +2,11 @@ import { getActiveLogger } from '../utils/winston';
 
 const log = getActiveLogger();
 
-export default class NotFoundException {
-  constructor(message, type, status) {
+export default class InvalidCredentialsException {
+  constructor(message) {
     this.message = message;
-    this.type = type;
-    this.status = status;
+    this.type = 'Invalid Credentials';
+    this.status = 400; // TODO I don't know about this
     log.error(message);
   }
 

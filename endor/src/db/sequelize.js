@@ -26,10 +26,29 @@ const User = model.define('user', {
 });
 
 const Credentials = model.define('credentials', {
-  password: STRING,
-  salt: STRING
+  password: { type: STRING, allowNull: false }
 });
 Credentials.belongsTo(User, { as: 'user', through: 'username' });
+
+const Client = model.define('client', {
+  client_id: { type: STRING, unique: true, allowNull: false },
+  name: { type: STRING, allowNull: false },
+  secret: { type: STRING, allowNull: false }
+});
+Client.belongsTo(User, { as: 'user', through: 'username' });
+
+const AccessCode = model.define('accessCode', {
+  value: { type: STRING, allowNull: false },
+  redirectURI: { type: STRING, allowNull: false }
+});
+AccessCode.belongsTo(User, { as: 'user', through: 'username' });
+AccessCode.belongsTo(Client, { as: 'clientId', through: 'id' });
+
+const Token = model.define('Token', {
+  value: { type: STRING, allowNull: false }
+});
+Token.belongsTo(User, { as: 'user', through: 'username' });
+Token.belongsTo(Client, { as: 'clientId', through: 'id' });
 
 const ToolType = {
   CONTAINERIZATION: 'containerization',
@@ -97,6 +116,9 @@ module.exports.model = model;
 // Model Objects
 module.exports.User = User;
 module.exports.Credentials = Credentials;
+module.exports.Client = Client;
+module.exports.AccessCode = AccessCode;
+module.exports.Token = Token;
 module.exports.Tool = Tool;
 module.exports.Project = Project;
 module.exports.ProjectOwner = ProjectOwner;

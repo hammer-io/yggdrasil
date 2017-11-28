@@ -1,4 +1,6 @@
 /* eslint-disable prefer-destructuring */
+import bcrypt from 'bcrypt';
+
 import { validationResult } from 'express-validator/check';
 import * as responseHelper from '../utils/response-helper';
 import * as errorFormatter from '../utils/error-formatter';
@@ -73,7 +75,10 @@ export async function createUser(req, res, next) {
 
   try {
     const user = req.body;
-    const userCreated = await userService.createUser(user);
+    const password = user.password;
+    delete user.password;
+    const userCreated = await userService.createUser(user, password);
+
     res.status(201).send(userCreated);
   } catch (error) {
     next(error);

@@ -1,5 +1,5 @@
-import sequelize from './sequelize';
 import bcrypt from 'bcrypt';
+import sequelize from './sequelize';
 
 // This file fills the database with data for testing
 
@@ -48,20 +48,16 @@ async function importUserData() {
   });
 
   const cred1 = await sequelize.Credentials.create({
-    password: pass,
-    salt
+    password: pass
   });
   const cred2 = await sequelize.Credentials.create({
-    password: pass,
-    salt
+    password: pass
   });
   const cred3 = await sequelize.Credentials.create({
-    password: pass,
-    salt
+    password: pass
   });
   const cred4 = await sequelize.Credentials.create({
-    password: pass,
-    salt
+    password: pass
   });
   await cred1.setUser(user1);
   await cred2.setUser(user2);
@@ -70,7 +66,7 @@ async function importUserData() {
 }
 
 async function importProjectData() {
-  console.log('hi');
+
   const project = await sequelize.Project.create({
     projectName: 'TMNT',
     description: 'You gotta know what a crumpet is to understand cricket!',

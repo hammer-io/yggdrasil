@@ -91,7 +91,8 @@ router.get('/user', usersController.getAuthenticatedUser);
  *  "username": "BobSagat",
  *  "email": "Bob@AFV.com",
  *  "firstName": "Bob",
- *  "lastName": "Sagat"
+ *  "lastName": "Sagat",
+ *  "password": "SuperSecurePassword1"
  * }
  *
  * @apiSuccess {json} user The user that was created
@@ -106,7 +107,7 @@ router.get('/user', usersController.getAuthenticatedUser);
       "updatedAt": "2017-11-12T20:26:47.000Z"
     }
  */
-router.post('/users', userValidator.checkCreateUser(), usersController.createUser);
+router.post('/users', usersController.createUser);
 
 /**
  * @api {patch} /users/:user update a user

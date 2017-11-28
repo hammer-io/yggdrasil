@@ -4,15 +4,23 @@ import { check } from 'express-validator/check';
 let userService = {};
 
 function checkDuplicateUsername(value) {
-  return userService.getUserByIdOrUsername(value).then((user) => {
-    throw new Error(`User with username ${user.email} already exists.`);
-  });
+  try {
+    return userService.getUserByIdOrUsername(value).then((user) => {
+      throw new Error(`User with username ${user.email} already exists.`);
+    });
+  } catch (err) {
+    return false;
+  }
 }
 
 function checkDuplicateEmail(value) {
-  return userService.getUserByEmail(value).then((user) => {
-    throw new Error(`User with email ${user.email} already exists.`);
-  });
+  try {
+    return userService.getUserByEmail(value).then((user) => {
+      throw new Error(`User with email ${user.email} already exists.`);
+    });
+  } catch (err) {
+    return false;
+  }
 }
 
 /**
