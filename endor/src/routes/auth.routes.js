@@ -2,7 +2,6 @@ import express from 'express';
 
 import * as userController from '../controllers/users.controller';
 import * as authController from '../controllers/auth.controller';
-import * as userValidator from '../middlewares/users.middleware';
 
 let userService = {};
 let authService = {};
@@ -25,7 +24,6 @@ export function setDependencies(newUserService, newClientService, newAuthService
   userService = newUserService;
   authService = newAuthService;
   userController.setDependencies(userService);
-  userValidator.setDependencies(userService);
   authController.setDependencies(userService, newClientService, authService);
   // authValidator.setDependencies(authService);
 }

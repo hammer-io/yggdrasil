@@ -161,6 +161,6 @@ export async function deleteProjectById(req, res, next) {
  * Injects the project service dependency
  * @param newProjectService the project service
  */
-export function setProjectService(newProjfectService) {
+export function setProjectService(newProjectService) {
   projectService = newProjectService;
 }
