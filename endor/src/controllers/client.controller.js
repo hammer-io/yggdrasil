@@ -6,25 +6,23 @@ import * as errorFormatter from '../utils/error-formatter';
 let clientService = {};
 
 export async function createClient(req, res, next) {
-  const user = req.body.user;
+  const userId = req.body.userId;
   const client = req.body.client;
-  clientService.createClient(user, client).then((createdClient) => {
+  clientService.createClient(userId, client).then((createdClient) => {
     res.json(createdClient);
   }).catch((err) => {
     console.log(err);
     next(err);
-    // res.status(err.code).send(err);
   });
 }
 
 export async function getAllClients(req, res, next) {
-  const user = req.params.user;
-  clientService.findAllClients(user).then((clients) => {
-    res.json(clients);
+  const userId = req.params.userId;
+  clientService.findAllClients(userId).then((clients) => {
+    res.send({ clients });
   }).catch((err) => {
     next(err);
-    // res.status(err.code).send(err);
-  })
+  });
 }
 
 

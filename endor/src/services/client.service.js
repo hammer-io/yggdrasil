@@ -1,4 +1,4 @@
-import validator from 'validator';
+
 // TODO - validation
 import InvalidRequestException from '../error/InvalidRequestException';
 import ClientNotFoundException from '../error/ClientNotFoundException';
@@ -19,9 +19,8 @@ export default class ClientService {
       return Promise.reject(new InvalidRequestException(errors));
     }
 
-    const user = await this.userService.getUserByIdOrUsername(userId);
     const createdClient = await this.clientRepository.create(client);
-    createdClient.setUser(user);
+    createdClient.setUser(userId);
 
     return createdClient;
   }
@@ -37,7 +36,7 @@ export default class ClientService {
     const clients = await this.clientRepository.findAll({
       where:
         {
-          user: userId
+          userId
         }
     });
     if (clients === null || clients.length === 0) {
@@ -47,8 +46,8 @@ export default class ClientService {
     return clients;
   }
 
-  async findOneClientById(clientId) {
-    this.log.info(`ClientService: find one client for user ${clientId} by client id`);
+  async findOneClientByClientId(clientId) {
+    this.log.info(`ClientService: find one client ${clientId} by client id`);
     // validate here
     const errors = [];
     if (errors.length !== 0) {
@@ -62,7 +61,28 @@ export default class ClientService {
         }
     });
     if (client === null || client.length === 0) {
-      return Promise.reject(new ClientNotFoundException(`Clients not found for user ${clientId}`));
+      return Promise.reject(new ClientNotFoundException(`Clients ${clientId} not found`));
+    }
+
+    return client;
+  }
+
+  async findOneClientById(clientId) {
+    this.log.info(`ClientService: find one client ${clientId} by client id`);
+    // validate here
+    const errors = [];
+    if (errors.length !== 0) {
+      return Promise.reject(new InvalidRequestException(errors));
+    }
+
+    const client = await this.clientRepository.findOne({
+      where:
+        {
+          id: clientId
+        }
+    });
+    if (client === null || client.length === 0) {
+      return Promise.reject(new ClientNotFoundException(`Clients ${clientId} not found`));
     }
 
     return client;

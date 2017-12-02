@@ -12,9 +12,7 @@ const server = oauth2orize.createServer();
 const TOKEN_LENGTH = 256;
 
 passport.use('basic', new BasicStrategy('basic', (username, password, next) => {
-  userService.getCredentialsByUsername(username, password).then((user) => {
-    return next(null, user);
-  }).catch((err) => {
+  userService.getCredentialsByUsername(username, password).then(user => next(null, user)).catch((err) => {
     if (err.status === 404) {
       return next(null, false);
     }
@@ -23,13 +21,13 @@ passport.use('basic', new BasicStrategy('basic', (username, password, next) => {
 }));
 
 passport.use('client-basic', new BasicStrategy('client-basic', (username, password, next) => {
-  clientService.findOneClientById(username).then((client) => {
+  clientService.findOneClientByClientId(username).then((client) => {
     if (!client || client.secret !== password) {
       return next(null, false);
     }
     return next(null, client);
   }).catch((err) => {
-    if (err.status === 404){
+    if (err.status === 404) {
       return next(null, false);
     }
     next(err);
@@ -63,48 +61,62 @@ server.deserializeClient((id, next) => {
 
 // Register authorization code grant type
 server.grant(oauth2orize.grant.code((client, redirectUri, user, ares, next) => {
+  console.log(ares.scope);
   authService.createCode(client, redirectUri, user).then((code) => {
-    next(null, code);
+    next(null, code.value);
   }).catch((err) => {
     next(err);
   })
 }));
 
 // Exchange authorization codes
-server.exchange(oauth2orize.exchange.code((clientId, code, redirectUri, next) => {
-  clientService.findOneClientById(clientId).then((client) => {
-    authService.findOneCodeByValue(code).then((authCode) => {
-      if (authCode.id !== client.id) {
-        next(null, false);
-      }
-      if (redirectUri !== authCode.redirectUri) {
-        next(null, false);
-      }
-    });
+server.exchange(oauth2orize.exchange.code((client, code, redirectUri, next) => {
+  authService.findOneCodeByValue(code).then((authCode) => {
+    if (authCode.id !== client.id) {
+      next(null, false);
+    }
+    if (redirectUri !== authCode.redirectURI) {
+      next(null, false);
+    }
 
-    authService.deleteCode(code).then((deletedCode) => {
-      authService.createToken(deletedCode.clientId, deletedCode.userId, TOKEN_LENGTH)
+    const { clientId, userId } = authCode;
+    console.log(`${clientId} ${userId}`);
+    authService.deleteCode(code).then(() => {
+      authService.createToken(clientId, userId, TOKEN_LENGTH)
         .then((newToken) => {
           next(null, newToken);
         })
+        .catch((err) => {
+          next(err);
+        });
+    }).catch((err) => {
+      next(err);
     })
   }).catch((err) => {
-    if (err.status === 404) {
-      // Return false because the access code is not valid, but don't return the error
-      next(null, false);
-    } else {
-      next(err);
-    }
-  })
+    next(err);
+  });
 }));
 
+export function success(req, res, next) {
+  console.log(req.query.code);
+  res.send({ code: req.query.code });
+}
+
 export function authorization() {
+  console.log('Entered authorization function');
   return [
     server.authorization((clientId, redirectUri, next) => {
-      clientService.findOneClientById(clientId)
+      clientService.findOneClientByClientId(clientId)
         .then(client => next(null, client, redirectUri))
         .catch((err) => { next(err); })
-    })
+    }),
+    (req, res) => {
+      res.send({
+        transactionID: req.oauth2.transactionID,
+        user: req.user,
+        client: req.oauth2.client
+      });
+    }
     // TODO Here it wants to ask for a permission
   ]
 }
@@ -115,8 +127,7 @@ export function decision() {
 
 export function token() {
   return [
-    server.token(),
-    server.errorHandler()
+    server.token()
   ]
 }
 

@@ -53,7 +53,7 @@ export default class AuthService {
   }
 
   async createCode(client, redirectUri, user, ares) {
-    this.log.info('AuthService: find token by value');
+    this.log.info(`AuthService: create new access code and redirect to ${redirectUri}`);
     // validate here
     const errors = [];
     if (errors.length !== 0) {
@@ -62,11 +62,11 @@ export default class AuthService {
 
     const code = {
       value: uid.sync(this.CODE_LENGTH), // TODO figure this out
-      redirectUri
+      redirectURI: redirectUri
     };
     const createdCode = await this.codeRepository.create(code);
 
-    createdCode.setClient(client);
+    createdCode.setClientId(client);
     createdCode.setUser(user);
 
     return createdCode;
@@ -102,7 +102,7 @@ export default class AuthService {
       return Promise.reject(new InvalidRequestException(errors));
     }
 
-    const code = await this.codeRepository.delete({
+    const code = await this.codeRepository.destroy({
       where:
         {
           value: codeValue
