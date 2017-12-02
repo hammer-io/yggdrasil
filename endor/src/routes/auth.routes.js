@@ -3,8 +3,6 @@ import express from 'express';
 import * as userController from '../controllers/users.controller';
 import * as authController from '../controllers/auth.controller';
 import * as userValidator from '../middlewares/users.middleware';
-import validator from '../validation/auth';
-import sequelize from '../db/sequelize';
 
 let userService = {};
 let authService = {};
