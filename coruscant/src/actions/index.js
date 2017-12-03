@@ -16,3 +16,11 @@ export const toggleSideMenu = () => {
         type: 'TOGGLE_SIDE_MENU'
     }
 }
+
+export const setInformation = info => {
+    return {
+        type: 'SET_NEW_PROJECT_INFORMATION',
+        info
+    }
+}
+

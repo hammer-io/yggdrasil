@@ -6,10 +6,11 @@ import IconButton from 'material-ui/IconButton';
 import Close from 'material-ui/svg-icons/navigation/close';
 import {toggleSideMenu} from "../actions/index";
 import { connect } from 'react-redux';
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
+import Avatar from 'material-ui/Avatar';
 
 const sidebarStyle = {
-    backgroundColor: '#46523c'
+    backgroundColor: '#285d1e'
 };
 
 class SideMenu extends React.Component {
@@ -21,8 +22,13 @@ class SideMenu extends React.Component {
     render() {
         return (
             <div>
-                <Drawer open={this.props.open}>
-                    <AppBar title="hammer.io"
+                <Drawer open={this.props.open}
+                        zDepth={0}
+                        containerStyle={{backgroundColor: '#f5f5f5'}}>
+                    <AppBar title={<div>
+                        <Avatar style={{verticalAlign: 'middle', marginRight: 20}}src="src/i/Viking_Hammer_Logo_1.png" />
+                        hammer.io
+                    </div>}
                             style = {sidebarStyle}
                             showMenuIconButton={false}
                             onRightIconButtonTouchTap={this.props.onClick}

@@ -48,6 +48,7 @@ class myAppBarMenu extends Component {
             <div>
                 <AppBar
                     title={title}
+                    style={{backgroundColor: '#fbab18'}}
                     showMenuIconButton={!this.props.open}
                     onLeftIconButtonTouchTap={this.props.onClick}
                     iconElementLeft={<IconButton><Menu /></IconButton>}

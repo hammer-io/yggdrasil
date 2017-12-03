@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import TextFieldExampleSimple from '../components/ProjectPrompts';
+import ProjectPrompts from '../components/ProjectPrompts2';
 import Login from "../components/LoginPrompt";
 import Paper from 'material-ui/Paper';
 import Register from "../components/RegisterPrompt";
@@ -10,8 +10,6 @@ import SideMenu from "../components/SideMenu";
 import { connect } from 'react-redux'
 import AppBarMenu from "../components/AppBarMenu";
 const paperstyle = {
-    margin: 20,
-    padding: 20,
     textAlign: 'center',
     display: 'inline-block'
 };
@@ -35,14 +33,14 @@ class myApp extends Component {
                         <div style = {this.props.open?tab:{}}>
                             <Route path="/:id" component={AppBarMenu}/>
                             <Route exact path="/" component={AppBarMenu}/>
-                            <Link to="/newproject" >Dear Nischay, this link doesn't work</Link>
+                            <Link to="/newproject" >Links don't work. Enter desired url manually</Link>
                             <Route path="/" render={(props) => <SideMenu {...props}/>} />
 
                             <div style = {center}>
                                 <Paper style={paperstyle} zDepth={1}>
                                     <Route exact path="/" component={HomePage} />
                                     <Route exact path="/login" component={Login} />
-                                    <Route exact path="/newproject" component={TextFieldExampleSimple} />
+                                    <Route exact path="/newproject" component={ProjectPrompts} />
                                     <Route exact path="/signup" component={Register} />
                                 </Paper>
                             </div>
