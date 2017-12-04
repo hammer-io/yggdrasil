@@ -12,39 +12,45 @@ const server = oauth2orize.createServer();
 const TOKEN_LENGTH = 256;
 
 passport.use('basic', new BasicStrategy('basic', (username, password, next) => {
-  userService.getCredentialsByUsername(username, password).then(user => next(null, user)).catch((err) => {
-    if (err.status === 404) {
-      return next(null, false);
-    }
-    next(err);
-  })
+  userService.getCredentialsByUsername(username, password)
+    .then(user => next(null, user)).catch((err) => {
+      if (err.status === 404) {
+        return next(null, false);
+      }
+      return next(err);
+    })
 }));
 
 passport.use('client-basic', new BasicStrategy('client-basic', (username, password, next) => {
-  clientService.findOneClientByClientId(username).then((client) => {
-    if (!client || client.secret !== password) {
-      return next(null, false);
-    }
-    return next(null, client);
-  }).catch((err) => {
-    if (err.status === 404) {
-      return next(null, false);
-    }
-    next(err);
-  })
+  clientService.findOneClientByClientId(username)
+    .then((client) => {
+      if (!client || client.secret !== password) {
+        return next(null, false);
+      }
+      return next(null, client);
+    })
+    .catch((err) => {
+      if (err.status === 404) {
+        return next(null, false);
+      }
+      return next(err);
+    });
 }));
 
-// I think some of this chaining is janky revisit one done
+
 passport.use(new BearerStrategy('bearer', (accessToken, next) => {
-  authService.findOneTokenByValue(accessToken).then((foundToken) => {
-    userService.getUserByIdOrUsername(foundToken.user).then((user) => {
-      if (!user) {
-        next(null, user, { scope: '*' });
-      }
-    });
-  }).catch((err) => {
-    next(err);
-  })
+  authService.findOneTokenByValue(accessToken)
+    .then((foundToken) => {
+      userService.getUserByIdOrUsername(foundToken.userId)
+        .then((user) => {
+          if (!user) {
+            return next(null, false);
+          }
+          return next(null, user, { scope: '*' });
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err))
 }));
 
 // Register serialization function - for sessions
@@ -52,53 +58,47 @@ server.serializeClient((client, next) => next(null, client.id), null);
 
 // Register deserialization function
 server.deserializeClient((id, next) => {
-  clientService.findOneClientById(id).then((client) => {
-    next(null, client);
-  }).catch((err) => {
-    next(err);
-  })
+  clientService.findOneClientById(id)
+    .then(client => next(null, client))
+    .catch(err => next(err));
 });
 
 // Register authorization code grant type
 server.grant(oauth2orize.grant.code((client, redirectUri, user, ares, next) => {
-  console.log(ares.scope);
-  authService.createCode(client, redirectUri, user).then((code) => {
-    next(null, code.value);
-  }).catch((err) => {
-    next(err);
-  })
+  authService.createCode(client, redirectUri, user)
+    .then(code => next(null, code.value))
+    .catch(err => next(err));
 }));
 
 // Exchange authorization codes
 server.exchange(oauth2orize.exchange.code((client, code, redirectUri, next) => {
-  authService.findOneCodeByValue(code).then((authCode) => {
-    if (authCode.id !== client.id) {
-      next(null, false);
-    }
-    if (redirectUri !== authCode.redirectURI) {
-      next(null, false);
-    }
+  authService.findOneCodeByValue(code)
+    .then((authCode) => {
+      if (authCode.clientIdId !== client.id) {
+        console.log(authCode.clientIdId);
+        console.log(client.id);
+        return next(null, false);
+      }
+      if (redirectUri !== authCode.redirectURI) {
+        console.log(redirectUri);
+        console.log(authCode.redirectURI);
+        return next(null, false);
+      }
 
-    const { clientId, userId } = authCode;
-    console.log(`${clientId} ${userId}`);
-    authService.deleteCode(code).then(() => {
-      authService.createToken(clientId, userId, TOKEN_LENGTH)
-        .then((newToken) => {
-          next(null, newToken);
+      const { clientIdId, userId } = authCode;
+      console.log(`${clientIdId} ${userId}`);
+      authService.deleteCode(code)
+        .then(() => {
+          authService.createToken(clientIdId, userId, TOKEN_LENGTH)
+            .then(newToken => next(null, newToken))
+            .catch(err => next(err));
         })
-        .catch((err) => {
-          next(err);
-        });
-    }).catch((err) => {
-      next(err);
+        .catch(err => next(err));
     })
-  }).catch((err) => {
-    next(err);
-  });
+    .catch(err => next(err));
 }));
 
 export function success(req, res, next) {
-  console.log(req.query.code);
   res.send({ code: req.query.code });
 }
 

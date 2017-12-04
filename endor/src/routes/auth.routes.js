@@ -66,14 +66,29 @@ router.post('/oauth2/authorize', authController.isAuthenticated, authController.
 /**
  * POST a token in exchange for an access code
  *
+ * The access token is deleted if the redirectURI and the access codes' client id is the same
+ * as the client requesting the new token, and then the new token is created and returned to
+ * in the response. The Authentication at this endpoint should be client authentication so as
+ * to verify that this is the client's token
+ *
  * Request:
  * {
  *   "code": "YxTKMd9l8ZAvof2GEwiP6w",
  *   "grant_type": "authorization_code",
- *   "redirect_uri": "http://localhost:3000/api/v1/authorize/successRedirect"
+ *   "redirect_uri": "http://localhost:3000/api/v1/oauth2/authorize/successRedirect"
  * }
  *
- * //TODO what will the response be?
+ * Response:
+ * {
+ *   "access_token": {
+ *       "id": 1,
+ *       "value": "<Long String>"
+ *       "userId": 3,
+ *       "updatedAt": "2017-12-04T01:08:36.415Z",
+ *       "createdAt": "2017-12-04T01:08:36.415Z"
+ *   },
+ *   "token_type": "Bearer"
+ * }
  */
 router.post('/oauth2/token', authController.isClientAuthenticated, authController.token());
 
