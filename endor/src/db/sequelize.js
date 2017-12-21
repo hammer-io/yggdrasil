@@ -42,13 +42,13 @@ const AccessCode = model.define('accessCode', {
   redirectURI: { type: STRING, allowNull: false }
 });
 AccessCode.belongsTo(User, { as: 'user', through: 'username' });
-AccessCode.belongsTo(Client, { as: 'clientId', through: 'id' });
+AccessCode.belongsTo(Client, { as: 'client', through: 'id' });
 
 const Token = model.define('Token', {
   value: { type: STRING(2048), allowNull: false }
 });
 Token.belongsTo(User, { as: 'user', through: 'username' });
-Token.belongsTo(Client, { as: 'clientId', through: 'id' });
+Token.belongsTo(Client, { as: 'client', through: 'id' });
 
 const ToolType = {
   CONTAINERIZATION: 'containerization',

@@ -11,6 +11,10 @@ const server = oauth2orize.createServer();
 
 const TOKEN_LENGTH = 256;
 
+/**
+ * Instructions for passport to use a basic authentication.
+ * Requires the user to supply their username and password.
+ */
 passport.use('basic', new BasicStrategy('basic', (username, password, next) => {
   userService.getCredentialsByUsername(username, password)
     .then(user => next(null, user)).catch((err) => {
@@ -21,6 +25,11 @@ passport.use('basic', new BasicStrategy('basic', (username, password, next) => {
     })
 }));
 
+/**
+ * Instructions for passport to use a basic authentication. Requires the client
+ * of a user to supply their client_id (not id, this is like a username) and their
+ * secret to authenticate the client.
+ */
 passport.use('client-basic', new BasicStrategy('client-basic', (username, password, next) => {
   clientService.findOneClientByClientId(username)
     .then((client) => {
@@ -37,7 +46,10 @@ passport.use('client-basic', new BasicStrategy('client-basic', (username, passwo
     });
 }));
 
-
+/**
+ * Instructions for passport to use a bearer token authentication.  Requires the
+ * user/client to supply their token in a header for access.
+ */
 passport.use(new BearerStrategy('bearer', (accessToken, next) => {
   authService.findOneTokenByValue(accessToken)
     .then((foundToken) => {
@@ -53,17 +65,23 @@ passport.use(new BearerStrategy('bearer', (accessToken, next) => {
     .catch(err => next(err))
 }));
 
-// Register serialization function - for sessions
+/**
+ * Registers the function to serialize the client for sessions on the auth server's side
+ */
 server.serializeClient((client, next) => next(null, client.id), null);
 
-// Register deserialization function
+/**
+ * Registers the the function to deserialize the client for sessions on the auth server's side
+ */
 server.deserializeClient((id, next) => {
   clientService.findOneClientById(id)
     .then(client => next(null, client))
     .catch(err => next(err));
 });
 
-// Register authorization code grant type
+/**
+ * The server's function to generate new access codes for a client.
+ */
 server.grant(oauth2orize.grant.code((client, redirectUri, user, ares, next) => {
   authService.createCode(client, redirectUri, user)
     .then(code => next(null, code.value))
@@ -71,11 +89,16 @@ server.grant(oauth2orize.grant.code((client, redirectUri, user, ares, next) => {
 }));
 
 // Exchange authorization codes
+/**
+ * The server's function to exchange an access code for a token. If the access code exists,
+ * and it's clientId is the same as the client asking, and the redirectURI is the same as the
+ * one stored, then the access code is deleted and a new token is generated and stored.
+ */
 server.exchange(oauth2orize.exchange.code((client, code, redirectUri, next) => {
   authService.findOneCodeByValue(code)
     .then((authCode) => {
-      if (authCode.clientIdId !== client.id) {
-        console.log(authCode.clientIdId);
+      if (authCode.clientId !== client.id) {
+        console.log(authCode.clientId);
         console.log(client.id);
         return next(null, false);
       }
@@ -85,11 +108,11 @@ server.exchange(oauth2orize.exchange.code((client, code, redirectUri, next) => {
         return next(null, false);
       }
 
-      const { clientIdId, userId } = authCode;
-      console.log(`${clientIdId} ${userId}`);
+      const { clientId, userId } = authCode;
+      console.log(`${clientId} ${userId}`);
       authService.deleteCode(code)
         .then(() => {
-          authService.createToken(clientIdId, userId, TOKEN_LENGTH)
+          authService.createToken(clientId, userId, TOKEN_LENGTH)
             .then(newToken => next(null, newToken))
             .catch(err => next(err));
         })
@@ -98,6 +121,13 @@ server.exchange(oauth2orize.exchange.code((client, code, redirectUri, next) => {
     .catch(err => next(err));
 }));
 
+/**
+ * A simple function used to return the access code to the client
+ *
+ * @param req the request
+ * @param res the response
+ * @param next the next middleware
+ */
 export function success(req, res, next) {
   res.send({ code: req.query.code });
 }
@@ -117,26 +147,41 @@ export function authorization() {
         client: req.oauth2.client
       });
     }
-    // TODO Here it wants to ask for a permission
   ]
 }
 
+/**
+ * The auth server's decision function
+ * @returns {[null]}
+ */
 export function decision() {
   return [server.decision()];
 }
 
+/**
+ * The auth server's token function
+ * @returns {[null]}
+ */
 export function token() {
   return [
     server.token()
   ]
 }
 
+/**
+ * Sets the services to be used by the controller
+ * @param newUserService the UserService
+ * @param newClientService the ClientService
+ * @param newAuthService the AuthService
+ */
 export function setDependencies(newUserService, newClientService, newAuthService) {
   userService = newUserService;
   clientService = newClientService;
   authService = newAuthService;
 }
 
+/** Registering the authentication strategies with Passpost */
 exports.isClientAuthenticated = passport.authenticate('client-basic', { session: false });
 exports.isBearerAuthenticated = passport.authenticate('bearer', { session: false });
 exports.isAuthenticated = passport.authenticate(['bearer', 'basic', 'client-basic'], { session: false });
+/** Done Registering */

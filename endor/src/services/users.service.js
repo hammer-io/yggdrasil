@@ -98,7 +98,7 @@ export default class UserService {
     return errors;
   }
 
-  async  validateCredentials(password) {
+  async validateCredentials(password) {
     const errors = [];
 
     if (password === null || password.length < 8 || !password.match(/\d+/g)) {
@@ -133,7 +133,7 @@ export default class UserService {
         }
       }
     });
-    console.log(`user ${userFound}`);
+
     if (userFound === null) {
       throw new UserNotFoundException(`User with ${user} could not be found.`);
     }
