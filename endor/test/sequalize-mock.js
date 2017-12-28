@@ -11,10 +11,12 @@ const BOOLEAN = Sequelize.DataTypes.BOOLEAN;
 
 // Create the sequelize instance (once for the app)
 const model = new Sequelize(
-  dbConfig.database,
-  dbConfig.username,
-  dbConfig.password,
-  dbConfig.options
+  'database',
+  'root',
+  'root', {
+    dialect: 'sqlite',
+    logging: false
+  }
 );
 
 // --------------------------- MODEL DEFINITION START ---------------------------
