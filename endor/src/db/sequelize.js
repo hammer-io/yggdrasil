@@ -6,6 +6,8 @@ import dbConfig from '../../../dbConfig.json';
 // Added for convenience
 // eslint-disable-next-line prefer-destructuring
 const STRING = Sequelize.DataTypes.STRING;
+// eslint-disable-next-line prefer-destructuring
+const BOOLEAN = Sequelize.DataTypes.BOOLEAN;
 
 // Create the sequelize instance (once for the app)
 const model = new Sequelize(
@@ -45,7 +47,8 @@ AccessCode.belongsTo(User, { as: 'user', through: 'username' });
 AccessCode.belongsTo(Client, { as: 'client', through: 'id' });
 
 const Token = model.define('Token', {
-  value: { type: STRING(2048), allowNull: false }
+  value: { type: STRING(2048), allowNull: false },
+  expired: { type: BOOLEAN, defaultValue: false }
 });
 Token.belongsTo(User, { as: 'user', through: 'username' });
 Token.belongsTo(Client, { as: 'client', through: 'id' });

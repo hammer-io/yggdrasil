@@ -2,6 +2,7 @@
 import InvalidRequestException from '../error/InvalidRequestException';
 import ClientNotFoundException from '../error/ClientNotFoundException';
 import RequestParamError from '../error/RequestParamError';
+import NonUniqueError from '../error/NonUniqueError';
 
 export default class ClientService {
   constructor(clientRepository, userService, log) {
@@ -10,7 +11,29 @@ export default class ClientService {
     this.log = log;
     this.CLIENT = 'client';
     this.USER = 'user';
+  }
 
+  /**
+   * Validates that the new client has the required fields.
+   *
+   * @param client The client
+   * @returns {Promise.<Array>} The errors with the given client
+   */
+  async validateNewClient(client) {
+    this.log.info('ClientService: validating a new client');
+
+    const errors = [];
+
+    if (!client.client_id) {
+      errors.push(new RequestParamError('client', 'Name is required'));
+    }
+    if (!client.name) {
+      errors.push(new RequestParamError('client', 'Client_id is required'));
+    }
+    if (!client.secret) {
+      errors.push(new RequestParamError('client', 'Secret is required'));
+    }
+    return errors;
   }
 
   /**
@@ -62,16 +85,23 @@ export default class ClientService {
    */
   async createClient(userId, client) {
     this.log.info(`ClientService: creating client ${client.name}`);
-    // TODO validate client here
-    const errors = [];
+
+    const errors = await this.validateNewClient(client);
     if (errors.length !== 0) {
+      console.log('errors found');
+      console.log(errors);
       return Promise.reject(new InvalidRequestException(errors));
     }
 
-    const createdClient = await this.clientRepository.create(client);
-    createdClient.setUser(userId);
-
-    return createdClient;
+    try {
+      const createdClient = await this.clientRepository.create(client);
+      createdClient.setUser(userId);
+      return createdClient;
+    } catch (err) {
+      console.log(err);
+      // for each err
+      return Promise.reject(new NonUniqueError(err, err.fields));
+    }
   }
 
   /**

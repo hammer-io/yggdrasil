@@ -11,6 +11,6 @@ export default class NotFoundException {
   }
 
   toString() {
-    return `${this.type} ${this.status} ${this.message}`;
+    return `${this.type} ${this.status}: ${this.message}`;
   }
 }
