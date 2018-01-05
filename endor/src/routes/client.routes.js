@@ -12,11 +12,11 @@ let clientService = {};
  * in the database.
  * Example body:
  * {
- *   "userId": 3,
  *   "client": {
  *   "name": "endor_frontend",
  *     "client_id": "client_id",
- *     "secret": "client_secret"
+ *     "secret": "client_secret",
+ *     "userId": 3,
  *    }
  *  }
  *

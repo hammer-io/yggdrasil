@@ -7,20 +7,20 @@ import UserService from './../dist/services/users.service';
 import { getActiveLogger } from '../dist/utils/winston';
 import ProjectService from '../src/services/projects.service';
 
-const userService = new UserService(sequalize.User, getActiveLogger());
+const userService = new UserService(sequalize.User, sequalize.Credentials, getActiveLogger());
 const projectService = new ProjectService(sequalize.Project, userService, getActiveLogger());
 
 describe('Testing Project Service', async () => {
   beforeEach(async () => {
-    await sequalize.AccessCode.sync({ force: false });
-    await sequalize.Token.sync({ force: false });
-    await sequalize.ProjectOwner.sync({ force: false });
-    await sequalize.ProjectContributor.sync({ force: false });
-    await sequalize.Credentials.sync({ force: false });
-    await sequalize.Client.sync({ force: false });
-    await sequalize.User.sync({ force: false });
-    await sequalize.Project.sync({ force: false });
-    await sequalize.Tool.sync({ force: false });
+    await sequalize.User.sync({ force: true });
+    await sequalize.Credentials.sync({ force: true });
+    await sequalize.Tool.sync({ force: true });
+    await sequalize.Project.sync({ force: true });
+    await sequalize.ProjectOwner.sync({ force: true });
+    await sequalize.ProjectContributor.sync({ force: true });
+    await sequalize.Client.sync({ force: true });
+    await sequalize.AccessCode.sync({ force: true });
+    await sequalize.Token.sync({ force: true });
 
     await sequalize.Tool.create({
       name: 'TravisCI (open source)',
@@ -196,7 +196,6 @@ describe('Testing Project Service', async () => {
   describe('get owners for a project', async () => {
     it('should get the owners for a project', async () => {
       const owners = await projectService.getOwnersByProjectId(1);
-      console.log(owners);
 
       expect(owners.length).to.equal(1);
 

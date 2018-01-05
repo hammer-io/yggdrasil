@@ -11,7 +11,7 @@ export default class ProjectService {
   constructor(projectRepository, userService, log) {
     this.userService = userService;
     this.projectRepository = projectRepository;
-    this.log = log
+    this.log = log;
   }
 
   /**

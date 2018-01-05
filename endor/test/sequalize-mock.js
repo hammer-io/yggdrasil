@@ -48,7 +48,7 @@ const AccessCode = model.define('accessCode', {
 AccessCode.belongsTo(User, { as: 'user', through: 'username' });
 AccessCode.belongsTo(Client, { as: 'client', through: 'id' });
 
-const Token = model.define('Token', {
+const Token = model.define('token', {
   value: { type: STRING(2048), allowNull: false },
   expired: { type: BOOLEAN, defaultValue: false }
 });

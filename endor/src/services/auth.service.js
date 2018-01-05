@@ -74,13 +74,19 @@ export default class AuthService {
       return Promise.reject(new InvalidRequestException(errors));
     }
 
-    const token = await this.authRepository.create({
-      value: uid.sync(this.TOKEN_LENGTH),
-      clientId,
-      userId
-    });
-
-    return token;
+    try {
+      const token = await this.authRepository.create({
+        value: uid.sync(this.TOKEN_LENGTH),
+        clientId,
+        userId
+      });
+      return token;
+    } catch (err) {
+      if (err.name === 'SequelizeForeignKeyConstraintError') {
+        return Promise.reject(new InvalidRequestException([err]));
+      }
+      return Promise.reject(err);
+    }
   }
 
   /**
@@ -123,22 +129,27 @@ export default class AuthService {
     this.log.info(`AuthService: create new access code and redirect to ${redirectUri}`);
 
     let errors = await this.validateId(this.CLIENT, client);
-    errors = errors.concat(this.validateId(this.USER, user));
-    errors = errors.concat(this.exists(this.REDIRECT_URI, redirectUri));
+    errors = errors.concat(await this.validateId(this.USER, user));
+    errors = errors.concat(await this.exists(this.REDIRECT_URI, redirectUri));
     if (errors.length !== 0) {
       return Promise.reject(new InvalidRequestException(errors));
     }
 
     const code = {
       value: uid.sync(this.CODE_LENGTH),
-      redirectURI: redirectUri
+      redirectURI: redirectUri,
+      clientId: client,
+      userId: user
     };
-    const createdCode = await this.codeRepository.create(code);
-
-    createdCode.setClientId(client);
-    createdCode.setUser(user);
-
-    return createdCode;
+    try {
+      const createdCode = await this.codeRepository.create(code);
+      return createdCode;
+    } catch (err) {
+      if (err.name === 'SequelizeForeignKeyConstraintError') {
+        return Promise.reject(new InvalidRequestException([err]));
+      }
+      return Promise.reject(err);
+    }
   }
 
 
@@ -189,7 +200,7 @@ export default class AuthService {
           value: codeValue
         }
     });
-    if (code === null || code.length === 0) {
+    if (code === null || code === 0) {
       return Promise.reject(new CodeNotFoundException(`Token ${codeValue} not found`));
     }
 

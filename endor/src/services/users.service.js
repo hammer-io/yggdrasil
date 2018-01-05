@@ -98,10 +98,15 @@ export default class UserService {
     return errors;
   }
 
+  /**
+   * Validates the credentials of a user
+   * @param password
+   * @returns {Promise.<Array>}
+   */
   async validateCredentials(password) {
     const errors = [];
 
-    if (password === null || password.length < 8 || !password.match(/\d+/g)) {
+    if (password === null || password === undefined || password.length < 8 || !password.match(/\d+/g)) {
       errors.push(new RequestParamError('password', 'Must contain at least one digit and have at least eight characters.'))
     }
 
@@ -177,7 +182,6 @@ export default class UserService {
         userId: userFound.id
       }
     });
-    console.log(password);
     const match = bcrypt.compareSync(password, cred.password);
 
     if (!match) {
@@ -198,12 +202,12 @@ export default class UserService {
 
     const userErrors = await this.validateUser(user, true);
     if (userErrors.length !== 0) {
-      return new InvalidRequestException(userErrors);
+      return Promise.reject(new InvalidRequestException(userErrors));
     }
 
     const credentialErrors = await this.validateCredentials(password);
     if (credentialErrors.length !== 0) {
-      return new InvalidRequestException(credentialErrors);
+      return Promise.reject(new InvalidRequestException(credentialErrors));
     }
 
     const salt = bcrypt.genSaltSync(SALT_ROUNDS);

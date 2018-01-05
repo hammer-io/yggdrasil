@@ -83,24 +83,24 @@ export default class ClientService {
    * @param client the new client
    * @returns {Promise.<*>} the newly created client
    */
-  async createClient(userId, client) {
+  async createClient(client) {
     this.log.info(`ClientService: creating client ${client.name}`);
 
     const errors = await this.validateNewClient(client);
     if (errors.length !== 0) {
-      console.log('errors found');
-      console.log(errors);
       return Promise.reject(new InvalidRequestException(errors));
     }
 
     try {
       const createdClient = await this.clientRepository.create(client);
-      createdClient.setUser(userId);
       return createdClient;
     } catch (err) {
-      console.log(err);
-      // for each err
-      return Promise.reject(new NonUniqueError(err, err.fields));
+      if (err.name === 'SequelizeUniqueConstraintError') {
+        return Promise.reject(new NonUniqueError(err, err.fields));
+      } else if (err.name === 'SequelizeForeignKeyConstraintError') {
+        return Promise.reject(new ClientNotFoundException('No user exists with the given id'));
+      }
+      return Promise.reject(err);
     }
   }
 
@@ -140,7 +140,7 @@ export default class ClientService {
   async findOneClientByClientId(clientId) {
     this.log.info(`ClientService: find one client ${clientId} by client id`);
 
-    const errors = this.exists(this.CLIENT, clientId);
+    const errors = await this.exists(this.CLIENT, clientId);
     if (errors.length !== 0) {
       return Promise.reject(new InvalidRequestException(errors));
     }

@@ -10,7 +10,7 @@ export default class NonUniqueError {
    */
   constructor(errors, field) {
     this.errors = errors;
-    this.type = '';
+    this.type = 'NonUniqueError';
     this.field = field;
     this.status = 400;
     log.error(errors);

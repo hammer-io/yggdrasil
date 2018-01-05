@@ -14,9 +14,7 @@ let clientService = {};
  * @returns {Promise.<void>}
  */
 export async function createClient(req, res, next) {
-  const userId = req.body.userId;
-  const client = req.body.client;
-  clientService.createClient(userId, client).then((createdClient) => {
+  clientService.createClient(req.body.client).then((createdClient) => {
     res.json(createdClient);
   }).catch((err) => {
     next(err);
