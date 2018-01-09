@@ -46,7 +46,6 @@ module.exports.validateNewUsername = function validateNewUsername() {
   return this.validateUsername()
     .withMessage('Username is not valid. It must only contain letters, numbers, and spaces and underscores')
     .custom(username => this.existsInDB(username).then((user) => {
-      console.log(user);
       if (user) {
         throw new Error('This Username is Already Taken');
       }

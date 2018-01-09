@@ -2,6 +2,7 @@ import express from 'express';
 
 import * as userController from '../controllers/users.controller';
 import * as authController from '../controllers/auth.controller';
+import * as authValidator from '../middlewares/auth.middleware';
 
 let userService = {};
 let authService = {};
@@ -60,7 +61,7 @@ router.get('/oauth2/authorize', authController.isAuthenticated, authController.a
  *    "allow": true OR "deny":true
  * }
  */
-router.post('/oauth2/authorize', authController.isAuthenticated, authController.decision());
+router.post('/oauth2/authorize', authController.isAuthenticated + authValidator.checkAuthorize(), authController.decision());
 
 
 /**
@@ -90,7 +91,7 @@ router.post('/oauth2/authorize', authController.isAuthenticated, authController.
  *   "token_type": "Bearer"
  * }
  */
-router.post('/oauth2/token', authController.isClientAuthenticated, authController.token());
+router.post('/oauth2/token', authController.isClientAuthenticated + authValidator.checkToken(), authController.token());
 
 /**
  * GET a json object containing the accesscode

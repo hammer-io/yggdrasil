@@ -144,7 +144,7 @@ router.post('/users', authController.isAuthenticated, usersController.createUser
  */
 router.patch(
   '/users/:user',
-  [authController.isAuthenticated, userValidator.checkUpdateUser()],
+  authController.isAuthenticated + userValidator.checkUpdateUser(),
   usersController.updateUserByIdOrUsername
 );
 

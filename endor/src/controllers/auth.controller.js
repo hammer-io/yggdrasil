@@ -3,12 +3,13 @@ import oauth2orize from 'oauth2orize';
 
 import { BasicStrategy } from 'passport-http';
 import BearerStrategy from 'passport-http-bearer';
+import {getActiveLogger} from '../utils/winston';
 
 let clientService = {};
 let authService = {};
 let userService = {};
 const server = oauth2orize.createServer();
-
+const log = getActiveLogger();
 const TOKEN_LENGTH = 256;
 
 /**
@@ -98,18 +99,13 @@ server.exchange(oauth2orize.exchange.code((client, code, redirectUri, next) => {
   authService.findOneCodeByValue(code)
     .then((authCode) => {
       if (authCode.clientId !== client.id) {
-        console.log(authCode.clientId);
-        console.log(client.id);
         return next(null, false);
       }
       if (redirectUri !== authCode.redirectURI) {
-        console.log(redirectUri);
-        console.log(authCode.redirectURI);
         return next(null, false);
       }
 
       const { clientId, userId } = authCode;
-      console.log(`${clientId} ${userId}`);
       authService.deleteCode(code)
         .then(() => {
           authService.createToken(clientId, userId, TOKEN_LENGTH)
@@ -133,7 +129,7 @@ export function success(req, res, next) {
 }
 
 export function authorization() {
-  console.log('Entered authorization function');
+  log.info('Entered authorization function');
   return [
     server.authorization((clientId, redirectUri, next) => {
       clientService.findOneClientByClientId(clientId)

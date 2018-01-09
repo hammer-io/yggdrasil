@@ -1,7 +1,9 @@
 import express from 'express';
 
-import * as clientController from './../controllers/client.controller';
 import * as authController from './../controllers/auth.controller';
+import * as clientController from './../controllers/client.controller';
+import * as clientValidator from '../middlewares/client.middleware';
+
 
 export const router = express.Router();
 let clientService = {};
@@ -13,7 +15,7 @@ let clientService = {};
  * Example body:
  * {
  *   "client": {
- *   "name": "endor_frontend",
+ *     "name": "endor_frontend",
  *     "clientId": "clientId",
  *     "secret": "client_secret",
  *     "userId": 3,
@@ -31,7 +33,7 @@ let clientService = {};
  *   "userId": 3
  * }
  */
-router.post('/clients', authController.isAuthenticated, clientController.createClient);
+router.post('/clients', authController.isAuthenticated + clientValidator.checkClient(), clientController.createClient);
 
 /**
  * GET all clients for given user
@@ -60,6 +62,4 @@ export function setDependencies(newUserService, newClientService, newAuthService
   clientService = newClientService;
   clientController.setDependencies(clientService);
   authController.setDependencies(newUserService, newClientService, newAuthService);
-  // TODO - validation
-  // clientValidator.setDependencies(clientService);
 }

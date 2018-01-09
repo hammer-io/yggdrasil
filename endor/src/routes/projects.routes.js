@@ -243,7 +243,7 @@ router.get('/projects/:projectId', authController.isAuthenticated, projectContro
  */
 router.post(
   '/user/projects',
-  [authController.isAuthenticated, projectValidator.checkCreateProject()],
+  authController.isAuthenticated + projectValidator.checkCreateProject(),
   projectController.createProjectForAuthenticatedUser
 );
 
@@ -300,7 +300,7 @@ router.post(
  */
 router.post(
   '/users/:user/projects',
-  [authController.isAuthenticated, projectValidator.checkCreateProject()],
+  authController.isAuthenticated + projectValidator.checkCreateProject(),
   projectController.createProjectForUser
 );
 
@@ -333,7 +333,7 @@ router.post(
  */
 router.patch(
   '/projects/:id',
-  [authController.isAuthenticated, projectValidator.checkUpdateProject()],
+  authController.isAuthenticated + projectValidator.checkUpdateProject(),
   projectController.updateProjectById
 );
 
