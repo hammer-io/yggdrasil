@@ -14,7 +14,7 @@ let clientService = {};
  * {
  *   "client": {
  *   "name": "endor_frontend",
- *     "client_id": "client_id",
+ *     "clientId": "clientId",
  *     "secret": "client_secret",
  *     "userId": 3,
  *    }
@@ -24,7 +24,7 @@ let clientService = {};
  * {
  *   "id": 1,
  *   "name": "endor_frontend",
- *   "client_id": "client_id",
+ *   "clientId": "clientId",
  *   "secret": "client_secret",
  *   "updatedAt": "2017-12-02T19:40:27.574Z",
  *   "createdAt": "2017-12-02T19:40:27.563Z",
@@ -44,7 +44,7 @@ router.post('/clients', authController.isAuthenticated, clientController.createC
  *   "clients": [
  *       {
  *           "id": 1,
- *           "client_id": "client_id",
+ *           "clientId": "clientId",
  *           "name": "endor_frontend",
  *           "secret": "client_secret",
  *           "createdAt": "2017-12-02T19:40:27.000Z",

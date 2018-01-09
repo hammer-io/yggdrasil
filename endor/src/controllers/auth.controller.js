@@ -27,7 +27,7 @@ passport.use('basic', new BasicStrategy('basic', (username, password, next) => {
 
 /**
  * Instructions for passport to use a basic authentication. Requires the client
- * of a user to supply their client_id (not id, this is like a username) and their
+ * of a user to supply their clientId (not id, this is like a username) and their
  * secret to authenticate the client.
  */
 passport.use('client-basic', new BasicStrategy('client-basic', (username, password, next) => {

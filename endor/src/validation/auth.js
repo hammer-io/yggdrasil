@@ -22,19 +22,6 @@ module.exports.existsInDB = function existsInDB(username, password) {
   return sequelize.User.findOne(queryParams);
 };
 
-// module.exports = function () {
-//   return [
-//     check('username')
-//       .isEmail().withMessage('Username is invalid')
-//       .trim()
-//       .normalizeEmail()
-//       .custom(username => existsInDB(username)),
-//       //
-//       // .sanitize('name')
-//       // .whitelist(['abcdefghijklmnopqrstuvwxyz', 'ABCDEFHIJKLMNOPQRSTUVWXYZ', '-', ' ']);
-//   ]
-// };
-
 module.exports.validateEmail = function validateEmail() {
   return check('email', 'Invalid email')
     .isEmail().withMessage('Email is invalid')

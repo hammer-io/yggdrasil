@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 // Using Expect style
 const sequalize = require('./sequalize-mock');
-import {populateClients, populateUsers} from './mockdb';
+import { defineTables, populateClients, populateUsers} from './setupMockDB';
 
 import UserService from './../dist/services/users.service';
 import ClientService from './../dist/services/client.service';
@@ -12,7 +12,7 @@ const clientService = new ClientService(sequalize.Client, userService, getActive
 
 describe('Testing Client Service', () => {
   beforeEach(async () => {
-
+    await defineTables();
     await populateUsers();
     await populateClients();
 
@@ -39,7 +39,7 @@ describe('Testing Client Service', () => {
   describe('create a client for a specific user', async () => {
     it('should create a client given a unique clientId for a user that exists', async () => {
       const client = {
-        client_id: 'client_id4',
+        clientId: 'clientId4',
         name: 'frontend1',
         secret: 'client_secret',
         userId: 1
@@ -47,16 +47,16 @@ describe('Testing Client Service', () => {
 
       // Create client for userId 1
       const newClient = await clientService.createClient(client);
-      expect(newClient.dataValues).to.have.keys([ 'id', 'createdAt', 'updatedAt', 'client_id', 'name', 'secret', 'userId']);
-      expect(newClient.client_id).to.equal(client.client_id);
+      expect(newClient.dataValues).to.have.keys([ 'id', 'createdAt', 'updatedAt', 'clientId', 'name', 'secret', 'userId']);
+      expect(newClient.clientId).to.equal(client.clientId);
       expect(newClient.name).to.equal(client.name);
       expect(newClient.secret).to.equal(client.secret);
       expect(newClient.userId).to.equal(1);
     });
 
-    it('should not create a client if the client_id is not unique', async () => {
+    it('should not create a client if the clientId is not unique', async () => {
       const client = {
-        client_id: 'client_id2',
+        clientId: 'clientId2',
         name: 'frontend1',
         secret: 'client_secret',
         userId: 1
@@ -68,13 +68,13 @@ describe('Testing Client Service', () => {
         expect(createdClient).to.be.an('undefined'); // An exception should be thrown, so this should not execute
       } catch (err) {
         expect(err.type).to.equal('NonUniqueError');
-        expect(err.field).to.be.an('array').that.deep.include('client_id');
+        expect(err.field).to.be.an('array').that.deep.include('clientId');
       }
     });
 
     it('should not create a client for a user that does not exist', async () => {
       const client = {
-        client_id: 'client_id6',
+        clientId: 'clientId6',
         name: 'frontend1',
         secret: 'client_secret',
         userId: 1000
@@ -92,8 +92,8 @@ describe('Testing Client Service', () => {
 
   describe('should find a client by id', async () => {
     it('when given an existing client id, find the correct client', async () => {
-      const client = await clientService.findOneClientByClientId('client_id2');
-      expect(client.client_id).to.equal('client_id2');
+      const client = await clientService.findOneClientByClientId('clientId2');
+      expect(client.clientId).to.equal('clientId2');
       expect(client.name).to.equal('endor_frontend1');
       expect(client.secret).to.equal('client_secret');
       expect(client.userId).to.equal(4);
@@ -113,7 +113,7 @@ describe('Testing Client Service', () => {
     it('when given an existing id, find the correct client', async () => {
       const client = await clientService.findOneClientById(1);
       expect(client.name).to.equal('endor_frontend1');
-      expect(client.client_id).to.equal('client_id');
+      expect(client.clientId).to.equal('clientId');
       expect(client.secret).to.equal('client_secret');
       expect(client.userId).to.equal(3);
     });

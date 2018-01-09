@@ -35,7 +35,7 @@ const Credentials = model.define('credentials', {
 Credentials.belongsTo(User, { as: 'user', through: 'username' });
 
 const Client = model.define('client', {
-  client_id: { type: STRING, unique: true, allowNull: false },
+  clientId: { type: STRING, unique: true, allowNull: false },
   name: { type: STRING, allowNull: false },
   secret: { type: STRING, allowNull: false }
 });

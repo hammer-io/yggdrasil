@@ -24,11 +24,11 @@ export default class ClientService {
 
     const errors = [];
 
-    if (!client.client_id) {
+    if (!client.clientId) {
       errors.push(new RequestParamError('client', 'Name is required'));
     }
     if (!client.name) {
-      errors.push(new RequestParamError('client', 'Client_id is required'));
+      errors.push(new RequestParamError('client', 'ClientId is required'));
     }
     if (!client.secret) {
       errors.push(new RequestParamError('client', 'Secret is required'));
@@ -134,7 +134,7 @@ export default class ClientService {
   /**
    * Find one client by the client id (this is like the username of the client, not the actual id).
    *
-   * @param clientId the client_id of the client
+   * @param clientId the clientId of the client
    * @returns {Promise.<*>} the found client
    */
   async findOneClientByClientId(clientId) {
@@ -148,7 +148,7 @@ export default class ClientService {
     const client = await this.clientRepository.findOne({
       where:
         {
-          client_id: clientId
+          clientId
         }
     });
     if (client === null || client.length === 0) {

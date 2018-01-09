@@ -2,11 +2,12 @@ import { expect } from 'chai';
 // Using Expect style
 const sequalize = require('./sequalize-mock');
 import {
+  defineTables,
   populateClients,
   populateUsers,
   populateAccessCodes,
   populateTokens
-} from './mockdb';
+} from './setupMockDB';
 
 import AuthService from './../dist/services/auth.service';
 import { getActiveLogger } from '../dist/utils/winston';
@@ -16,7 +17,7 @@ const authService = new AuthService(sequalize.Token, sequalize.AccessCode, getAc
 
 describe('Testing Client Service', () => {
   beforeEach(async () => {
-
+    await defineTables();
     await populateUsers();
     await populateClients();
     await populateAccessCodes();

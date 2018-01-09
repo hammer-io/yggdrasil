@@ -12,7 +12,7 @@ export const router = express.Router();
  * GET authorization data
  *
  * Params required:
- * client_id: the id of the client requesting access
+ * clientId: the id of the client requesting access
  * response_type: value should be 'code'
  * redirect_uri: uri of redirect upon permission granted, which is the endpoint
  *     requestion access to the user's account
@@ -35,7 +35,7 @@ export const router = express.Router();
  *   },
  *   "client": {
  *       "id": 1,
- *       "client_id": "client_id",
+ *       "clientId": "clientId",
  *       "name": "endor_frontend",
  *       "secret": "client_secret",
  *       "createdAt": "2017-12-02T19:40:27.000Z",
