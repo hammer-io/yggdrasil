@@ -1,6 +1,7 @@
 import express from 'express';
 
 import * as ownersController from './../controllers/owners.controller';
+import * as authController from './../controllers/auth.controller';
 
 export const router = express.Router();
 
@@ -37,7 +38,7 @@ let projectService = {};
  }
  ]
  */
-router.get('/projects/:id/owners', ownersController.getOwnersByProjectId);
+router.get('/projects/:id/owners', authController.isAuthenticated, ownersController.getOwnersByProjectId);
 
 /**
  * @api {get} /projects/:id/owners/:user Check if a user is a owner
@@ -56,7 +57,7 @@ router.get('/projects/:id/owners', ownersController.getOwnersByProjectId);
  * @apiErrorExample {json} Error-Response
  * Status: 404 Not Found
  */
-router.get('/projects/:id/owners/:user', ownersController.checkIfUserIsOwner);
+router.get('/projects/:id/owners/:user', authController.isAuthenticated, ownersController.checkIfUserIsOwner);
 
 /**
  * @api {post} /projects/:id/owners/:user Add owner to project
@@ -89,7 +90,7 @@ router.get('/projects/:id/owners/:user', ownersController.checkIfUserIsOwner);
  }
  ]
  */
-router.post('/projects/:id/owners/:user', ownersController.addOwnerToProject);
+router.post('/projects/:id/owners/:user', authController.isAuthenticated, ownersController.addOwnerToProject);
 
 /**
  * @api {delete} /projects/:id/owners/:user Remove owner from project
@@ -105,7 +106,7 @@ router.post('/projects/:id/owners/:user', ownersController.addOwnerToProject);
  * @apiSuccessExample {json} Success-Response
  * Status: 204 No Content
  */
-router.delete('/projects/:id/owners/:user', ownersController.deleteOwnerFromProject);
+router.delete('/projects/:id/owners/:user', authController.isAuthenticated, ownersController.deleteOwnerFromProject);
 
 /**
  * Set dependencies for the owners routes

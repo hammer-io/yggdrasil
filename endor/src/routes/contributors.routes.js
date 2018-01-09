@@ -1,6 +1,7 @@
 import express from 'express';
 
 import * as contributorsController from './../controllers/contributors.controller';
+import * as authController from '../controllers/auth.controller';
 
 export const router = express.Router();
 
@@ -37,7 +38,7 @@ let projectService = {};
      }
     ]
  */
-router.get('/projects/:id/contributors', contributorsController.getContributorsByProjectId);
+router.get('/projects/:id/contributors', authController.isAuthenticated, contributorsController.getContributorsByProjectId);
 
 /**
  * @api {get} /projects/:id/contributors/:user Check if a user is a contributor
@@ -56,7 +57,7 @@ router.get('/projects/:id/contributors', contributorsController.getContributorsB
  * @apiErrorExample {json} Error-Response
  * Status: 404 Not Found
  */
-router.get('/projects/:id/contributors/:user', contributorsController.checkIfUserIsContributor);
+router.get('/projects/:id/contributors/:user', authController.isAuthenticated, contributorsController.checkIfUserIsContributor);
 
 /**
  * @api {post} /projects/:id/contributors/:user Add contributor to project
@@ -89,7 +90,7 @@ router.get('/projects/:id/contributors/:user', contributorsController.checkIfUse
     }
   ]
  */
-router.post('/projects/:id/contributors/:user', contributorsController.addContributorToProject);
+router.post('/projects/:id/contributors/:user', authController.isAuthenticated, contributorsController.addContributorToProject);
 
 /**
  * @api {delete} /projects/:id/contributors/:user Remove contributor from project
@@ -105,7 +106,7 @@ router.post('/projects/:id/contributors/:user', contributorsController.addContri
  * @apiSuccessExample {json} Success-Response
  * Status: 204 No Content
  */
-router.delete('/projects/:id/contributors/:user', contributorsController.deleteContributorFromProject);
+router.delete('/projects/:id/contributors/:user', authController.isAuthenticated, contributorsController.deleteContributorFromProject);
 
 /**
  * Set dependencies for the contributors routes

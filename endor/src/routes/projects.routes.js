@@ -6,6 +6,7 @@
  */
 
 import express from 'express';
+import * as authController from '../controllers/auth.controller';
 import * as projectController from '../controllers/projects.controller';
 import * as projectValidator from '../middlewares/projects.middleware';
 
@@ -41,7 +42,7 @@ let projectService = {};
  *  }
  * ]
  */
-router.get('/projects', projectController.getAllProjects);
+router.get('/projects', authController.isAuthenticated, projectController.getAllProjects);
 
 /**
  * @api {get} /user/projects Get projects for an authenticated user
@@ -100,7 +101,7 @@ router.get('/projects', projectController.getAllProjects);
      ]
  }
  */
-router.get('/user/projects', projectController.getProjectByAuthenticatedUser);
+router.get('/user/projects', authController.isAuthenticated, projectController.getProjectByAuthenticatedUser);
 
 /**
  * @api {get} /users/:user/projects Get a project by user id
@@ -159,7 +160,7 @@ router.get('/user/projects', projectController.getProjectByAuthenticatedUser);
      ]
  }
  */
-router.get('/users/:user/projects', projectController.getProjectsByUser);
+router.get('/users/:user/projects', authController.isAuthenticated, projectController.getProjectsByUser);
 
 /**
  * @api {get} /projects/:projectId Get project by id
@@ -188,7 +189,7 @@ router.get('/users/:user/projects', projectController.getProjectsByUser);
  *    "webFrameworkId": null
  *  }
  */
-router.get('/projects/:projectId', projectController.getProjectById);
+router.get('/projects/:projectId', authController.isAuthenticated, projectController.getProjectById);
 
 /**
  * @api {post} /user/projects Create a project for an authenticated user
@@ -240,7 +241,11 @@ router.get('/projects/:projectId', projectController.getProjectById);
  *    "webFrameworkId": 4
  *  }
  */
-router.post('/user/projects', projectValidator.checkCreateProject(), projectController.createProjectForAuthenticatedUser);
+router.post(
+  '/user/projects',
+  [authController.isAuthenticated, projectValidator.checkCreateProject()],
+  projectController.createProjectForAuthenticatedUser
+);
 
 /**
  * @api {post} /users/:user/projects Create a project
@@ -293,7 +298,11 @@ router.post('/user/projects', projectValidator.checkCreateProject(), projectCont
  *    "webFrameworkId": 4
  *  }
  */
-router.post('/users/:user/projects', projectValidator.checkCreateProject(), projectController.createProjectForUser);
+router.post(
+  '/users/:user/projects',
+  [authController.isAuthenticated, projectValidator.checkCreateProject()],
+  projectController.createProjectForUser
+);
 
 /**
  * @api {patch} /projects/:id Update a project
@@ -322,7 +331,11 @@ router.post('/users/:user/projects', projectValidator.checkCreateProject(), proj
  *    "webFrameworkId": null
  *  }
  */
-router.patch('/projects/:id', projectValidator.checkUpdateProject(), projectController.updateProjectById);
+router.patch(
+  '/projects/:id',
+  [authController.isAuthenticated, projectValidator.checkUpdateProject()],
+  projectController.updateProjectById
+);
 
 /**
  * @api {delete} /projects/:id Delete a project
@@ -336,7 +349,7 @@ router.patch('/projects/:id', projectValidator.checkUpdateProject(), projectCont
  * @apiSuccessExample {json} Success-Response
  * Status: 204 No Content
  */
-router.delete('/projects/:id', projectController.deleteProjectById);
+router.delete('/projects/:id', authController.isAuthenticated, projectController.deleteProjectById);
 
 /**
  * Sets the project service dependency for the controller

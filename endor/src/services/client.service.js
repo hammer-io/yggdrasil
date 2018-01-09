@@ -79,7 +79,6 @@ export default class ClientService {
   /**
    * Create a new client for the given user.
    *
-   * @param userId the client's user
    * @param client the new client
    * @returns {Promise.<*>} the newly created client
    */

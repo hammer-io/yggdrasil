@@ -6,8 +6,14 @@ import TokenNotFoundException from '../error/TokenNotFoundException';
 import CodeNotFoundException from '../error/CodeNotFoundException';
 
 export default class AuthService {
-  constructor(authRepository, codeRepository, log) {
-    this.authRepository = authRepository;
+  /**
+   * Constructor for AuthService.  Connects to the code and token repository.
+   * @param codeRepository
+   * @param codeRepository
+   * @param log
+   */
+  constructor(codeRepository, codeRepository, log) {
+    this.codeRepository = codeRepository;
     this.codeRepository = codeRepository;
     this.log = log;
     this.CODE_LENGTH = 16;
@@ -75,7 +81,7 @@ export default class AuthService {
     }
 
     try {
-      const token = await this.authRepository.create({
+      const token = await this.codeRepository.create({
         value: uid.sync(this.TOKEN_LENGTH),
         clientId,
         userId
@@ -103,7 +109,7 @@ export default class AuthService {
       return Promise.reject(new InvalidRequestException(errors));
     }
 
-    const token = await this.authRepository.findOne({
+    const token = await this.codeRepository.findOne({
       where:
         {
           value: tokenValue

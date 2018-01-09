@@ -1,5 +1,6 @@
 import express from 'express';
-import * as usersController from './../controllers/users.controller'
+import * as authController from './../controllers/auth.controller';
+import * as usersController from './../controllers/users.controller';
 import * as userValidator from './../middlewares/users.middleware';
 
 export const router = express.Router();
@@ -27,7 +28,7 @@ let userService = {};
     }
   ]
  */
-router.get('/users', usersController.getAllUsers);
+router.get('/users', authController.isAuthenticated, usersController.getAllUsers);
 
 /**
  * @api {get} /users/:user Get user by id or username
@@ -49,7 +50,7 @@ router.get('/users', usersController.getAllUsers);
     "updatedAt": "2017-11-12T20:26:47.000Z"
   }
  */
-router.get('/users/:user', usersController.getUserByIdOrUsername);
+router.get('/users/:user', authController.isAuthenticated, usersController.getUserByIdOrUsername);
 
 /**
  * @api {get} /user Get authenticated user
@@ -71,7 +72,7 @@ router.get('/users/:user', usersController.getUserByIdOrUsername);
       "updatedAt": "2017-11-12T20:26:47.000Z"
     }
  */
-router.get('/user', usersController.getAuthenticatedUser);
+router.get('/user', authController.isAuthenticated, usersController.getAuthenticatedUser);
 
 /**
  * @api {post} /users Create new user
@@ -107,7 +108,7 @@ router.get('/user', usersController.getAuthenticatedUser);
       "updatedAt": "2017-11-12T20:26:47.000Z"
     }
  */
-router.post('/users', usersController.createUser);
+router.post('/users', authController.isAuthenticated, usersController.createUser);
 
 /**
  * @api {patch} /users/:user update a user
@@ -141,7 +142,11 @@ router.post('/users', usersController.createUser);
       "updatedAt": "2017-11-14T20:26:47.000Z"
     }
  */
-router.patch('/users/:user', userValidator.checkUpdateUser(), usersController.updateUserByIdOrUsername);
+router.patch(
+  '/users/:user',
+  [authController.isAuthenticated, userValidator.checkUpdateUser()],
+  usersController.updateUserByIdOrUsername
+);
 
 /**
  * @api {delete} /users/:user delete a user
@@ -154,7 +159,7 @@ router.patch('/users/:user', userValidator.checkUpdateUser(), usersController.up
  * @apiSuccessExample {json} Success-Response
  * Status: 204 No Content
  */
-router.delete('/users/:user', usersController.deleteUserById);
+router.delete('/users/:user', authController.isAuthenticated, usersController.deleteUserById);
 
 /**
  * Sets dependencies for the routes
