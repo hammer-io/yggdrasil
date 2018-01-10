@@ -66,7 +66,6 @@ async function importUserData() {
 }
 
 async function importProjectData() {
-
   const project = await sequelize.Project.create({
     projectName: 'TMNT',
     description: 'You gotta know what a crumpet is to understand cricket!',

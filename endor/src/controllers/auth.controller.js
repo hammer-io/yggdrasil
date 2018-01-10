@@ -3,7 +3,7 @@ import oauth2orize from 'oauth2orize';
 
 import { BasicStrategy } from 'passport-http';
 import BearerStrategy from 'passport-http-bearer';
-import {getActiveLogger} from '../utils/winston';
+import { getActiveLogger } from '../utils/winston';
 
 let clientService = {};
 let authService = {};
@@ -124,7 +124,7 @@ server.exchange(oauth2orize.exchange.code((client, code, redirectUri, next) => {
  * @param res the response
  * @param next the next middleware
  */
-export function success(req, res, next) {
+export function success(req, res) {
   res.send({ code: req.query.code });
 }
 

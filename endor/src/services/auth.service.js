@@ -8,12 +8,13 @@ import CodeNotFoundException from '../error/CodeNotFoundException';
 export default class AuthService {
   /**
    * Constructor for AuthService.  Connects to the code and token repository.
+   *
    * @param codeRepository
-   * @param codeRepository
+   * @param tokenRepository
    * @param log
    */
-  constructor(codeRepository, codeRepository, log) {
-    this.codeRepository = codeRepository;
+  constructor(tokenRepository, codeRepository, log) {
+    this.tokenRepository = tokenRepository;
     this.codeRepository = codeRepository;
     this.log = log;
     this.CODE_LENGTH = 16;
@@ -81,7 +82,7 @@ export default class AuthService {
     }
 
     try {
-      const token = await this.codeRepository.create({
+      const token = await this.tokenRepository.create({
         value: uid.sync(this.TOKEN_LENGTH),
         clientId,
         userId
@@ -109,7 +110,7 @@ export default class AuthService {
       return Promise.reject(new InvalidRequestException(errors));
     }
 
-    const token = await this.codeRepository.findOne({
+    const token = await this.tokenRepository.findOne({
       where:
         {
           value: tokenValue
@@ -128,10 +129,9 @@ export default class AuthService {
    * @param client the client id
    * @param redirectUri where the client should be redirected upon success
    * @param user the user id who owns the client
-   * @param ares no idea
    * @returns {Promise.<*>} the newly created code
    */
-  async createCode(client, redirectUri, user, ares) {
+  async createCode(client, redirectUri, user) {
     this.log.info(`AuthService: create new access code and redirect to ${redirectUri}`);
 
     let errors = await this.validateId(this.CLIENT, client);

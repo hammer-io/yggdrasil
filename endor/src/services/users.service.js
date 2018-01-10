@@ -104,6 +104,7 @@ export default class UserService {
    * @returns {Promise.<Array>}
    */
   async validateCredentials(password) {
+    this.log.info('UserService: Validating credentials');
     const errors = [];
 
     if (password === null || password === undefined || password.length < 8 || !password.match(/\d+/g)) {

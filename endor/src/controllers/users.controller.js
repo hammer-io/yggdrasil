@@ -1,5 +1,3 @@
-/* eslint-disable prefer-destructuring */
-import bcrypt from 'bcrypt';
 
 import { validationResult } from 'express-validator/check';
 import * as responseHelper from '../utils/response-helper';
@@ -34,7 +32,7 @@ export async function getAllUsers(req, res, next) {
  */
 export async function getUserByIdOrUsername(req, res, next) {
   try {
-    const user = req.params.user;
+    const { user } = req.params;
     const userFound = await userService.getUserByIdOrUsername(user);
     res.send(userFound);
   } catch (error) {
@@ -75,7 +73,7 @@ export async function createUser(req, res, next) {
 
   try {
     const user = req.body;
-    const password = user.password;
+    const { password } = user.password;
     delete user.password;
     const userCreated = await userService.createUser(user, password);
 
@@ -112,7 +110,7 @@ export async function updateUserByIdOrUsername(req, res, next) {
  */
 export async function deleteUserById(req, res, next) {
   try {
-    const user = req.params.user;
+    const { user } = req.params;
     await userService.deleteUserByIdOrUsername(user);
     responseHelper.noContent(res);
   } catch (error) {
