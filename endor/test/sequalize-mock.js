@@ -1,8 +1,5 @@
 import Sequelize from 'sequelize';
 
-// eslint-disable-next-line import/no-unresolved
-import dbConfig from '../../dbConfig.json';
-
 // Added for convenience
 // eslint-disable-next-line prefer-destructuring
 const STRING = Sequelize.DataTypes.STRING;
