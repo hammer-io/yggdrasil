@@ -28,7 +28,7 @@ class SignOutButton extends Component {
 
 class myAppBarMenu extends Component {
     render() {
-        var title = 'Welcome';
+        let title = 'Welcome';
         let route = this.props.match.params.id;
         if(route){
             switch(route.toLowerCase()) {
@@ -36,7 +36,7 @@ class myAppBarMenu extends Component {
                     title = 'Create New Project';
                     break;
                 case 'login':
-                    title = 'Login';
+                    title = 'LoginPrompt';
                     break;
                 case 'signup':
                     title = 'Register';

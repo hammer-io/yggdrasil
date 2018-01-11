@@ -7,11 +7,15 @@ const theme = {
     xLarge: 72
   },
 
-  height: {
-    small: 24,
-    regular: 48,
-    large: 72
-  },
+    height: {
+        small: 24,
+        regular: 48,
+        large: 72
+    },
+
+    simplePadding: {
+        padding: 20
+    },
 
   colors: {
     white: '#FFFFFF',

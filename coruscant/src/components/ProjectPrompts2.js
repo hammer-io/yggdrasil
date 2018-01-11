@@ -5,20 +5,11 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
-import Divider from 'material-ui/Divider';
+import theme from "../../style/theme.js";
 
 const styles = {
-    block: {
-        maxWidth: 250,
-    },
-    radioButton: {
-        marginBottom: 16,
-    },
     select: {
         textAlign: 'left'
-    },
-    padding: {
-        padding: 20
     },
     next: {
         marginLeft: 16,
@@ -35,7 +26,7 @@ class myProjectPrompts extends Component {
     }
 
     updateInfo(newInfo) {
-        var info = {
+        let info = {
             name: this.refs.name.getValue(),
             desc: this.refs.desc.getValue(),
             version: this.refs.version.getValue(),
@@ -50,7 +41,7 @@ class myProjectPrompts extends Component {
     render() {
         return (
             <div>
-                <div style={styles.padding}>
+                <div style={theme.simplePadding}>
                     <h4>Enter some information about your project</h4>
                     <TextField
                         ref={"name"}
@@ -96,7 +87,7 @@ class myProjectPrompts extends Component {
                     <SelectField floatingLabelText="CI tool"
                                  style={styles.select}
                                  value={this.props.info.ci}
-                                 disabled={this.props.info.src === 'None'}
+                                 disabled={checkIfIsNone(this.props.info.src)}
                                  errorStyle={styles.warning}
                                  errorText={this.props.info.src === 'None'?'Source control required to use':''}
                                  onChange={(event,index,values) => this.updateInfo({ci: values})}>
@@ -107,7 +98,7 @@ class myProjectPrompts extends Component {
                     <SelectField floatingLabelText="Containerization tool"
                                  style={styles.select}
                                  value={this.props.info.docker}
-                                 disabled={this.props.info.ci === 'None'}
+                                 disabled={checkIfIsNone(this.props.info.ci)}
                                  errorStyle={styles.warning}
                                  errorText={this.props.info.ci === 'None'?'CI tool required to use':''}
                                  onChange={(event,index,values) => this.updateInfo({docker: values})}>
@@ -118,7 +109,7 @@ class myProjectPrompts extends Component {
                     <SelectField floatingLabelText="Hosting service"
                                  style={styles.select}
                                  value={this.props.info.host}
-                                 disabled={this.props.info.docker === 'None'}
+                                 disabled={checkIfIsNone(this.props.info.docker)}
                                  errorStyle={styles.warning}
                                  errorText={this.props.info.docker === 'None'?'Containerization required to use':''}
                                  onChange={(event,index,values) => this.updateInfo({host: values})}>
@@ -140,6 +131,10 @@ class myProjectPrompts extends Component {
             </div>
         );
     }
+}
+
+const checkIfIsNone = value => {
+    return value === 'None';
 }
 
 const mapStateToProps = state => {

@@ -1,30 +1,26 @@
 import React, {Component} from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import theme from "../../style/theme.js";
 
-const styles = {
-    padding: {
-        padding: 20
-    }
-};
-class Login extends Component {
+class LoginPrompt extends Component {
 
     componentDidMount() {
-        document.title = "Hammer.io - Login";
+        document.title = "Hammer.io - LoginPrompt";
     }
 
     submitForm() {
-        var credentials = {
+        let credentials = {
             username: this.refs.username.getValue(),
             password: this.refs.password.getValue()
-        }
+        };
         console.log('Logging in...');
         // Do something with credentials
     }
 
     render() {
         return (
-            <div style={styles.padding}>
+            <div style={theme.simplePadding}>
                 <h4>Sign in to Hammer-io</h4>
                 <TextField
                     ref={'username'}
@@ -47,4 +43,4 @@ class Login extends Component {
     }
 }
 
-export default Login;
+export default LoginPrompt;

@@ -3,12 +3,12 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import * as validator from '../utils/validator';
 import { connect } from 'react-redux';
+import theme from "../../style/theme.js";
 
-const styles = {
-    padding: {
-        padding: 20
-    }
+const style = {
+    margin: 15,
 };
+
 class myRegister extends Component {
 
     componentDidMount() {
@@ -49,7 +49,7 @@ class myRegister extends Component {
 
     render() {
         return (
-            <div style={styles.padding}>
+            <div style={theme.simplePadding}>
                 <h4>Create your personal account</h4>
                 <TextField
                     ref={"username"}
@@ -86,12 +86,6 @@ class myRegister extends Component {
         );
     }
 }
-
-const style = {
-    margin: 15,
-};
-
-
 
 const mapStateToProps = state => {
     return {

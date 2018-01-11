@@ -13,6 +13,11 @@ const sidebarStyle = {
     backgroundColor: '#285d1e'
 };
 
+const avatarStyle = {
+    verticalAlign: 'middle',
+    marginRight: 20
+};
+
 class SideMenu extends React.Component {
 
     constructor(props) {
@@ -26,7 +31,8 @@ class SideMenu extends React.Component {
                         zDepth={0}
                         containerStyle={{backgroundColor: '#f5f5f5'}}>
                     <AppBar title={<div>
-                        <Avatar style={{verticalAlign: 'middle', marginRight: 20}}src="src/i/Viking_Hammer_Logo_1.png" />
+                        <Avatar style={avatarStyle}
+                                src="src/i/Viking_Hammer_Logo_1.png" />
                         hammer.io
                     </div>}
                             style = {sidebarStyle}
