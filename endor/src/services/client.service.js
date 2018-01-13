@@ -20,18 +20,21 @@ export default class ClientService {
    * @returns {Promise.<Array>} The errors with the given client
    */
   async validateNewClient(client) {
-    this.log.info('ClientService: validating a new client');
+    this.log.verbose('ClientService: validating a new client');
 
     const errors = [];
 
-    if (!client.clientId) {
+    if (!client.name) {
       errors.push(new RequestParamError('client', 'Name is required'));
     }
-    if (!client.name) {
+    if (!client.clientId) {
       errors.push(new RequestParamError('client', 'ClientId is required'));
     }
     if (!client.secret) {
       errors.push(new RequestParamError('client', 'Secret is required'));
+    }
+    if (!client.userId) {
+      errors.push(new RequestParamError('client', 'UserId is required'));
     }
     return errors;
   }
@@ -44,13 +47,13 @@ export default class ClientService {
    * @returns {Promise.<Array>} array containing errors if they exist
    */
   async validateId(type, id) {
-    this.log.info(`AuthService: validating id ${id} for ${type}`);
+    this.log.verbose(`ClientService: validating id ${id} for ${type}`);
 
     const errors = [];
     if (!id) {
       errors.push(new RequestParamError(`${type}Id`, `${type}Id is required.`));
     }
-    if (!Number.isInteger(id)) {
+    if (Number.isNaN(Number(id))) {
       errors.push(new RequestParamError(`${type}Id`, `${type}Id must be a valid id.`));
     }
 
@@ -65,7 +68,7 @@ export default class ClientService {
    * @returns {Promise.<Array>} array containing errors if they exist
    */
   async exists(type, value) {
-    this.log.info(`AuthService: checking that the ${type} value ${value} is not null or undefined`);
+    this.log.verbose(`ClientService: checking that the ${type} value ${value} is not null or undefined`);
 
     const errors = [];
     if (!value) {
@@ -95,7 +98,7 @@ export default class ClientService {
       return createdClient;
     } catch (err) {
       if (err.name === 'SequelizeUniqueConstraintError') {
-        return Promise.reject(new NonUniqueError(err, err.fields));
+        return Promise.reject(new NonUniqueError(err.errors, err.fields));
       } else if (err.name === 'SequelizeForeignKeyConstraintError') {
         return Promise.reject(new ClientNotFoundException('No user exists with the given id'));
       }

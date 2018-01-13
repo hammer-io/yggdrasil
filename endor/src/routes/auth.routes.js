@@ -10,19 +10,25 @@ export const router = express.Router();
 
 
 /**
- * GET authorization data
+ * @api { get } /oauth2/authorize Get permissions
+ * @apiVersion 1.0.0
+ * @apiName Get Authorization Data
+ * @apiGroup Auth
  *
- * Params required:
- * clientId: the id of the client requesting access
- * response_type: value should be 'code'
- * redirect_uri: uri of redirect upon permission granted, which is the endpoint
- *     requestion access to the user's account
+ * @apiPermission None
  *
- * Here the client is asking permission to use the user's account.
+ * @apiDescription Here the client is asking permission to use the user's account.
  * The response of the user should be sent to POST /oauth/authorize
  * This endpoint will return the client, the user and a transaction ID
  *
- * Result on success:
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
+ * @apiParam { STRING } clientId the id of the client requesting access
+ * @apiParam { STRING } response_type value should be 'code'
+ * @apiParam { STRING } redirect_uri uri of redirect upon permission granted, which is the endpoint
+ *     requesting access to the user's account
+ *
+ * @apiSuccess { json } returns a transaction id, user, and a client
+ * @apiSucccessExample { json } Success-Example:
  * {
  *   "transactionID": "IRGn6Bom",
  *   "user": {
@@ -48,38 +54,61 @@ export const router = express.Router();
 router.get('/oauth2/authorize', authController.isAuthenticated, authController.authorization());
 
 /**
- * POST response from user to the request from GET /oauth2/authorize
+ * @api { post } /oauth2/authorize Post permissions authorized by the user
+ * @apiVersion 1.0.0
+ * @apiName Post permission
+ * @apiGroup Auth
  *
- * Upon success, it redirects to the redirect_URI given to GET /oauth2/authorize.
+ * @apiPermissions None
+ *
+ * @apiDescription Upon success, it redirects to the redirect_URI given to GET /oauth2/authorize.
  * To return a simple JSON indicating { success: true }, redirect to
- * GET /oauth2/authorize/successRedirect . Sends the code in the parameters to the
+ * GET /oauth2/authorize/successRedirect. Sends the code in req.query.code to the
  * redirectURI.
  *
- * Requires:
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
+ * @apiParam { STRING } transaction_id from GET /oauth2/authorize
+ * @apiParamExample { json } Success-Example:
  * {
- *    "transaction_id": "3dI123d", (transaction_id from GET /oauth2/authorize)
+ *    "transaction_id": "3dI123d",
  *    "allow": true OR "deny":true
  * }
+ *
+ * @apiSuccess { json } returns success
+ * @apiSuccessExample { json } Success-Example:
+ * {
+ *   "success": true
+ * }
  */
-router.post('/oauth2/authorize', authController.isAuthenticated + authValidator.checkAuthorize(), authController.decision());
+router.post('/oauth2/authorize', [authController.isAuthenticated].concat(authValidator.checkAuthorize()), authController.decision());
 
 
 /**
- * POST a token in exchange for an access code
+ * @api { post } /oauth2/token Exchange access code to create a token
+ * @apiVersion 1.0.0
+ * @apiName Post Token
+ * @apiGroup Auth
  *
- * The access token is deleted if the redirectURI and the access codes' client id is the same
- * as the client requesting the new token, and then the new token is created and returned to
- * in the response. The Authentication at this endpoint should be client authentication so as
+ * @apiPermission None
+ *
+ * @apiDescription The access token is deleted if the redirectURI and the access codes' client id is
+ * the same as the client requesting the new token, and then the new token is created and returned
+ * to in the response. The Authentication at this endpoint should be client authentication so as
  * to verify that this is the client's token
  *
- * Request:
+ * @apiHeader Authorization Client-Basic
+ * @apiParam { STRING } code the access code
+ * @apiParam { STRING } grant_type the value should be "authorization_code"
+ * @apiParam { STRING } redirect_uri the value should be "http://localhost:3000/api/v1/oauth2/authorize/successRedirect"
+ * @apiParamExample Param-Example:
  * {
  *   "code": "YxTKMd9l8ZAvof2GEwiP6w",
  *   "grant_type": "authorization_code",
  *   "redirect_uri": "http://localhost:3000/api/v1/oauth2/authorize/successRedirect"
  * }
  *
- * Response:
+ * @apiSuccess { json } returns the access token and the token_type ("bearer")
+ * @apiSuccessExample { json } Success-Example:
  * {
  *   "access_token": {
  *       "id": 1,
@@ -91,12 +120,20 @@ router.post('/oauth2/authorize', authController.isAuthenticated + authValidator.
  *   "token_type": "Bearer"
  * }
  */
-router.post('/oauth2/token', authController.isClientAuthenticated + authValidator.checkToken(), authController.token());
+router.post('/oauth2/token', [authController.isClientAuthenticated].concat(authValidator.checkToken()), authController.token());
 
 /**
- * GET a json object containing the accesscode
+ * @api { get } /oauth2/authorize/successRedirect Get access code redirect
+ * @apiVersion 1.0.0
+ * @apiName Authorize Redirect
  *
- * Returns:
+ * @apiPermission None
+ *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
+ * @apiParam { STRING } code the access code in query.code
+ *
+ * @apiSuccess { json } code returns the access code
+ * @apiSuccessExample { json } Success-Example:
  * {
  *     "code": "jk2q43jk2dsr4qqewfds_"
  * }
@@ -114,6 +151,5 @@ export function setDependencies(newUserService, newClientService, newAuthService
   authService = newAuthService;
   userController.setDependencies(userService);
   authController.setDependencies(userService, newClientService, authService);
-  // authValidator.setDependencies(authService);
 }
 

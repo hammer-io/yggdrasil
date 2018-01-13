@@ -16,6 +16,7 @@ let projectService = {};
  *
  * @apiPermission none
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} id the id of the project to get contributors for
  *
  * @apiSuccess {Object[]} contributors of the project
@@ -48,6 +49,7 @@ router.get('/projects/:id/contributors', authController.isAuthenticated, contrib
  *
  * @apiPermission none
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} id the id of the project
  * @apiParam {String} user user id or username
  *
@@ -67,6 +69,7 @@ router.get('/projects/:id/contributors/:user', authController.isAuthenticated, c
  *
  * @apiPermission project owner
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} id the id of the project
  * @apiParam {String} user user id or username of the user to add as a contributor
  *
@@ -100,6 +103,7 @@ router.post('/projects/:id/contributors/:user', authController.isAuthenticated, 
  *
  * @apiPermission project owner
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} id the id of the project
  * @apiParam {String} user user id or username of the user to add as a contributor
  *

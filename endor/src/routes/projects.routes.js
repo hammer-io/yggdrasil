@@ -23,6 +23,8 @@ let projectService = {};
  *
  * @apiPermission none
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
+ *
  * @apiSuccess {Object[]} projects List of all of the public projects
  * @apiSuccessExample {json} Success-Response:
  * [
@@ -51,6 +53,8 @@ router.get('/projects', authController.isAuthenticated, projectController.getAll
  * @apiGroup Projects
  *
  * @apiPermission authenticated user
+ *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  *
  * @apiSuccess {Object[]} projects list of projects for authenticated user
  * @apiSuccessExample {json} Success-Response:
@@ -109,6 +113,7 @@ router.get('/user/projects', authController.isAuthenticated, projectController.g
  * @apiName get projects for user
  * @apiGroup Projects
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} user the user id or the username to find by
  *
  * @apiSuccess {[Object]} projects the list of projects for a given user
@@ -170,6 +175,7 @@ router.get('/users/:user/projects', authController.isAuthenticated, projectContr
  *
  * @apiPermission autenticated user
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} projectId the projectId to find by
  *
  * @apiSuccess {Object} project the project
@@ -199,6 +205,7 @@ router.get('/projects/:projectId', authController.isAuthenticated, projectContro
  *
  * @apiPermission authenticated user
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} projectName the name of the project
  * @apiParam {String} description the description to the project
  * @apiParam {String} version the version of the project
@@ -243,7 +250,7 @@ router.get('/projects/:projectId', authController.isAuthenticated, projectContro
  */
 router.post(
   '/user/projects',
-  authController.isAuthenticated + projectValidator.checkCreateProject(),
+  [authController.isAuthenticated].concat(projectValidator.checkCreateProject()),
   projectController.createProjectForAuthenticatedUser
 );
 
@@ -255,6 +262,7 @@ router.post(
  *
  * @apiPermission authenticated user
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} user the username or userid of the user to create a project for
  * @apiParam {String} projectName the name of the project
  * @apiParam {String} description the description to the project
@@ -300,7 +308,7 @@ router.post(
  */
 router.post(
   '/users/:user/projects',
-  authController.isAuthenticated + projectValidator.checkCreateProject(),
+  [authController.isAuthenticated].concat(projectValidator.checkCreateProject()),
   projectController.createProjectForUser
 );
 
@@ -312,6 +320,7 @@ router.post(
  *
  * @apiPermission project owner
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} id the id of the project to update
  *
  * @apiSuccess {Object} project the updated project
@@ -333,7 +342,7 @@ router.post(
  */
 router.patch(
   '/projects/:id',
-  authController.isAuthenticated + projectValidator.checkUpdateProject(),
+  [authController.isAuthenticated].concat(projectValidator.checkUpdateProject()),
   projectController.updateProjectById
 );
 
@@ -343,6 +352,7 @@ router.patch(
  * @apiName delete project
  * @apiGroup Projects
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiPermission project owner
  *
  * @apiSuccess {Object} project the deleted project

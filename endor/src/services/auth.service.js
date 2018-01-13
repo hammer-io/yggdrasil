@@ -34,13 +34,13 @@ export default class AuthService {
    * @returns {Promise.<Array>} array containing errors if they exist
    */
   async validateId(type, id) {
-    this.log.info(`AuthService: validating id ${id} for ${type}`);
+    this.log.verbose(`AuthService: validating id ${id} for ${type}`);
 
     const errors = [];
     if (!id) {
       errors.push(new RequestParamError(`${type}Id`, `${type}Id is required.`));
     }
-    if (!Number.isInteger(id)) {
+    if (Number.isNaN(Number(id))) {
       errors.push(new RequestParamError(`${type}Id`, `${type}Id must be a valid id.`));
     }
 
@@ -55,7 +55,7 @@ export default class AuthService {
    * @returns {Promise.<Array>} array containing errors if they exist
    */
   async exists(type, value) {
-    this.log.info(`AuthService: checking that the ${type} value ${value} is not null or undefined`);
+    this.log.verbose(`AuthService: checking that the ${type} value ${value} is not null or undefined`);
 
     const errors = [];
     if (!value) {
@@ -154,6 +154,7 @@ export default class AuthService {
       if (err.name === 'SequelizeForeignKeyConstraintError') {
         return Promise.reject(new InvalidRequestException([err]));
       }
+      console.log(err);
       return Promise.reject(err);
     }
   }

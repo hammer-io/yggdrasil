@@ -18,6 +18,8 @@ import * as owners from './routes/owners.routes';
 import UserService from './services/users.service';
 import AuthService from './services/auth.service';
 import ClientService from './services/client.service';
+// eslint-disable-next-line import/no-unresolved
+import config from '../../endorConfig.json';
 
 const app = express();
 
@@ -28,9 +30,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// TODO - reexamine if this is necessary for oauth2orize
 app.use(session({
-  secret: 'Super Secret Session Key',
+  secret: config.session.secret,
   saveUninitialized: true,
   resave: true
 }));

@@ -6,7 +6,7 @@ export default class InvalidCredentialsException {
   constructor(message) {
     this.message = message;
     this.type = 'Invalid Credentials';
-    this.status = 400; // TODO I don't know about this
+    this.status = 401;
     log.error(message);
   }
 

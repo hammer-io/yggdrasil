@@ -84,7 +84,7 @@ server.deserializeClient((id, next) => {
  * The server's function to generate new access codes for a client.
  */
 server.grant(oauth2orize.grant.code((client, redirectUri, user, ares, next) => {
-  authService.createCode(client, redirectUri, user)
+  authService.createCode(client.id, redirectUri, user.id)
     .then(code => next(null, code.value))
     .catch(err => next(err));
 }));
@@ -122,7 +122,6 @@ server.exchange(oauth2orize.exchange.code((client, code, redirectUri, next) => {
  *
  * @param req the request
  * @param res the response
- * @param next the next middleware
  */
 export function success(req, res) {
   res.send({ code: req.query.code });

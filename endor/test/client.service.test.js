@@ -68,7 +68,7 @@ describe('Testing Client Service', () => {
         expect(createdClient).to.be.an('undefined'); // An exception should be thrown, so this should not execute
       } catch (err) {
         expect(err.type).to.equal('NonUniqueError');
-        expect(err.field).to.be.an('array').that.deep.include('clientId');
+        expect(err.fields).to.be.an('array').that.deep.include('clientId');
       }
     });
 

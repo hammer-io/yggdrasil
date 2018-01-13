@@ -4,10 +4,7 @@ import Sequelize from 'sequelize';
 import dbConfig from '../../../dbConfig.json';
 
 // Added for convenience
-// eslint-disable-next-line prefer-destructuring
-const STRING = Sequelize.DataTypes.STRING;
-// eslint-disable-next-line prefer-destructuring
-const BOOLEAN = Sequelize.DataTypes.BOOLEAN;
+const { STRING, BOOLEAN } = Sequelize.DataTypes;
 
 // Create the sequelize instance (once for the app)
 const model = new Sequelize(

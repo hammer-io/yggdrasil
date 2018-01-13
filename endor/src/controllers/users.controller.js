@@ -73,7 +73,7 @@ export async function createUser(req, res, next) {
 
   try {
     const user = req.body;
-    const { password } = user.password;
+    const { password } = user;
     delete user.password;
     const userCreated = await userService.createUser(user, password);
 

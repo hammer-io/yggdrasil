@@ -16,6 +16,7 @@ endor/node_modules
 endor/dist/
 
 dbConfig.json
+endorConfig.json
 
 .DS_Store
 */.DS_Store

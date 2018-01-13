@@ -14,6 +14,8 @@ let userService = {};
  *
  * @apiPermission none
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
+ *
  * @apiSuccess {Object[]} users List of all of the public users
  * @apiSuccessExample {json} Success-Response:
  * [
@@ -38,6 +40,8 @@ router.get('/users', authController.isAuthenticated, usersController.getAllUsers
  *
  * @apiPermission none
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
+ *
  * @apiSuccess {Object} users List of all of the public users
  * @apiSuccessExample {json} Success-Response:
  * {
@@ -59,6 +63,8 @@ router.get('/users/:user', authController.isAuthenticated, usersController.getUs
  * @apiGroup Users
  *
  * @apiPermission authenticated user
+ *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  *
  * @apiSuccess {Object} user Authenticated user information
  * @apiSuccessExample {json} Success-Response:
@@ -82,6 +88,7 @@ router.get('/user', authController.isAuthenticated, usersController.getAuthentic
  *
  * @apiPermission authenticated user
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} username the username of the user
  * @apiParam {String} email the email of the user
  * @apiParam {String} firstName the first name of the user
@@ -108,7 +115,7 @@ router.get('/user', authController.isAuthenticated, usersController.getAuthentic
       "updatedAt": "2017-11-12T20:26:47.000Z"
     }
  */
-router.post('/users', authController.isAuthenticated, usersController.createUser);
+router.post('/users', authController.isClientAuthenticated, usersController.createUser);
 
 /**
  * @api {patch} /users/:user update a user
@@ -116,6 +123,7 @@ router.post('/users', authController.isAuthenticated, usersController.createUser
  * @apiName update user
  * @apiGroup Users
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} id the id of the user to update
  * @apiParam {String} username the username of the user
  * @apiParam {String} email the email of the user
@@ -144,7 +152,7 @@ router.post('/users', authController.isAuthenticated, usersController.createUser
  */
 router.patch(
   '/users/:user',
-  authController.isAuthenticated + userValidator.checkUpdateUser(),
+  [authController.isAuthenticated].concat(userValidator.checkUpdateUser()),
   usersController.updateUserByIdOrUsername
 );
 
@@ -154,6 +162,7 @@ router.patch(
  * @apiName delete user
  * @apiGroup Users
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} id the id of the user to delete
  *
  * @apiSuccessExample {json} Success-Response
