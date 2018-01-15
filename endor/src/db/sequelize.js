@@ -54,6 +54,27 @@ const Tool = model.define('tool', {
 });
 
 
+const InviteStatus = {
+  OPEN: 'open',
+  ACCEPTED: 'accepted',
+  RESCINDED: 'rescinded',
+  EXPIRED: 'expired'
+};
+const Invite = model.define('invite', {
+  daysFromCreationUntilExpiration: Sequelize.DataTypes.INTEGER,
+  status: {
+    type: Sequelize.DataTypes.ENUM,
+    values: [
+      InviteStatus.OPEN,
+      InviteStatus.ACCEPTED,
+      InviteStatus.RESCINDED,
+      InviteStatus.EXPIRED
+    ]
+  },
+  dateOfStatusChange: Sequelize.DataTypes.DATE
+});
+
+
 const Project = model.define('project', {
   projectName: STRING,
   description: STRING(1024),
@@ -83,6 +104,12 @@ Project.belongsToMany(User, { as: 'contributors', through: 'projectContributor' 
 User.belongsToMany(Project, { as: 'projectsContributed', through: 'projectContributor' });
 
 
+const ProjectInvite = model.define('projectInvite', {
+  // ASSOCIATIONS DEFINED BELOW
+});
+Project.belongsToMany(Invite, { as: 'invites', through: 'projectInvite' });
+
+
 // --------------------------- MODEL DEFINITION END ---------------------------
 
 
@@ -92,10 +119,13 @@ module.exports.model = model;
 // Model Objects
 module.exports.User = User;
 module.exports.Tool = Tool;
+module.exports.Invite = Invite;
 module.exports.Project = Project;
 module.exports.ProjectOwner = ProjectOwner;
 module.exports.ProjectContributor = ProjectContributor;
+module.exports.ProjectInvite = ProjectInvite;
 
 // Other things provided for convenience
 module.exports.ToolType = ToolType;
+module.exports.InviteStatus = InviteStatus;
 module.exports.DataTypes = Sequelize.DataTypes;
