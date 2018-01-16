@@ -12,9 +12,7 @@ const theme = {
 
   font: {
     family: {
-      regular: 'Roboto-Regular',
-      bold: 'Roboto-Medium',
-      thin: 'Roboto-Light'
+      regular: 'Roboto'
     },
 
     weight: {

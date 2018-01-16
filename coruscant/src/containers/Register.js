@@ -1,30 +1,60 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
-import TextField from 'material-ui/TextField'
-import theme from "../../style/theme.js"
+import { TextField, Paper } from 'material-ui'
+import Theme from "../../style/theme.js"
+
+const styles = {
+  header: {
+    fontFamily: Theme.font.family.regular
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: Theme.padding.regular
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: Theme.padding.regular
+  },
+  button: {
+    marginTop: Theme.padding.large
+  }
+}
 
 class Register extends Component {
+  constructor (props) {
+    super(props)
+  }
 
   render() {
     return (
-      <div style={theme.simplePadding}>
-        <h4>Sign in to Hammer-io</h4>
-        <TextField
-          hintText="Username"
-          floatingLabelText="Username"
-        />
-        <br/>
-        <TextField
-          type="password"
-          hintText="Password"
-          floatingLabelText="Password"
-        />
-        <br/>
-        <RaisedButton
-          label="Sign in"
-          primary={true}
-          onClick={() => this.submitForm()}
-        />
+      <div style={styles.container}>
+        <h4 style={styles.header}>Create an account</h4>
+        <Paper style={styles.form}>
+          <TextField
+            hintText="Email"
+            floatingLabelText="Email"
+          />
+          <TextField
+            hintText="Username"
+            floatingLabelText="Username"
+          />
+          <TextField
+            type="password"
+            hintText="Password"
+            floatingLabelText="Password"
+          />
+          <RaisedButton
+            label="Register"
+            primary={true}
+            onClick={() => this.submitForm()}
+            style={styles.button}
+          />
+        </Paper>
       </div>
     )
   }

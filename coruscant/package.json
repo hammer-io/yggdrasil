@@ -29,6 +29,7 @@
     "babel-preset-stage-1": "^6.1.18",
     "lodash": "^3.10.1",
     "material-ui": "^0.19.4",
+    "prop-types": "^15.6.0",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
     "react-redux": "4.3.0",
