@@ -37,7 +37,7 @@ invites.setDependencies(inviteService, userService, projectService);
 // API ENDPOINTS //
 app.use('/', express.static('doc'));
 app.use('/api', index);
-app.use('/api/v1', [projects.router, users.router, contributors.router, owners.router]);
+app.use('/api/v1', [projects.router, users.router, contributors.router, owners.router, invites.router]);
 // END API ENDPOINTS //
 
 // default 404 handler

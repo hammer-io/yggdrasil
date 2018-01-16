@@ -37,8 +37,7 @@ export function setProjectService(newProjectService) {
  */
 export async function getInvitesByProjectId(req, res, next) {
   try {
-    const project = await projectService.getProjectById(req.params.id);
-    const invites = await project.getInvites();
+    const invites = await inviteService.getInvitesByProjectId(req.params.id);
     res.send(invites);
   } catch (error) {
     next(error);
@@ -53,8 +52,7 @@ export async function getInvitesByProjectId(req, res, next) {
  */
 export async function getInvitesByUserId(req, res, next) {
   try {
-    const user = await userService.getUserByIdOrUsername(req.params.id);
-    const invites = await user.getInvitationsToProjects();
+    const invites = await inviteService.getInvitesByUserId(req.params.id);
     res.send(invites);
   } catch (error) {
     next(error);
@@ -80,12 +78,15 @@ export async function getInvitesByAuthenticatedUser(req, res, next) {
  */
 export async function addInviteToProject(req, res, next) {
   try {
+    const projectId = req.params.projectId;
+    const userId = req.params.userId;
     const daysUntilExpiration = req.params.daysUntilExpiration;
 
-    const project = await projectService.getProjectById(req.params.projectId);
-    const user = await userService.getUserByIdOrUsername(req.params.userId);
+    // Validate that the user and project actually exist
+    await projectService.getProjectById(projectId);
+    await userService.getUserByIdOrUsername(userId);
 
-    const invite = await inviteService.createInvite(project, user, daysUntilExpiration);
+    const invite = await inviteService.createInvite(projectId, userId, daysUntilExpiration);
     res.status(201).send(invite);
   } catch (error) {
     next(error);

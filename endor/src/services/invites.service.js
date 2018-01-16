@@ -26,7 +26,8 @@ export default class InviteService {
    * @returns {boolean} whether or not the string is a valid InviteStatus
    */
   static isValidInviteStatus(status) {
-    return InviteStatus.values().filter(value => value === status).length > 0;
+    const inviteStatusValues = Object.keys(InviteStatus).map(key => InviteStatus[key]);
+    return inviteStatusValues.filter(value => value === status).length > 0;
   }
 
 
@@ -40,12 +41,12 @@ export default class InviteService {
   static async validateInvite(invite, asNewInvite) {
     const errors = [];
     if (asNewInvite) {
-      if (!('userInvited' in invite)) {
-        errors.push(new RequestParamError('userInvited', 'User is required.'));
+      if (!('userInvitedId' in invite)) {
+        errors.push(new RequestParamError('userInvitedId', 'User is required.'));
       }
 
-      if (!('projectInvitedTo' in invite)) {
-        errors.push(new RequestParamError('projectInvitedTo', 'Project is required.'));
+      if (!('projectInvitedToId' in invite)) {
+        errors.push(new RequestParamError('projectInvitedToId', 'Project is required.'));
       }
     } else if (!('status' in invite)) {
       errors.push(new RequestParamError('status', 'Status is required for invite updates.'));
@@ -57,7 +58,8 @@ export default class InviteService {
     }
 
     if (invite.status && !InviteService.isValidInviteStatus(invite.status)) {
-      const enumValues = InviteStatus.values().join(', ');
+      const inviteStatusValues = Object.keys(InviteStatus).map(key => InviteStatus[key]);
+      const enumValues = inviteStatusValues.join(', ');
       errors.push(new RequestParamError('status', `Must be one of the following: ${enumValues}`));
     }
 
@@ -85,23 +87,63 @@ export default class InviteService {
   }
 
   /**
+   * Gets all invites for the given project
+   * @param projectId the project id to find by
+   * @returns {Object} the invite that was found
+   */
+  async getInvitesByProjectId(projectId) {
+    this.log.info(`InviteService: find invite with project id of ${projectId}`);
+    const invitesFound = await this.inviteRepository.findAll({
+      where: {
+        projectInvitedToId: projectId
+      }
+    });
+
+    if (invitesFound === null) {
+      throw new InviteNotFoundException(`Invites belonging to project ${projectId} could not be found.`);
+    }
+
+    return invitesFound;
+  }
+
+  /**
+   * Gets all invites for the given user
+   * @param userId the user id to find by
+   * @returns {Object} the invite that was found
+   */
+  async getInvitesByUserId(userId) {
+    this.log.info(`InviteService: find invite with user id of ${userId}`);
+    const invitesFound = await this.inviteRepository.findAll({
+      where: {
+        userInvitedId: userId
+      }
+    });
+
+    if (invitesFound === null) {
+      throw new InviteNotFoundException(`Invites for user ${userId} could not be found.`);
+    }
+
+    return invitesFound;
+  }
+
+  /**
    * Creates a new invite
-   * @param project the project to which the user is being invited to
-   * @param user the user being invited
+   * @param projectId the id of the project to which the user is being invited to
+   * @param userId the id of the user being invited
    * @param daysUntilExpiration the number of days the invite will remain open before expiring
    * @returns {Object} the created invite
    */
-  async createInvite(project, user, daysUntilExpiration) {
-    this.log.info(`InviteService: creating invite for user ${user.id} to project ${project.id}`);
+  async createInvite(projectId, userId, daysUntilExpiration) {
+    this.log.info(`InviteService: creating invite for user ${userId} to project ${projectId}`);
 
     const invite = {
-      userInvited: user,
-      projectInvitedTo: project,
+      userInvitedId: userId,
+      projectInvitedToId: projectId,
       status: InviteStatus.OPEN,
       daysFromCreationUntilExpiration: daysUntilExpiration
     };
 
-    const errors = await this.validateInvite(invite, true);
+    const errors = await InviteService.validateInvite(invite, true);
     if (errors.length !== 0) {
       throw new InvalidRequestException(errors);
     }
@@ -118,7 +160,7 @@ export default class InviteService {
   async updateInvite(inviteId, invite) {
     this.log.info(`InviteService: update invite ${inviteId}`);
 
-    const errors = await this.validateInvite(invite, false);
+    const errors = await InviteService.validateInvite(invite, false);
     if (errors.length !== 0) {
       throw new InvalidRequestException(errors);
     }

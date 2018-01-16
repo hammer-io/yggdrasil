@@ -54,38 +54,6 @@ const Tool = model.define('tool', {
 });
 
 
-const InviteStatus = {
-  OPEN: 'open',
-  ACCEPTED: 'accepted',
-  RESCINDED: 'rescinded',
-  EXPIRED: 'expired'
-};
-const Invite = model.define('invite', {
-  // userInvited and projectInvitedTo defined below in InviteUser
-  status: {
-    type: Sequelize.DataTypes.ENUM,
-    values: [
-      InviteStatus.OPEN,
-      InviteStatus.ACCEPTED,
-      InviteStatus.RESCINDED,
-      InviteStatus.EXPIRED
-    ],
-    defaultValue: InviteStatus.OPEN
-  },
-  daysFromCreationUntilExpiration: {
-    type: Sequelize.DataTypes.INTEGER,
-    defaultValue: 30
-  }
-});
-
-
-const InviteUser = model.define('inviteUser', {
-  // ASSOCIATIONS DEFINED BELOW
-});
-Invite.belongsTo(User, { as: 'userInvited', through: 'inviteUser' });
-User.belongsToMany(Invite, { as: 'invitationsToProjects', through: 'inviteUser' });
-
-
 const Project = model.define('project', {
   // owners, contributors, invites, and various tools defined below
   projectName: STRING,
@@ -116,11 +84,31 @@ Project.belongsToMany(User, { as: 'contributors', through: 'projectContributor' 
 User.belongsToMany(Project, { as: 'projectsContributed', through: 'projectContributor' });
 
 
-const ProjectInvite = model.define('projectInvite', {
-  // ASSOCIATIONS DEFINED BELOW
+const InviteStatus = {
+  OPEN: 'open',
+  ACCEPTED: 'accepted',
+  RESCINDED: 'rescinded',
+  EXPIRED: 'expired'
+};
+const Invite = model.define('invite', {
+  // userInvited and projectInvitedTo defined below
+  status: {
+    type: Sequelize.DataTypes.ENUM,
+    values: [
+      InviteStatus.OPEN,
+      InviteStatus.ACCEPTED,
+      InviteStatus.RESCINDED,
+      InviteStatus.EXPIRED
+    ],
+    defaultValue: InviteStatus.OPEN
+  },
+  daysFromCreationUntilExpiration: {
+    type: Sequelize.DataTypes.INTEGER,
+    defaultValue: 30
+  }
 });
-Invite.belongsTo(Project, { as: 'projectInvitedTo', through: 'projectInvite' });
-Project.belongsToMany(Invite, { as: 'invites', through: 'projectInvite' });
+Invite.belongsTo(User, { as: 'userInvited' });
+Invite.belongsTo(Project, { as: 'projectInvitedTo' });
 
 
 // --------------------------- MODEL DEFINITION END ---------------------------
@@ -133,11 +121,9 @@ module.exports.model = model;
 module.exports.User = User;
 module.exports.Tool = Tool;
 module.exports.Invite = Invite;
-module.exports.InviteUser = InviteUser;
 module.exports.Project = Project;
 module.exports.ProjectOwner = ProjectOwner;
 module.exports.ProjectContributor = ProjectContributor;
-module.exports.ProjectInvite = ProjectInvite;
 
 // Other things provided for convenience
 module.exports.ToolType = ToolType;
