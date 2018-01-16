@@ -51,6 +51,7 @@ async function main() {
     await sequelize.User.sync({ force: overwriteExistingTables });
     await sequelize.Tool.sync({ force: overwriteExistingTables });
     await sequelize.Invite.sync({ force: overwriteExistingTables });
+    await sequelize.InviteUser.sync({ force: overwriteExistingTables });
     await sequelize.Project.sync({ force: overwriteExistingTables });
     await sequelize.ProjectOwner.sync({ force: overwriteExistingTables });
     await sequelize.ProjectContributor.sync({ force: overwriteExistingTables });

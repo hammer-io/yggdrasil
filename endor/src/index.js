@@ -6,11 +6,13 @@ import index from './routes/index.routes';
 import * as projects from './routes/projects.routes';
 import * as contributors from './routes/contributors.routes';
 import * as users from './routes/users.routes';
+import * as invites from './routes/invites.routes';
+import UserService from './services/users.service';
+import InviteService from './services/invites.service';
 import ProjectService from './services/projects.service';
 import sequalize from './db/sequelize';
 import { getActiveLogger } from './utils/winston';
 import * as owners from './routes/owners.routes';
-import UserService from './services/users.service';
 
 const app = express();
 
@@ -23,10 +25,12 @@ app.use(cookieParser());
 // dependency injections //
 const userService = new UserService(sequalize.User, getActiveLogger());
 const projectService = new ProjectService(sequalize.Project, userService, getActiveLogger());
+const inviteService = new InviteService(sequalize.Invite, getActiveLogger());
 projects.setProjectService(projectService);
 users.setDependencies(userService);
 contributors.setDependencies(projectService);
 owners.setDependencies(projectService);
+invites.setDependencies(inviteService, userService, projectService);
 // end dependency injections //
 
 

@@ -61,7 +61,7 @@ const InviteStatus = {
   EXPIRED: 'expired'
 };
 const Invite = model.define('invite', {
-  daysFromCreationUntilExpiration: Sequelize.DataTypes.INTEGER,
+  // userInvited and projectInvitedTo defined below in InviteUser
   status: {
     type: Sequelize.DataTypes.ENUM,
     values: [
@@ -69,13 +69,25 @@ const Invite = model.define('invite', {
       InviteStatus.ACCEPTED,
       InviteStatus.RESCINDED,
       InviteStatus.EXPIRED
-    ]
+    ],
+    defaultValue: InviteStatus.OPEN
   },
-  dateOfStatusChange: Sequelize.DataTypes.DATE
+  daysFromCreationUntilExpiration: {
+    type: Sequelize.DataTypes.INTEGER,
+    defaultValue: 30
+  }
 });
 
 
+const InviteUser = model.define('inviteUser', {
+  // ASSOCIATIONS DEFINED BELOW
+});
+Invite.belongsTo(User, { as: 'userInvited', through: 'inviteUser' });
+User.belongsToMany(Invite, { as: 'invitationsToProjects', through: 'inviteUser' });
+
+
 const Project = model.define('project', {
+  // owners, contributors, invites, and various tools defined below
   projectName: STRING,
   description: STRING(1024),
   version: STRING,
@@ -107,6 +119,7 @@ User.belongsToMany(Project, { as: 'projectsContributed', through: 'projectContri
 const ProjectInvite = model.define('projectInvite', {
   // ASSOCIATIONS DEFINED BELOW
 });
+Invite.belongsTo(Project, { as: 'projectInvitedTo', through: 'projectInvite' });
 Project.belongsToMany(Invite, { as: 'invites', through: 'projectInvite' });
 
 
@@ -120,6 +133,7 @@ module.exports.model = model;
 module.exports.User = User;
 module.exports.Tool = Tool;
 module.exports.Invite = Invite;
+module.exports.InviteUser = InviteUser;
 module.exports.Project = Project;
 module.exports.ProjectOwner = ProjectOwner;
 module.exports.ProjectContributor = ProjectContributor;

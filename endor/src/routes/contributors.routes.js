@@ -100,7 +100,7 @@ router.post('/projects/:id/contributors/:user', contributorsController.addContri
  * @apiPermission project owner
  *
  * @apiParam {String} id the id of the project
- * @apiParam {String} user user id or username of the user to add as a contributor
+ * @apiParam {String} user user id or username of the user to remove as a contributor
  *
  * @apiSuccessExample {json} Success-Response
  * Status: 204 No Content
