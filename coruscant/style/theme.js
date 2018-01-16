@@ -17,6 +17,12 @@ const theme = {
       thin: 'Roboto-Light'
     },
 
+    weight: {
+      light: 300,
+      regular: 400,
+      medium: 500,
+    },
+
     small: {
       size: 12,
       lineHeight: 16
