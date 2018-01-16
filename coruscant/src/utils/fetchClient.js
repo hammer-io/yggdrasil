@@ -35,7 +35,7 @@ class FetchClient {
     return this.send('DELETE', opts)
   }
 
-  isErrorCode (statusCode) {
+  static isErrorCode (statusCode) {
     return statusCode >= 400
   }
 
