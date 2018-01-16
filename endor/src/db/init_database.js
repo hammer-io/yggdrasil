@@ -49,10 +49,14 @@ async function main() {
   try {
     // Make all calls to initialize tables here!
     await sequelize.User.sync({ force: overwriteExistingTables });
+    await sequelize.Credentials.sync({ force: overwriteExistingTables });
     await sequelize.Tool.sync({ force: overwriteExistingTables });
     await sequelize.Project.sync({ force: overwriteExistingTables });
     await sequelize.ProjectOwner.sync({ force: overwriteExistingTables });
     await sequelize.ProjectContributor.sync({ force: overwriteExistingTables });
+    await sequelize.Client.sync({ force: overwriteExistingTables });
+    await sequelize.AccessCode.sync({ force: overwriteExistingTables });
+    await sequelize.Token.sync({ force: overwriteExistingTables });
 
     // Add initial values
     await createTools();

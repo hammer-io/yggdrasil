@@ -9,4 +9,8 @@ export default class NotFoundException {
     this.status = status;
     log.error(message);
   }
+
+  toString() {
+    return `${this.type} ${this.status}: ${this.message}`;
+  }
 }

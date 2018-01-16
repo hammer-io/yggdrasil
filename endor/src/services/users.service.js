@@ -1,17 +1,23 @@
 import validator from 'validator';
+import bcrypt from 'bcrypt';
 
 import UserNotFoundException from '../error/UserNotFoundException';
 import InvalidRequestException from '../error/InvalidRequestException';
+import InvalidCredentialsException from '../error/InvalidCredentialsException';
 import RequestParamError from '../error/RequestParamError';
+
+const SALT_ROUNDS = 10;
 
 export default class UserService {
   /**
    * User Service constructor
-   * @param userRepository the user repository to inject (most likely something from sequalize)
+   * @param userRepository the user repository to inject (most likely something from sequelize)
+   * @param credentialsRepository the credentials repository to inject
    * @param log the logger to inject
    */
-  constructor(userRepository, log) {
+  constructor(userRepository, credentialsRepository, log) {
     this.userRepository = userRepository;
+    this.credentialsRepository = credentialsRepository;
     this.log = log;
   }
 
@@ -93,6 +99,22 @@ export default class UserService {
   }
 
   /**
+   * Validates the credentials of a user
+   * @param password
+   * @returns {Promise.<Array>}
+   */
+  async validateCredentials(password) {
+    this.log.info('UserService: Validating credentials');
+    const errors = [];
+
+    if (password === null || password === undefined || password.length < 8 || !password.match(/\d+/g)) {
+      errors.push(new RequestParamError('password', 'Must contain at least one digit and have at least eight characters.'))
+    }
+
+    return errors;
+  }
+
+  /**
    * Gets all users that have not been deleted
    * @returns {Array} a list of all users
    */
@@ -145,20 +167,59 @@ export default class UserService {
     return userFound;
   }
 
+  async getCredentialsByUsername(username, password) {
+    this.log.info(`UserService: find credentials of user with username ${username}`);
+    const userFound = await this.userRepository.findOne({
+      where: {
+        username
+      }
+    });
+    if (userFound === null) {
+      return Promise.reject(new InvalidCredentialsException('Invalid credentials'));
+    }
+
+    const cred = await this.credentialsRepository.findOne({
+      where: {
+        userId: userFound.id
+      }
+    });
+    const match = bcrypt.compareSync(password, cred.password);
+
+    if (!match) {
+      return Promise.reject(new InvalidCredentialsException('Invalid credentials'))
+    }
+
+    return userFound;
+  }
+
   /**
    * Creates a new user
    * @param user the user to create
+   * @param password the credentials object associated with the user being created
    * @returns {Object} the created user
    */
-  async createUser(user) {
+  async createUser(user, password) {
     this.log.info(`UserService: creating user ${user}`);
 
-    const errors = await this.validateUser(user, true);
-    if (errors.length !== 0) {
-      throw new InvalidRequestException(errors);
+    const userErrors = await this.validateUser(user, true);
+    if (userErrors.length !== 0) {
+      return Promise.reject(new InvalidRequestException(userErrors));
     }
 
+    const credentialErrors = await this.validateCredentials(password);
+    if (credentialErrors.length !== 0) {
+      return Promise.reject(new InvalidRequestException(credentialErrors));
+    }
+
+    const salt = bcrypt.genSaltSync(SALT_ROUNDS);
+    const credentials = {
+      salt,
+      password: await bcrypt.hashSync(password, salt)
+    };
+
     const userCreated = await this.userRepository.create(user);
+    const cred = await this.credentialsRepository.create(credentials);
+    await cred.setUser(userCreated);
     return userCreated;
   }
 

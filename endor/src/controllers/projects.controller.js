@@ -14,7 +14,7 @@ let projectService = {};
  * Handles the GET /project endpoint
  * @param req the request
  * @param res the response
- * @param call to the next middleware
+ * @param next to the next middleware
  */
 export async function getAllProjects(req, res, next) {
   try {
@@ -34,7 +34,6 @@ export async function getAllProjects(req, res, next) {
 async function getProjectsForUser(user, res, next) {
   try {
     const projects = await projectService.getProjectsByUser(user);
-    console.log(projects);
     res.send(projects);
   } catch (error) {
     next(error);

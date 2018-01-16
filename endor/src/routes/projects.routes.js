@@ -6,6 +6,7 @@
  */
 
 import express from 'express';
+import * as authController from '../controllers/auth.controller';
 import * as projectController from '../controllers/projects.controller';
 import * as projectValidator from '../middlewares/projects.middleware';
 
@@ -21,6 +22,8 @@ let projectService = {};
  * @apiGroup Projects
  *
  * @apiPermission none
+ *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  *
  * @apiSuccess {Object[]} projects List of all of the public projects
  * @apiSuccessExample {json} Success-Response:
@@ -41,7 +44,7 @@ let projectService = {};
  *  }
  * ]
  */
-router.get('/projects', projectController.getAllProjects);
+router.get('/projects', authController.isAuthenticated, projectController.getAllProjects);
 
 /**
  * @api {get} /user/projects Get projects for an authenticated user
@@ -50,6 +53,8 @@ router.get('/projects', projectController.getAllProjects);
  * @apiGroup Projects
  *
  * @apiPermission authenticated user
+ *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  *
  * @apiSuccess {Object[]} projects list of projects for authenticated user
  * @apiSuccessExample {json} Success-Response:
@@ -100,7 +105,7 @@ router.get('/projects', projectController.getAllProjects);
      ]
  }
  */
-router.get('/user/projects', projectController.getProjectByAuthenticatedUser);
+router.get('/user/projects', authController.isAuthenticated, projectController.getProjectByAuthenticatedUser);
 
 /**
  * @api {get} /users/:user/projects Get a project by user id
@@ -108,6 +113,7 @@ router.get('/user/projects', projectController.getProjectByAuthenticatedUser);
  * @apiName get projects for user
  * @apiGroup Projects
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} user the user id or the username to find by
  *
  * @apiSuccess {[Object]} projects the list of projects for a given user
@@ -159,7 +165,7 @@ router.get('/user/projects', projectController.getProjectByAuthenticatedUser);
      ]
  }
  */
-router.get('/users/:user/projects', projectController.getProjectsByUser);
+router.get('/users/:user/projects', authController.isAuthenticated, projectController.getProjectsByUser);
 
 /**
  * @api {get} /projects/:projectId Get project by id
@@ -169,6 +175,7 @@ router.get('/users/:user/projects', projectController.getProjectsByUser);
  *
  * @apiPermission autenticated user
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} projectId the projectId to find by
  *
  * @apiSuccess {Object} project the project
@@ -188,7 +195,7 @@ router.get('/users/:user/projects', projectController.getProjectsByUser);
  *    "webFrameworkId": null
  *  }
  */
-router.get('/projects/:projectId', projectController.getProjectById);
+router.get('/projects/:projectId', authController.isAuthenticated, projectController.getProjectById);
 
 /**
  * @api {post} /user/projects Create a project for an authenticated user
@@ -198,6 +205,7 @@ router.get('/projects/:projectId', projectController.getProjectById);
  *
  * @apiPermission authenticated user
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} projectName the name of the project
  * @apiParam {String} description the description to the project
  * @apiParam {String} version the version of the project
@@ -240,7 +248,11 @@ router.get('/projects/:projectId', projectController.getProjectById);
  *    "webFrameworkId": 4
  *  }
  */
-router.post('/user/projects', projectValidator.checkCreateProject(), projectController.createProjectForAuthenticatedUser);
+router.post(
+  '/user/projects',
+  [authController.isAuthenticated].concat(projectValidator.checkCreateProject()),
+  projectController.createProjectForAuthenticatedUser
+);
 
 /**
  * @api {post} /users/:user/projects Create a project
@@ -250,6 +262,7 @@ router.post('/user/projects', projectValidator.checkCreateProject(), projectCont
  *
  * @apiPermission authenticated user
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} user the username or userid of the user to create a project for
  * @apiParam {String} projectName the name of the project
  * @apiParam {String} description the description to the project
@@ -293,7 +306,11 @@ router.post('/user/projects', projectValidator.checkCreateProject(), projectCont
  *    "webFrameworkId": 4
  *  }
  */
-router.post('/users/:user/projects', projectValidator.checkCreateProject(), projectController.createProjectForUser);
+router.post(
+  '/users/:user/projects',
+  [authController.isAuthenticated].concat(projectValidator.checkCreateProject()),
+  projectController.createProjectForUser
+);
 
 /**
  * @api {patch} /projects/:id Update a project
@@ -303,6 +320,7 @@ router.post('/users/:user/projects', projectValidator.checkCreateProject(), proj
  *
  * @apiPermission project owner
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} id the id of the project to update
  *
  * @apiSuccess {Object} project the updated project
@@ -322,7 +340,11 @@ router.post('/users/:user/projects', projectValidator.checkCreateProject(), proj
  *    "webFrameworkId": null
  *  }
  */
-router.patch('/projects/:id', projectValidator.checkUpdateProject(), projectController.updateProjectById);
+router.patch(
+  '/projects/:id',
+  [authController.isAuthenticated].concat(projectValidator.checkUpdateProject()),
+  projectController.updateProjectById
+);
 
 /**
  * @api {delete} /projects/:id Delete a project
@@ -330,13 +352,14 @@ router.patch('/projects/:id', projectValidator.checkUpdateProject(), projectCont
  * @apiName delete project
  * @apiGroup Projects
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiPermission project owner
  *
  * @apiSuccess {Object} project the deleted project
  * @apiSuccessExample {json} Success-Response
  * Status: 204 No Content
  */
-router.delete('/projects/:id', projectController.deleteProjectById);
+router.delete('/projects/:id', authController.isAuthenticated, projectController.deleteProjectById);
 
 /**
  * Sets the project service dependency for the controller

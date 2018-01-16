@@ -1,5 +1,6 @@
 import express from 'express';
-import * as usersController from './../controllers/users.controller'
+import * as authController from './../controllers/auth.controller';
+import * as usersController from './../controllers/users.controller';
 import * as userValidator from './../middlewares/users.middleware';
 
 export const router = express.Router();
@@ -12,6 +13,8 @@ let userService = {};
  * @apiGroup Users
  *
  * @apiPermission none
+ *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  *
  * @apiSuccess {Object[]} users List of all of the public users
  * @apiSuccessExample {json} Success-Response:
@@ -27,7 +30,7 @@ let userService = {};
     }
   ]
  */
-router.get('/users', usersController.getAllUsers);
+router.get('/users', authController.isAuthenticated, usersController.getAllUsers);
 
 /**
  * @api {get} /users/:user Get user by id or username
@@ -36,6 +39,8 @@ router.get('/users', usersController.getAllUsers);
  * @apiGroup Users
  *
  * @apiPermission none
+ *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  *
  * @apiSuccess {Object} users List of all of the public users
  * @apiSuccessExample {json} Success-Response:
@@ -49,7 +54,7 @@ router.get('/users', usersController.getAllUsers);
     "updatedAt": "2017-11-12T20:26:47.000Z"
   }
  */
-router.get('/users/:user', usersController.getUserByIdOrUsername);
+router.get('/users/:user', authController.isAuthenticated, usersController.getUserByIdOrUsername);
 
 /**
  * @api {get} /user Get authenticated user
@@ -58,6 +63,8 @@ router.get('/users/:user', usersController.getUserByIdOrUsername);
  * @apiGroup Users
  *
  * @apiPermission authenticated user
+ *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  *
  * @apiSuccess {Object} user Authenticated user information
  * @apiSuccessExample {json} Success-Response:
@@ -71,7 +78,7 @@ router.get('/users/:user', usersController.getUserByIdOrUsername);
       "updatedAt": "2017-11-12T20:26:47.000Z"
     }
  */
-router.get('/user', usersController.getAuthenticatedUser);
+router.get('/user', authController.isAuthenticated, usersController.getAuthenticatedUser);
 
 /**
  * @api {post} /users Create new user
@@ -81,6 +88,7 @@ router.get('/user', usersController.getAuthenticatedUser);
  *
  * @apiPermission authenticated user
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} username the username of the user
  * @apiParam {String} email the email of the user
  * @apiParam {String} firstName the first name of the user
@@ -91,7 +99,8 @@ router.get('/user', usersController.getAuthenticatedUser);
  *  "username": "BobSagat",
  *  "email": "Bob@AFV.com",
  *  "firstName": "Bob",
- *  "lastName": "Sagat"
+ *  "lastName": "Sagat",
+ *  "password": "SuperSecurePassword1"
  * }
  *
  * @apiSuccess {json} user The user that was created
@@ -106,7 +115,7 @@ router.get('/user', usersController.getAuthenticatedUser);
       "updatedAt": "2017-11-12T20:26:47.000Z"
     }
  */
-router.post('/users', userValidator.checkCreateUser(), usersController.createUser);
+router.post('/users', authController.isClientAuthenticated, usersController.createUser);
 
 /**
  * @api {patch} /users/:user update a user
@@ -114,6 +123,7 @@ router.post('/users', userValidator.checkCreateUser(), usersController.createUse
  * @apiName update user
  * @apiGroup Users
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} id the id of the user to update
  * @apiParam {String} username the username of the user
  * @apiParam {String} email the email of the user
@@ -140,7 +150,11 @@ router.post('/users', userValidator.checkCreateUser(), usersController.createUse
       "updatedAt": "2017-11-14T20:26:47.000Z"
     }
  */
-router.patch('/users/:user', userValidator.checkUpdateUser(), usersController.updateUserByIdOrUsername);
+router.patch(
+  '/users/:user',
+  [authController.isAuthenticated].concat(userValidator.checkUpdateUser()),
+  usersController.updateUserByIdOrUsername
+);
 
 /**
  * @api {delete} /users/:user delete a user
@@ -148,12 +162,13 @@ router.patch('/users/:user', userValidator.checkUpdateUser(), usersController.up
  * @apiName delete user
  * @apiGroup Users
  *
+ * @apiHeader Authorization Basic Client-Basic Auth-Token
  * @apiParam {String} id the id of the user to delete
  *
  * @apiSuccessExample {json} Success-Response
  * Status: 204 No Content
  */
-router.delete('/users/:user', usersController.deleteUserById);
+router.delete('/users/:user', authController.isAuthenticated, usersController.deleteUserById);
 
 /**
  * Sets dependencies for the routes
