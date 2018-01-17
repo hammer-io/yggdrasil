@@ -13,4 +13,8 @@ export default class InvalidRequestException {
     this.status = 400;
     log.error(errors);
   }
+
+  toString() {
+    return `${this.type} ${this.status}: ${this.errors}`;
+  }
 }

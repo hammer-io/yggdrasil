@@ -90,3 +90,41 @@ sequelize.User.findAll({
   console.error(err);
 });
 ```
+
+## Authentication
+
+### Basic-Auth
+Uses the user's username and password in the Authentication header to authenticate
+the user.
+
+### Client-Basic
+Uses the client's clientId and secret like a username and password to authenticate and
+to protect a user's credentials.
+
+### Bearer
+A token is used to authenticate the user.
+
+**Steps:**
+* **Note:** All steps must be authenticated, posting a token requires Client-Basic
+* Create a client - post /clients
+* Authorize - get /oauth2/authorize?client_id=<client_id_goes_here>2&response_type=code&redirect_uri=http://localhost:3000/api/v1/oauth2/authorize/successRedirect
+    - returns a transaction_id
+* Post Authorization - post /oauth2/authorize with body:
+    - returns access code if redirect_uri is http://localhost:3000/api/v1/oauth2/authorize/successRedirect
+
+```javascript
+{
+    "transaction_id": <transaction_id_goes_here>,
+    "allow": true
+}
+```
+       
+* Post a new Token - post /oauth2/token?grant_type=authorization_code
+    - returns authentication token
+```javascript
+{
+    "code": "code_goes_here",
+    "grant_type": "authorization_code",
+    "redirect_uri": "http://localhost:3000/api/v1/oauth2/authorize/successRedirect"
+}
+```

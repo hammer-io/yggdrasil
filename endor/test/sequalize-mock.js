@@ -1,10 +1,7 @@
 import Sequelize from 'sequelize';
 
-// eslint-disable-next-line import/no-unresolved
-
 // Added for convenience
-// eslint-disable-next-line prefer-destructuring
-const STRING = Sequelize.DataTypes.STRING;
+const { STRING, BOOLEAN } = Sequelize.DataTypes;
 
 // Create the sequelize instance (once for the app)
 const model = new Sequelize(
@@ -17,6 +14,8 @@ const model = new Sequelize(
 );
 
 // --------------------------- MODEL DEFINITION START ---------------------------
+
+
 const User = model.define('user', {
   username: { type: STRING, unique: true },
   email: STRING,
@@ -24,6 +23,31 @@ const User = model.define('user', {
   lastName: STRING
 });
 
+const Credentials = model.define('credentials', {
+  password: { type: STRING, allowNull: false }
+});
+Credentials.belongsTo(User, { as: 'user', through: 'username' });
+
+const Client = model.define('client', {
+  clientId: { type: STRING, unique: true, allowNull: false },
+  name: { type: STRING, allowNull: false },
+  secret: { type: STRING, allowNull: false }
+});
+Client.belongsTo(User, { as: 'user', through: 'username' });
+
+const AccessCode = model.define('accessCode', {
+  value: { type: STRING, allowNull: false },
+  redirectURI: { type: STRING, allowNull: false }
+});
+AccessCode.belongsTo(User, { as: 'user', through: 'username' });
+AccessCode.belongsTo(Client, { as: 'client', through: 'id' });
+
+const Token = model.define('token', {
+  value: { type: STRING(2048), allowNull: false },
+  expired: { type: BOOLEAN, defaultValue: false }
+});
+Token.belongsTo(User, { as: 'user', through: 'username' });
+Token.belongsTo(Client, { as: 'client', through: 'id' });
 
 const ToolType = {
   CONTAINERIZATION: 'containerization',
@@ -85,13 +109,15 @@ User.belongsToMany(Project, { as: 'projectsContributed', through: 'projectContri
 // --------------------------- MODEL DEFINITION END ---------------------------
 
 
-// --------------------------- DATA IMPORT ------------------------------------
-
 // Model Instance
 module.exports.model = model;
 
 // Model Objects
 module.exports.User = User;
+module.exports.Credentials = Credentials;
+module.exports.Client = Client;
+module.exports.AccessCode = AccessCode;
+module.exports.Token = Token;
 module.exports.Tool = Tool;
 module.exports.Project = Project;
 module.exports.ProjectOwner = ProjectOwner;

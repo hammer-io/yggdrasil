@@ -1,48 +1,17 @@
 import { expect } from 'chai';
+import { defineTables, populateUsers } from './setupMockDB';
 // Using Expect style
 const sequalize = require('./sequalize-mock');
 
 import UserService from './../dist/services/users.service';
 import { getActiveLogger } from '../dist/utils/winston';
 
-const userService = new UserService(sequalize.User, getActiveLogger());
+const userService = new UserService(sequalize.User, sequalize.Credentials, getActiveLogger());
 
 describe('Testing User Service', () => {
   beforeEach(async () => {
-    await sequalize.User.sync({ force: true });
-    await sequalize.Tool.sync({ force: true });
-    await sequalize.Project.sync({ force: true });
-    await sequalize.ProjectOwner.sync({ force: true });
-    await sequalize.ProjectContributor.sync({ force: true });
-
-    await sequalize.User.bulkCreate([
-      {
-        username: 'BobSagat',
-        email: 'Bob@AFV.com',
-        firstName: 'Bob',
-        lastName: 'Sagat'
-      },
-      {
-        username: 'globalwarmingguy56',
-        email: 'Al@saveourplanet.com',
-        firstName: 'Al',
-        lastName: 'Gore'
-      },
-      {
-        username: 'jreach',
-        email: 'jreach@gmail.com',
-        firstName: 'Jack',
-        lastName: 'Reacher'
-      },
-      {
-        username: 'johnnyb',
-        email: 'jbravo@cartoonnetwork.com',
-        firstName: 'Johnny',
-        lastName: 'Bravo'
-      }
-    ]);
-
-
+    await defineTables();
+    await populateUsers();
   });
 
   describe('get user by username or id', async () => {
@@ -131,8 +100,7 @@ describe('Testing User Service', () => {
         firstName: 'LeBron',
         lastName: 'James'
       };
-
-      const userCreated = await userService.createUser(newUser);
+      const userCreated = await userService.createUser(newUser, 'plaintext1');
       expect(userCreated.id).to.equal(5);
       expect(userCreated.username).to.equal('lebron');
       expect(userCreated.email).to.equal('lebron@cavs.com');
@@ -152,6 +120,7 @@ describe('Testing User Service', () => {
         const userCreated = await userService.createUser(newUser);
         expect(userCreated).to.be('undefined');
       } catch (error) {
+        expect(error.errors).to.not.be.an('undefined');
         expect(error.errors.length).to.equal(1);
         expect(error.errors[0].field).to.equal('username');
         expect(error.errors[0].message).to.equal('User with username BobSagat already exists.');
@@ -174,6 +143,7 @@ describe('Testing User Service', () => {
         const userCreated = await userService.createUser(newUser);
         expect(userCreated).to.be('undefined');
       } catch (error) {
+        expect(error.errors).to.not.be.an('undefined');
         expect(error.errors.length).to.equal(1);
         expect(error.errors[0].field).to.equal('email');
         expect(error.errors[0].message).to.equal('User with email Bob@AFV.com already exists.')
@@ -191,6 +161,7 @@ describe('Testing User Service', () => {
         const userCreated = await userService.createUser(newUser);
         expect(userCreated).to.be('undefined');
       } catch (error) {
+        expect(error.errors).to.not.be.an('undefined');
         expect(error.errors.length).to.equal(4);
 
         // check that the user was not created

@@ -1,8 +1,11 @@
+import bcrypt from 'bcrypt';
 import sequelize from './sequelize';
 
 // This file fills the database with data for testing
 
 async function importUserData() {
+  const salt = await bcrypt.genSalt(10);
+  const pass = await bcrypt.hash('plaintext1', salt);
   await sequelize.User.bulkCreate([
     {
       username: 'BobSagat',
@@ -29,6 +32,37 @@ async function importUserData() {
       lastName: 'Bravo'
     }
   ]);
+
+
+  const user1 = await sequelize.User.findOne({
+    where: { username: 'johnnyb' }
+  });
+  const user2 = await sequelize.User.findOne({
+    where: { username: 'globalwarmingguy56' }
+  });
+  const user3 = await sequelize.User.findOne({
+    where: { username: 'jreach' }
+  });
+  const user4 = await sequelize.User.findOne({
+    where: { username: 'BobSagat' }
+  });
+
+  const cred1 = await sequelize.Credentials.create({
+    password: pass
+  });
+  const cred2 = await sequelize.Credentials.create({
+    password: pass
+  });
+  const cred3 = await sequelize.Credentials.create({
+    password: pass
+  });
+  const cred4 = await sequelize.Credentials.create({
+    password: pass
+  });
+  await cred1.setUser(user1);
+  await cred2.setUser(user2);
+  await cred3.setUser(user3);
+  await cred4.setUser(user4);
 }
 
 async function importProjectData() {

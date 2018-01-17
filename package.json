@@ -18,7 +18,9 @@
   },
   "homepage": "https://github.com/hammer-io/yggdrasil#readme",
   "dependencies": {
-    "babel-polyfill": "6.26.0"
+    "babel-polyfill": "6.26.0",
+    "express-session": "^1.15.6",
+    "passport-http": "^0.3.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
