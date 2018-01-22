@@ -1,12 +1,7 @@
 import { combineReducers } from 'redux'
-import menuOpen from './menuOpen'
-import userID from './userID'
-import newProjectInfo from './ProjectCreation'
-import registerInfo from './registerInfo'
+
+import session from './session'
 
 export default combineReducers({
-    menuOpen,
-    userID,
-    newProjectInfo,
-    registerInfo
+    session
 })

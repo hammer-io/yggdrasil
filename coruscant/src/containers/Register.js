@@ -18,6 +18,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'center',
     padding: Theme.padding.regular
   },
   button: {
@@ -33,8 +34,8 @@ class Register extends Component {
   render() {
     return (
       <div style={styles.container}>
-        <h4 style={styles.header}>Create an account</h4>
         <Paper style={styles.form}>
+          <h4 style={styles.header}>Create an account</h4>
           <TextField
             hintText="Email"
             floatingLabelText="Email"

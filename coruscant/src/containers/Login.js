@@ -32,8 +32,8 @@ class Login extends Component {
   render() {
     return (
       <div style={styles.container}>
-        <h4 style={styles.header}>Sign in to Hammer-io</h4>
         <Paper style={styles.form}>
+          <h4 style={styles.header}>Sign in to Hammer-io</h4>
           <TextField
             hintText="Username"
             floatingLabelText="Username"
