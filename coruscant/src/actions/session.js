@@ -64,7 +64,7 @@ export function logout(token) {
       })
       if (!error) {
         dispatch(setAccessToken(''))
-        dispatch(setUser({}))
+        dispatch(setUser(null))
         return null
       }
       return error

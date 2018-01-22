@@ -18,6 +18,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'center',
     padding: Theme.padding.regular
   },
   button: {
