@@ -17,12 +17,11 @@
     "url": "https://github.com/hammer-io/yggradsil/issues"
   },
   "homepage": "https://github.com/hammer-io/yggdrasil#readme",
-  "dependencies": {
-    "babel-polyfill": "6.26.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-plugin-transform-async-to-generator": "6.24.1",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "1.6.0",
     "eslint": "4.8.0",
     "eslint-config-airbnb-base": "12.0.1",
