@@ -196,13 +196,13 @@ export default class UserService {
    * Creates a new user
    * @param user the user to create
    * @param password the credentials object associated with the user being created
-   * @param validate if the user should be validated defaults to true
+   * @param toValidate if the user should be validated defaults to true
    * @returns {Object} the created user
    */
-  async createUser(user, password, validate = true) {
+  async createUser(user, password, toValidate = true) {
     this.log.info(`UserService: creating user ${user}`);
 
-    const userErrors = await this.validateUser(user, validate);
+    const userErrors = await this.validateUser(user, toValidate);
     if (userErrors.length !== 0) {
       return Promise.reject(new InvalidRequestException(userErrors));
     }

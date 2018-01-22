@@ -179,7 +179,7 @@ router.get('/oauth2/authorize/successRedirect', authController.isAuthenticated, 
  * }
  *
  */
-router.post('/oauth2/register', authValidator.checkToken(), authController.register);
+router.post('/auth/register', authValidator.checkToken(), authController.register);
 
 /**
  * @api { get } /oauth2 Check Authentication Token
@@ -194,7 +194,7 @@ router.post('/oauth2/register', authValidator.checkToken(), authController.regis
  *
  * @apiSuccess status 200
  */
-router.get('/oauth2', authController.isBearerAuthenticated, authController.checkToken);
+router.get('/auth', authController.isBearerAuthenticated, authController.checkToken);
 
 /**
  * Sets dependencies for the routes

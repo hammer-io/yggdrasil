@@ -1,4 +1,5 @@
 import uid from 'uid-safe';
+import sequelize from 'sequelize';
 
 import RequestParamError from '../error/RequestParamError';
 import InvalidRequestException from '../error/InvalidRequestException';
@@ -86,7 +87,7 @@ export default class AuthService {
       });
       return token;
     } catch (err) {
-      if (err.name === 'SequelizeForeignKeyConstraintError') {
+      if (err instanceof sequelize.ForeignKeyConstraintError) {
         return Promise.reject(new InvalidRequestException([err]));
       }
       return Promise.reject(err);
@@ -123,7 +124,6 @@ export default class AuthService {
   /**
    * Create a code for a given client.
    *
-   * @param client the client id
    * @param redirectUri where the client should be redirected upon success
    * @param user the user id who owns the client
    * @returns {Promise.<*>} the newly created code
@@ -146,7 +146,7 @@ export default class AuthService {
       const createdCode = await this.codeRepository.create(code);
       return createdCode;
     } catch (err) {
-      if (err.name === 'SequelizeForeignKeyConstraintError') {
+      if (err instanceof sequelize.ForeignKeyConstraintError) {
         return Promise.reject(new InvalidRequestException([err]));
       }
 

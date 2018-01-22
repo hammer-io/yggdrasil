@@ -1,3 +1,4 @@
+import sequelize from 'sequelize';
 
 import InvalidRequestException from '../error/InvalidRequestException';
 import ClientNotFoundException from '../error/ClientNotFoundException';
@@ -93,7 +94,7 @@ export default class ClientService {
       const createdClient = await this.clientRepository.create(client);
       return createdClient;
     } catch (err) {
-      if (err.name === 'SequelizeUniqueConstraintError') {
+      if (err instanceof sequelize.UniqueConstraintError) {
         return Promise.reject(new NonUniqueError(err.errors, err.fields));
       }
       return Promise.reject(err);
