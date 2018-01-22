@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { TextField, RaisedButton, Paper } from 'material-ui'
-import Theme from "../../style/theme.js"
+import Theme from '../../style/theme'
 
 const styles = {
   header: {
@@ -26,10 +26,6 @@ const styles = {
 }
 
 class Login extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   render() {
     return (
       <div style={styles.container}>
@@ -46,7 +42,7 @@ class Login extends Component {
           />
           <RaisedButton
             label="Sign in"
-            primary={true}
+            primary
             onClick={() => this.submitForm()}
             style={styles.button}
           />

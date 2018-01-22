@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
-import theme from "../../style/theme.js"
 
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 
 class Menu extends Component {
-
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -19,19 +17,19 @@ class Menu extends Component {
     this.updateDrawerState = this.updateDrawerState.bind(this)
   }
 
-  clickNavbarItem (event, item) {
+  clickNavbarItem(event, item) { // eslint-disable-line class-methods-use-this
     console.log(item.props.primaryText)
   }
 
-  clickToggleDrawer () {
+  clickToggleDrawer() {
     this.setState({ drawerOpen: !this.state.drawerOpen })
   }
 
-  clickSidebarItem (event, item) {
+  clickSidebarItem(event, item) { // eslint-disable-line class-methods-use-this
     console.log(item)
   }
 
-  updateDrawerState (open) {
+  updateDrawerState(open) {
     this.setState({ drawerOpen: open })
   }
 

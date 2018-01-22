@@ -79,7 +79,7 @@
 //                                  style={styles.select}
 //                                  value={this.props.info.src}
 //                                  disabled={false}
-//                                  onChange={(event,index,values) => this.updateInfo({src: values})}>
+//              onChange={(event,index,values) => this.updateInfo({src: values})}>
 //                         <MenuItem value={'GitHub'} primaryText="GitHub" />
 //                         <MenuItem value={'None'} primaryText="None" />
 //                     </SelectField>
@@ -89,8 +89,8 @@
 //                                  value={this.props.info.ci}
 //                                  disabled={checkIfIsNone(this.props.info.src)}
 //                                  errorStyle={styles.warning}
-//                                  errorText={this.props.info.src === 'None'?'Source control required to use':''}
-//                                  onChange={(event,index,values) => this.updateInfo({ci: values})}>
+//                errorText={this.props.info.src === 'None'?'Source control required to use':''}
+//                onChange={(event,index,values) => this.updateInfo({ci: values})}>
 //                         <MenuItem value={'TravisCI'} primaryText="TravisCI" />
 //                         <MenuItem value={'None'} primaryText="None" />
 //                     </SelectField>
@@ -100,33 +100,36 @@
 //                                  value={this.props.info.docker}
 //                                  disabled={checkIfIsNone(this.props.info.ci)}
 //                                  errorStyle={styles.warning}
-//                                  errorText={this.props.info.ci === 'None'?'CI tool required to use':''}
-//                                  onChange={(event,index,values) => this.updateInfo({docker: values})}>
+//            errorText={this.props.info.ci === 'None'?'CI tool required to use':''}
+//            onChange={(event,index,values) => this.updateInfo({docker: values})}>
 //                         <MenuItem value={'Docker'} primaryText="Docker" />
 //                         <MenuItem value={'None'} primaryText="None" />
 //                     </SelectField>
 //                     <br />
-//                     <SelectField floatingLabelText="Hosting service"
-//                                  style={styles.select}
-//                                  value={this.props.info.host}
-//                                  disabled={checkIfIsNone(this.props.info.docker)}
-//                                  errorStyle={styles.warning}
-//                                  errorText={this.props.info.docker === 'None'?'Containerization required to use':''}
-//                                  onChange={(event,index,values) => this.updateInfo({host: values})}>
+//                     <SelectField
+//                          floatingLabelText="Hosting service"
+//                          style={styles.select}
+//                          value={this.props.info.host}
+//                          disabled={checkIfIsNone(this.props.info.docker)}
+//                          errorStyle={styles.warning}
+//          errorText={this.props.info.docker === 'None'?'Containerization required to use':''}
+//                          onChange={(event,index,values) => this.updateInfo({host: values})}>
 //                         <MenuItem value={'Heroku'} primaryText="Heroku" />
 //                         <MenuItem value={'None'} primaryText="None" />
 //                     </SelectField>
 //                     <br />
-//                     <SelectField floatingLabelText="Web application framework"
-//                                  style={styles.select}
-//                                  value={this.props.info.framework}
-//                                  disabled={false}
-//                                  onChange={(event,index,values) => this.updateInfo({framework: values})}>
+//                     <SelectField
+//                          floatingLabelText="Web application framework"
+//                          style={styles.select}
+//                          value={this.props.info.framework}
+//                          disabled={false}
+//                          onChange={(event,index,values) => this.updateInfo({framework: values})}>
 //                         <MenuItem value={'ExpressJS'} primaryText="ExpressJS" />
 //                         <MenuItem value={'None'} primaryText="None" />
 //                     </SelectField>
 //                     <br />
-//                     <RaisedButton style={styles.next} label="Create Project" primary={true} onClick={()=>{console.log(this.props.info)}}/>
+//                     <RaisedButton style={styles.next}
+//    label="Create Project" primary={true} onClick={()=>{console.log(this.props.info)}}/>
 //                 </div>
 //             </div>
 //         );

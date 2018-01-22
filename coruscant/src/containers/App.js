@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 import { getSession } from '../actions/session'
 
@@ -14,12 +15,7 @@ const mapDispatchToProps = {
 
 @connect(mapStateToProps, mapDispatchToProps)
 class App extends Component {
-
-  constructor (props) {
-    super(props)
-  }
-
-  async componentDidMount () {
+  async componentDidMount() {
     const { session, history, getSession } = this.props
     if (session.authToken === null) {
       history.push('/login')
@@ -31,7 +27,7 @@ class App extends Component {
     }
   }
 
-  render () {
+  render() {
     return (
       <div>
         {
@@ -40,6 +36,10 @@ class App extends Component {
       </div>
     )
   }
+}
+
+App.propTypes = {
+  children: PropTypes.oneOf([PropTypes.array, PropTypes.string, PropTypes.object]).isRequired
 }
 
 export default withRouter(App)

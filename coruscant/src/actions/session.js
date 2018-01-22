@@ -2,15 +2,15 @@ import FetchClient from './../utils/fetchClient'
 import actionCreator from './../utils/actionCreator'
 import * as Constants from './../constants'
 
-export function setAccessToken (token) {
-  return actionCreator(Constants.SET_AUTH_TOKEN, { token: token })
+export function setAccessToken(token) {
+  return actionCreator(Constants.SET_AUTH_TOKEN, { token })
 }
 
-export function setUser (user) {
-  return actionCreator(Constants.SET_USER, { user: user })
+export function setUser(user) {
+  return actionCreator(Constants.SET_USER, { user })
 }
 
-export function getSession (token) {
+export function getSession(token) {
   return async function (dispatch) {
     try {
       const fetchClient = new FetchClient()
@@ -23,14 +23,14 @@ export function getSession (token) {
         console.log(error)
       }
       return { result, error }
-    } catch (e) {
-      console.log(e)
+    } catch (error) {
+      console.log(error)
       return { result: null, error }
     }
   }
 }
 
-export function login (credentials) {
+export function login(credentials) {
   return async function (dispatch) {
     try {
       const fetchClient = new FetchClient()
@@ -43,19 +43,18 @@ export function login (credentials) {
         dispatch(setAccessToken(result.token))
         dispatch(setAccessToken(result.user))
         return { result, error }
-      } else {
-        console.log(error)
-        return { result: null, error }
       }
-    } catch (e) {
-      console.log(e)
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
       return { result: null, error }
     }
   }
 }
 
 
-export function logout (token) {
+export function logout(token) {
   return async function (dispatch) {
     try {
       const fetchClient = new FetchClient()
@@ -70,14 +69,14 @@ export function logout (token) {
         return null
       }
       return error
-    } catch (e) {
-      console.log(e)
+    } catch (error) {
+      console.log(error)
       return error
     }
   }
 }
 
-export function register (credentials) {
+export function register(credentials) {
   return async function (dispatch) {
     try {
       const fetchClient = new FetchClient()
@@ -90,12 +89,11 @@ export function register (credentials) {
         dispatch(setAccessToken(result.token))
         dispatch(setAccessToken(result.user))
         return { result, error }
-      } else {
-        console.log(error)
-        return { result: null, error }
       }
-    } catch (e) {
-      console.log(e)
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
       return { result: null, error }
     }
   }

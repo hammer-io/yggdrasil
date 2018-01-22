@@ -1,20 +1,20 @@
 import * as Constants from './../constants'
 
-function makeInitialState () {
+function makeInitialState() {
   return {
     authToken: null,
     user: null
   }
 }
 
-function setAccessToken (state, action) {
+function setAccessToken(state, action) {
   return {
     ...state,
     authToken: action.payload.token
   }
 }
 
-function setUser (state, action) {
+function setUser(state, action) {
   return {
     ...state,
     user: action.payload.user

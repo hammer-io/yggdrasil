@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import RaisedButton from 'material-ui/RaisedButton'
-import TextField from 'material-ui/TextField'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+
 import Theme from '../../style/theme'
+import Sidebar from '../components/Sidebar'
 
 const styles = {
   header: {
@@ -16,11 +18,12 @@ const styles = {
   }
 }
 
-class Home extends Component {
-  constructor (props) {
-    super(props)
-  }
+const mapStateToProps = state => ({
+  session: state.session
+})
 
+@connect(mapStateToProps)
+class Home extends Component {
   render() {
     return (
       <div style={styles.container}>
@@ -28,6 +31,10 @@ class Home extends Component {
       </div>
     )
   }
+}
+
+Sidebar.propTypes = {
+  session: PropTypes.func.isRequired
 }
 
 export default Home

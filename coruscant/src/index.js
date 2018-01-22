@@ -13,33 +13,31 @@ import Register from './containers/Register'
 import NotFound from './components/NotFound'
 
 const store = getStore()
-store.subscribe(throttle(() =>  {
+store.subscribe(throttle(() => {
   saveState({
     session: store.getStats().session
   })
 }), 1000)
 
-export default class Root extends React.Component {
-  render() {
-    return (
-      <MuiThemeProvider>
-        <Provider store={store}>
-          <Router>
-            <App>
-              <Switch>
-                <Route path={['/home']} component={Menu} />
-              </Switch>
-              <Switch>
-                <Route exact path="/" render={() => <Redirect to="/home"/>} />
-                <Route exact path="/home" component={Home} />
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/register" component={Register} />
-                <Route component={NotFound} />
-              </Switch>
-            </App>
-          </Router>
-        </Provider>
-      </MuiThemeProvider>
-    )
-  }
-}
+const Root = () => (
+  <MuiThemeProvider>
+    <Provider store={store}>
+      <Router>
+        <App>
+          <Switch>
+            <Route path={['/home']} component={Menu} />
+          </Switch>
+          <Switch>
+            <Route exact path="/" render={() => <Redirect to="/home" />} />
+            <Route exact path="/home" component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route component={NotFound} />
+          </Switch>
+        </App>
+      </Router>
+    </Provider>
+  </MuiThemeProvider>
+)
+
+export default Root

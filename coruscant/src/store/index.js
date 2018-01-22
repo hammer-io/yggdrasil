@@ -6,10 +6,11 @@ import reducer from './../reducers'
 import { loadState } from './../utils/localStorage'
 
 const loggerMiddleware = createLogger()
+// eslint-disable-next-line no-underscore-dangle
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const persistedState = loadState()
 
-export const getStore = () => createStore(
+const getStore = () => createStore(
   reducer,
   persistedState,
   composeEnhancers(applyMiddleware(
@@ -17,3 +18,5 @@ export const getStore = () => createStore(
     loggerMiddleware
   ))
 )
+
+export default getStore

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import RaisedButton from 'material-ui/RaisedButton'
 import { TextField, Paper } from 'material-ui'
-import Theme from "../../style/theme.js"
+import Theme from '../../style/theme'
 
 const styles = {
   header: {
@@ -28,10 +28,6 @@ const styles = {
 }
 
 class Register extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   render() {
     return (
       <div style={styles.container}>
@@ -52,7 +48,7 @@ class Register extends Component {
           />
           <RaisedButton
             label="Register"
-            primary={true}
+            primary
             onClick={() => this.submitForm()}
             style={styles.button}
           />

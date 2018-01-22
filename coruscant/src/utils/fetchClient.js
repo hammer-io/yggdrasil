@@ -1,52 +1,52 @@
 class FetchResponse {
-  constructor (result, error, res) {
-    this.result = results || null
+  constructor(result, error, res) {
+    this.result = result || null
     this.error = error || null
     this.res = res
   }
 }
 
 class FetchClient {
-  constructor (baseURL) {
+  constructor(baseURL) {
     this.baseURL = baseURL || 'http://localhost:8080/'
   }
 
-  setAuthToken (authToken) {
+  setAuthToken(authToken) {
     this.authToken = authToken
   }
 
-  get (opts) {
+  get(opts) {
     return this.send('GET', opts)
   }
 
-  post (opts) {
+  post(opts) {
     return this.send('POST', opts)
   }
 
-  put (opts) {
+  put(opts) {
     return this.send('PUT', opts)
   }
 
-  patch (opts) {
+  patch(opts) {
     return this.send('PATCH', opts)
   }
 
-  delete (opts) {
+  delete(opts) {
     return this.send('DELETE', opts)
   }
 
-  static isErrorCode (statusCode) {
+  static isErrorCode(statusCode) {
     return statusCode >= 400
   }
 
-  async send (method, opts) {
+  async send(method, opts) {
     if (!opts.url) {
       return
     }
 
-    let url = this.baseURL + opts.url
+    const url = this.baseURL + opts.url
     const o = {
-      method: method,
+      method,
       body: opts.body,
       headers: {
         ...opts.headers,
