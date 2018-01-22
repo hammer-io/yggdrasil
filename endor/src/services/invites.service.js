@@ -32,6 +32,16 @@ export default class InviteService {
 
 
   /**
+   * @returns {RequestParamError} the error lists the possible valid status strings
+   */
+  static getInvalidStatusError() {
+    const inviteStatusValues = Object.keys(InviteStatus).map(key => InviteStatus[key]);
+    const enumValues = inviteStatusValues.join(', ');
+    return new RequestParamError('status', `Must be one of the following values: ${enumValues}. If updating the status, note that it can only be updated from a status of 'open', and it can only be updated with the correct permissions.`);
+  }
+
+
+  /**
    * Validates a invite
    * @param invite the invite to validate
    * @param asNewInvite boolean indicates whether it should be validated
@@ -58,9 +68,7 @@ export default class InviteService {
     }
 
     if (invite.status && !InviteService.isValidInviteStatus(invite.status)) {
-      const inviteStatusValues = Object.keys(InviteStatus).map(key => InviteStatus[key]);
-      const enumValues = inviteStatusValues.join(', ');
-      errors.push(new RequestParamError('status', `Must be one of the following: ${enumValues}`));
+      errors.push(InviteService.getInvalidStatusError());
     }
 
     return errors;
@@ -154,34 +162,25 @@ export default class InviteService {
   /**
    * Updates an invite
    * @param inviteId the id of the invite to update
-   * @param invite the updated invite information
+   * @param status the updated status
    * @returns {Object} the updated invite
    */
-  async updateInvite(inviteId, invite) {
-    this.log.info(`InviteService: update invite ${inviteId}`);
+  async updateInvite(inviteId, status) {
+    this.log.info(`InviteService: update invite ${inviteId} to ${status}`);
 
-    const errors = await InviteService.validateInvite(invite, false);
-    if (errors.length !== 0) {
-      throw new InvalidRequestException(errors);
+    if (!InviteService.isValidInviteStatus(status)) {
+      throw new InvalidRequestException([InviteService.getInvalidStatusError()]);
     }
 
     const foundInvite = await this.getInviteById(inviteId);
     if (foundInvite === null) {
       throw new InviteNotFoundException(`Invite ${inviteId} not found.`);
     }
+    if (foundInvite.status !== InviteStatus.OPEN) {
+      throw new InvalidRequestException([InviteService.getInvalidStatusError()]);
+    }
 
-    return foundInvite.update(invite);
-  }
-
-  /**
-   * Deletes an invite by the invite id
-   * @param inviteId the invite id to delete by
-   * @returns {Object} the invite that was deleted
-   */
-  async deleteInvite(inviteId) {
-    this.log.info(`InviteService: delete invite with id ${inviteId}`);
-    const inviteToBeDeleted = await this.getInviteById(inviteId);
-    await inviteToBeDeleted.destroy();
-    return inviteToBeDeleted;
+    foundInvite.update({ status });
+    return foundInvite;
   }
 }

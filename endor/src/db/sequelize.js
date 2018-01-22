@@ -111,6 +111,7 @@ User.belongsToMany(Project, { as: 'projectsContributed', through: 'projectContri
 const InviteStatus = {
   OPEN: 'open',
   ACCEPTED: 'accepted',
+  DECLINED: 'declined',
   RESCINDED: 'rescinded',
   EXPIRED: 'expired'
 };
@@ -121,6 +122,7 @@ const Invite = model.define('invite', {
     values: [
       InviteStatus.OPEN,
       InviteStatus.ACCEPTED,
+      InviteStatus.DECLINED,
       InviteStatus.RESCINDED,
       InviteStatus.EXPIRED
     ],

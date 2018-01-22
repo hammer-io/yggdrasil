@@ -1,5 +1,369 @@
 [
   {
+    "type": " get ",
+    "url": "/oauth2/authorize",
+    "title": "Get permissions",
+    "version": "1.0.0",
+    "name": "Get_Authorization_Data",
+    "group": "Auth",
+    "permission": [
+      {
+        "name": "None"
+      }
+    ],
+    "description": "<p>Here the client is asking permission to use the user's account. The response of the user should be sent to POST /oauth/authorize This endpoint will return the client, the user and a transaction ID</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "STRING",
+            "optional": false,
+            "field": "clientId",
+            "description": "<p>the id of the client requesting access</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "STRING",
+            "optional": false,
+            "field": "response_type",
+            "description": "<p>value should be 'code'</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "STRING",
+            "optional": false,
+            "field": "redirect_uri",
+            "description": "<p>uri of redirect upon permission granted, which is the endpoint requesting access to the user's account</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "returns",
+            "description": "<p>a transaction id, user, and a client</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/routes/auth.routes.js",
+    "groupTitle": "Auth"
+  },
+  {
+    "type": " post ",
+    "url": "/oauth2/token",
+    "title": "Exchange access code to create a token",
+    "version": "1.0.0",
+    "name": "Post_Token",
+    "group": "Auth",
+    "permission": [
+      {
+        "name": "None"
+      }
+    ],
+    "description": "<p>The access token is deleted if the redirectURI and the access codes' client id is the same as the client requesting the new token, and then the new token is created and returned to in the response. The Authentication at this endpoint should be client authentication so as to verify that this is the client's token</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Client-Basic</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "STRING",
+            "optional": false,
+            "field": "code",
+            "description": "<p>the access code</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "STRING",
+            "optional": false,
+            "field": "grant_type",
+            "description": "<p>the value should be &quot;authorization_code&quot;</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "STRING",
+            "optional": false,
+            "field": "redirect_uri",
+            "description": "<p>the value should be &quot;http://localhost:3000/api/v1/oauth2/authorize/successRedirect&quot;</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Param-Example:",
+          "content": "{\n  \"code\": \"YxTKMd9l8ZAvof2GEwiP6w\",\n  \"grant_type\": \"authorization_code\",\n  \"redirect_uri\": \"http://localhost:3000/api/v1/oauth2/authorize/successRedirect\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "returns",
+            "description": "<p>the access token and the token_type (&quot;bearer&quot;)</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Example:",
+          "content": "{\n  \"access_token\": {\n      \"id\": 1,\n      \"value\": \"<Long String>\"\n      \"userId\": 3,\n      \"updatedAt\": \"2017-12-04T01:08:36.415Z\",\n      \"createdAt\": \"2017-12-04T01:08:36.415Z\"\n  },\n  \"token_type\": \"Bearer\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/auth.routes.js",
+    "groupTitle": "Auth"
+  },
+  {
+    "type": " post ",
+    "url": "/oauth2/authorize",
+    "title": "Post permissions authorized by the user",
+    "version": "1.0.0",
+    "name": "Post_permission",
+    "group": "Auth",
+    "description": "<p>Upon success, it redirects to the redirect_URI given to GET /oauth2/authorize. To return a simple JSON indicating { success: true }, redirect to GET /oauth2/authorize/successRedirect. Sends the code in req.query.code to the redirectURI.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "STRING",
+            "optional": false,
+            "field": "transaction_id",
+            "description": "<p>from GET /oauth2/authorize</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Example:",
+          "content": "{\n   \"transaction_id\": \"3dI123d\",\n   \"allow\": true OR \"deny\":true\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "returns",
+            "description": "<p>success</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Example:",
+          "content": "{\n  \"success\": true\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/auth.routes.js",
+    "groupTitle": "Auth"
+  },
+  {
+    "type": "post",
+    "url": "/clients",
+    "title": "Create a new client",
+    "version": "1.0.0",
+    "name": "Create_a_new_client",
+    "group": "Clients",
+    "permission": [
+      {
+        "name": "none"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "json",
+            "optional": false,
+            "field": "client",
+            "description": "<p>client to be created</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "client.name",
+            "description": "<p>name of the client</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "client.clientId",
+            "description": "<p>clientId of the client. Must be unique</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "client.secret",
+            "description": "<p>secret of the client</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Integer",
+            "optional": false,
+            "field": "client.userId",
+            "description": "<p>userId of the user who owns the client</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Param-Example:",
+          "content": "{\n    \"client\": {\n      \"name\": \"endor_frontend\",\n      \"clientId\": \"clientId\",\n      \"secret\": \"client_secret\",\n      \"userId\": 3,\n     }\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "client",
+            "description": "<p>the newly created client</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Example:",
+          "content": "{\n     \"id\": 1,\n     \"name\": \"endor_frontend\",\n     \"clientId\": \"clientId\",\n     \"secret\": \"client_secret\",\n     \"updatedAt\": \"2017-12-02T19:40:27.574Z\",\n     \"createdAt\": \"2017-12-02T19:40:27.563Z\",\n     \"userId\": 3\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/client.routes.js",
+    "groupTitle": "Clients"
+  },
+  {
+    "type": "get",
+    "url": "/clients/:userId",
+    "title": "Get clients for user",
+    "version": "1.0.0",
+    "name": "Retrieve_clients_for_a_user",
+    "group": "Clients",
+    "description": "<p>Returns all the clients for the given user.  If the user has no clients, it will result in a 404 error with a message saying they have no clients</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Integer",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>the id of the user</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "clients",
+            "description": "<p>list of all clients of the user</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Example:",
+          "content": "{\n  \"clients\": [\n      {\n          \"id\": 1,\n          \"clientId\": \"clientId\",\n          \"name\": \"endor_frontend\",\n          \"secret\": \"client_secret\",\n          \"createdAt\": \"2017-12-02T19:40:27.000Z\",\n          \"updatedAt\": \"2017-12-02T19:40:27.000Z\",\n          \"userId\": 3\n      }\n  ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/client.routes.js",
+    "groupTitle": "Clients"
+  },
+  {
     "type": "post",
     "url": "/projects/:id/contributors/:user",
     "title": "Add contributor to project",
@@ -11,6 +375,18 @@
         "name": "project owner"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -66,6 +442,18 @@
         "name": "none"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -119,6 +507,18 @@
         "name": "none"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -167,6 +567,18 @@
         "name": "project owner"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -210,6 +622,102 @@
     "groupTitle": "Index"
   },
   {
+    "type": "put",
+    "url": "/invites/:id/accept",
+    "title": "Accept an invitation. May only be used on an open invite.",
+    "version": "1.0.0",
+    "name": "accept_contributor_invitation",
+    "group": "Invites",
+    "permission": [
+      {
+        "name": "authenticated user referenced in the invite"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>invite id of the invitation to accept</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "invite",
+            "description": "<p>the accepted invitation</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response",
+          "content": "\n{\n \"id\": 1,\n \"status\": \"accepted\",\n \"daysFromCreationUntilExpiration\": 30,\n \"userInvited\": {\n   // User object\n },\n \"projectInvitedTo\": {\n   // Project object\n },\n \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n \"updatedAt\": \"2017-11-27T10:22:12.000Z\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/invites.routes.js",
+    "groupTitle": "Invites"
+  },
+  {
+    "type": "put",
+    "url": "/invites/:id/decline",
+    "title": "Decline an invitation. May only be used on an open invite.",
+    "version": "1.0.0",
+    "name": "decline_contributor_invitation",
+    "group": "Invites",
+    "permission": [
+      {
+        "name": "authenticated user referenced in the invite"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>invite id of the invitation to decline</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "invite",
+            "description": "<p>the declined invitation</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response",
+          "content": "\n{\n \"id\": 1,\n \"status\": \"declined\",\n \"daysFromCreationUntilExpiration\": 30,\n \"userInvited\": {\n   // User object\n },\n \"projectInvitedTo\": {\n   // Project object\n },\n \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n \"updatedAt\": \"2017-11-27T10:22:12.000Z\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/invites.routes.js",
+    "groupTitle": "Invites"
+  },
+  {
     "type": "get",
     "url": "/projects/:id/invites",
     "title": "Get all contributor invitations for a project",
@@ -249,7 +757,7 @@
       "examples": [
         {
           "title": "Success-Response",
-          "content": "[\n {\n  \"id\": 1,\n  \"status\": \"OPEN\",\n  \"daysFromCreationUntilExpiration\": 30,\n  \"userInvited\": {\n    // User object\n  },\n  \"projectInvitedTo\": {\n    // Project object\n  },\n  \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n  \"updatedAt\": \"2017-11-12T20:26:47.000Z\"\n }\n ]",
+          "content": "[\n {\n  \"id\": 1,\n  \"status\": \"open\",\n  \"daysFromCreationUntilExpiration\": 30,\n  \"userInvited\": {\n    // User object\n  },\n  \"projectInvitedTo\": {\n    // Project object\n  },\n  \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n  \"updatedAt\": \"2017-11-12T20:26:47.000Z\"\n }\n ]",
           "type": "json"
         }
       ]
@@ -304,14 +812,14 @@
             "type": "Object[]",
             "optional": false,
             "field": "invite",
-            "description": "<p>the contributor invitation</p>"
+            "description": "<p>the invitation</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response",
-          "content": "\n{\n \"id\": 1,\n \"status\": \"OPEN\",\n \"daysFromCreationUntilExpiration\": 30,\n \"userInvited\": {\n   // User object\n },\n \"projectInvitedTo\": {\n   // Project object\n },\n \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n \"updatedAt\": \"2017-11-12T20:26:47.000Z\"\n}",
+          "content": "\n{\n \"id\": 1,\n \"status\": \"open\",\n \"daysFromCreationUntilExpiration\": 30,\n \"userInvited\": {\n   // User object\n },\n \"projectInvitedTo\": {\n   // Project object\n },\n \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n \"updatedAt\": \"2017-11-12T20:26:47.000Z\"\n}",
           "type": "json"
         }
       ]
@@ -320,15 +828,15 @@
     "groupTitle": "Invites"
   },
   {
-    "type": "delete",
-    "url": "/invites/:id",
-    "title": "Remove (rescind) a contributor invitation",
+    "type": "put",
+    "url": "/invites/:id/rescind",
+    "title": "Rescind an invitation. May only be used on an open invite.",
     "version": "1.0.0",
-    "name": "remove_contributor_invitation_to_project",
+    "name": "rescind_contributor_invitation_to_project",
     "group": "Invites",
     "permission": [
       {
-        "name": "project owner"
+        "name": "owner of the project referenced in the invitation"
       }
     ],
     "parameter": {
@@ -345,10 +853,21 @@
       }
     },
     "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "invite",
+            "description": "<p>the rescinded invitation</p>"
+          }
+        ]
+      },
       "examples": [
         {
           "title": "Success-Response",
-          "content": "Status: 204 No Content",
+          "content": "\n{\n \"id\": 1,\n \"status\": \"rescinded\",\n \"daysFromCreationUntilExpiration\": 30,\n \"userInvited\": {\n   // User object\n },\n \"projectInvitedTo\": {\n   // Project object\n },\n \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n \"updatedAt\": \"2017-11-27T10:22:12.000Z\"\n}",
           "type": "json"
         }
       ]
@@ -383,7 +902,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "[\n {\n  \"id\": 1,\n  \"status\": \"OPEN\",\n  \"daysFromCreationUntilExpiration\": 30,\n  \"userInvited\": {\n    // User object\n  },\n  \"projectInvitedTo\": {\n    // Project object\n  },\n  \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n  \"updatedAt\": \"2017-11-12T20:26:47.000Z\"\n }\n ]",
+          "content": "[\n {\n  \"id\": 1,\n  \"status\": \"open\",\n  \"daysFromCreationUntilExpiration\": 30,\n  \"userInvited\": {\n    // User object\n  },\n  \"projectInvitedTo\": {\n    // Project object\n  },\n  \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n  \"updatedAt\": \"2017-11-12T20:26:47.000Z\"\n }\n ]",
           "type": "json"
         }
       ]
@@ -403,6 +922,18 @@
         "name": "project owner"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -458,6 +989,18 @@
         "name": "none"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -511,6 +1054,18 @@
         "name": "none"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -559,6 +1114,18 @@
         "name": "project owner"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -598,6 +1165,18 @@
     "version": "1.0.0",
     "name": "delete_project",
     "group": "Projects",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "permission": [
       {
         "name": "project owner"
@@ -638,6 +1217,18 @@
         "name": "autenticated user"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -681,6 +1272,18 @@
     "version": "1.0.0",
     "name": "get_projects_for_user",
     "group": "Projects",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -729,6 +1332,18 @@
         "name": "project owner"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -777,6 +1392,18 @@
         "name": "authenticated user"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -888,6 +1515,18 @@
         "name": "authenticated user"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1006,6 +1645,18 @@
         "name": "none"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "fields": {
         "Success 200": [
@@ -1041,6 +1692,18 @@
         "name": "authenticated user"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "fields": {
         "Success 200": [
@@ -1076,6 +1739,18 @@
         "name": "authenticated user"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1112,7 +1787,7 @@
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "{\n \"username\": \"BobSagat\",\n \"email\": \"Bob@AFV.com\",\n \"firstName\": \"Bob\",\n \"lastName\": \"Sagat\"\n}",
+          "content": "{\n \"username\": \"BobSagat\",\n \"email\": \"Bob@AFV.com\",\n \"firstName\": \"Bob\",\n \"lastName\": \"Sagat\",\n \"password\": \"SuperSecurePassword1\"\n}",
           "type": "json"
         }
       ]
@@ -1147,6 +1822,18 @@
     "version": "1.0.0",
     "name": "delete_user",
     "group": "Users",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1184,6 +1871,18 @@
         "name": "authenticated user"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "fields": {
         "Success 200": [
@@ -1219,6 +1918,18 @@
         "name": "none"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "fields": {
         "Success 200": [
@@ -1254,6 +1965,18 @@
         "name": "none"
       }
     ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "fields": {
         "Success 200": [
@@ -1284,6 +2007,18 @@
     "version": "1.0.0",
     "name": "update_user",
     "group": "Users",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1354,5 +2089,65 @@
     },
     "filename": "src/routes/users.routes.js",
     "groupTitle": "Users"
+  },
+  {
+    "type": " get ",
+    "url": "/oauth2/authorize/successRedirect",
+    "title": "Get access code redirect",
+    "version": "1.0.0",
+    "name": "Authorize_Redirect",
+    "permission": [
+      {
+        "name": "None"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Client-Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "STRING",
+            "optional": false,
+            "field": "code",
+            "description": "<p>the access code in query.code</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "code",
+            "description": "<p>returns the access code</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Example:",
+          "content": "{\n    \"code\": \"jk2q43jk2dsr4qqewfds_\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/auth.routes.js",
+    "group": "_home_nkarasch_GitStuff_yggdrasil_endor_src_routes_auth_routes_js",
+    "groupTitle": "_home_nkarasch_GitStuff_yggdrasil_endor_src_routes_auth_routes_js"
   }
 ]

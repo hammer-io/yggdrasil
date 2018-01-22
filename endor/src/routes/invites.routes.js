@@ -1,5 +1,6 @@
+/* eslint-disable max-len */
 import express from 'express';
-
+import * as authController from '../controllers/auth.controller';
 import * as invitesController from './../controllers/invites.controller';
 
 export const router = express.Router();
@@ -31,7 +32,7 @@ export function setDependencies(inviteService, userService, projectService) {
  * [
  {
   "id": 1,
-  "status": "OPEN",
+  "status": "open",
   "daysFromCreationUntilExpiration": 30,
   "userInvited": {
     // User object
@@ -44,7 +45,7 @@ export function setDependencies(inviteService, userService, projectService) {
  }
  ]
  */
-router.get('/projects/:id/invites', invitesController.getInvitesByProjectId);
+router.get('/projects/:id/invites', authController.isAuthenticated, invitesController.getInvitesByProjectId);
 
 /**
  * @api {get} /user/invites Get invites for an authenticated user
@@ -59,7 +60,7 @@ router.get('/projects/:id/invites', invitesController.getInvitesByProjectId);
  * [
  {
   "id": 1,
-  "status": "OPEN",
+  "status": "open",
   "daysFromCreationUntilExpiration": 30,
   "userInvited": {
     // User object
@@ -72,7 +73,7 @@ router.get('/projects/:id/invites', invitesController.getInvitesByProjectId);
  }
  ]
  */
-router.get('/user/invites', invitesController.getInvitesByAuthenticatedUser);
+router.get('/user/invites', authController.isAuthenticated, invitesController.getInvitesByAuthenticatedUser);
 
 /**
  * @api {post} /projects/:projectId/invites/:userId Invite a contributor to the project
@@ -87,12 +88,12 @@ router.get('/user/invites', invitesController.getInvitesByAuthenticatedUser);
  * @apiParam {Number} [daysUntilExpiration] the invite will expire after this many days have passed
  *   since the invite was created. Must be a non-negative integer. Optional: Defaults to 30 days.
  *
- * @apiSuccess {Object[]} invite the contributor invitation
+ * @apiSuccess {Object[]} invite the invitation
  * @apiSuccessExample {json} Success-Response
  *
  {
   "id": 1,
-  "status": "OPEN",
+  "status": "open",
   "daysFromCreationUntilExpiration": 30,
   "userInvited": {
     // User object
@@ -104,19 +105,91 @@ router.get('/user/invites', invitesController.getInvitesByAuthenticatedUser);
   "updatedAt": "2017-11-12T20:26:47.000Z"
  }
  */
-router.post('/projects/:projectId/invites/:userId', invitesController.addInviteToProject);
+router.post('/projects/:projectId/invites/:userId', authController.isAuthenticated, invitesController.addInviteToProject);
 
 /**
- * @api {delete} /invites/:id Remove (rescind) a contributor invitation
+ * @api {put} /invites/:id/accept Accept an invitation. May only be used on an open invite.
  * @apiVersion 1.0.0
- * @apiName remove contributor invitation to project
+ * @apiName accept contributor invitation
  * @apiGroup Invites
  *
- * @apiPermission project owner
+ * @apiPermission authenticated user referenced in the invite
+ *
+ * @apiParam {String} id invite id of the invitation to accept
+ *
+ * @apiSuccess {Object[]} invite the accepted invitation
+ * @apiSuccessExample {json} Success-Response
+ *
+ {
+  "id": 1,
+  "status": "accepted",
+  "daysFromCreationUntilExpiration": 30,
+  "userInvited": {
+    // User object
+  },
+  "projectInvitedTo": {
+    // Project object
+  },
+  "createdAt": "2017-11-12T20:26:47.000Z",
+  "updatedAt": "2017-11-27T10:22:12.000Z"
+ }
+ */
+router.put('/invites/:id/accept', authController.isAuthenticated, invitesController.acceptInvite);
+
+/**
+ * @api {put} /invites/:id/decline Decline an invitation. May only be used on an open invite.
+ * @apiVersion 1.0.0
+ * @apiName decline contributor invitation
+ * @apiGroup Invites
+ *
+ * @apiPermission authenticated user referenced in the invite
+ *
+ * @apiParam {String} id invite id of the invitation to decline
+ *
+ * @apiSuccess {Object[]} invite the declined invitation
+ * @apiSuccessExample {json} Success-Response
+ *
+ {
+  "id": 1,
+  "status": "declined",
+  "daysFromCreationUntilExpiration": 30,
+  "userInvited": {
+    // User object
+  },
+  "projectInvitedTo": {
+    // Project object
+  },
+  "createdAt": "2017-11-12T20:26:47.000Z",
+  "updatedAt": "2017-11-27T10:22:12.000Z"
+ }
+ */
+router.put('/invites/:id/decline', authController.isAuthenticated, invitesController.declineInvite);
+
+/**
+ * @api {put} /invites/:id/rescind Rescind an invitation. May only be used on an open invite.
+ * @apiVersion 1.0.0
+ * @apiName rescind contributor invitation to project
+ * @apiGroup Invites
+ *
+ * @apiPermission owner of the project referenced in the invitation
  *
  * @apiParam {String} id invite id of the contributor invitation to rescind
  *
+ * @apiSuccess {Object[]} invite the rescinded invitation
  * @apiSuccessExample {json} Success-Response
- * Status: 204 No Content
+ *
+ {
+  "id": 1,
+  "status": "rescinded",
+  "daysFromCreationUntilExpiration": 30,
+  "userInvited": {
+    // User object
+  },
+  "projectInvitedTo": {
+    // Project object
+  },
+  "createdAt": "2017-11-12T20:26:47.000Z",
+  "updatedAt": "2017-11-27T10:22:12.000Z"
+ }
  */
-router.delete('/invites/:id', invitesController.deleteInvite);
+router.put('/invites/:id/rescind', authController.isAuthenticated, invitesController.rescindInvite);

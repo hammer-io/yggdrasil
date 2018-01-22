@@ -1,4 +1,5 @@
 /* eslint-disable prefer-destructuring */
+import { InviteStatus } from '../db/sequelize';
 import * as responseHelper from './../utils/response-helper';
 
 let inviteService = {};
@@ -53,6 +54,7 @@ export async function getInvitesByProjectId(req, res, next) {
 export async function getInvitesByUserId(req, res, next) {
   try {
     const invites = await inviteService.getInvitesByUserId(req.params.id);
+    invites.other = req.params.other;
     res.send(invites);
   } catch (error) {
     next(error);
@@ -94,17 +96,49 @@ export async function addInviteToProject(req, res, next) {
 }
 
 /**
- * Handles the DELETE /projects/:projectId/invites/:inviteId endpoint
+ * Change an invite status from OPEN to either ACCEPTED, DECLINED, or RESCINDED
+ * @param req the request
+ * @param res the response
+ * @param next the next middleware
+ * @param status the status that the invite should be changed to
+ */
+async function updateInvite(req, res, next, status) {
+  try {
+    const inviteId = req.params.id;
+    const updatedInvite = await inviteService.updateInvite(inviteId, status);
+
+    res.status(201).send(updatedInvite);
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Handles the UPDATE /invites/:id/accept endpoint
  * @param req the request
  * @param res the response
  * @param next the next middleware
  */
-export async function deleteInvite(req, res, next) {
-  try {
-    const inviteId = req.params.id;
-    await inviteService.deleteInvite(inviteId);
-    responseHelper.noContent(res);
-  } catch (error) {
-    next(error);
-  }
+export async function acceptInvite(req, res, next) {
+  return updateInvite(req, res, next, InviteStatus.ACCEPTED);
+}
+
+/**
+ * Handles the UPDATE /invites/:id/decline endpoint
+ * @param req the request
+ * @param res the response
+ * @param next the next middleware
+ */
+export async function declineInvite(req, res, next) {
+  return updateInvite(req, res, next, InviteStatus.DECLINED);
+}
+
+/**
+ * Handles the UPDATE /invites/:id/rescind endpoint
+ * @param req the request
+ * @param res the response
+ * @param next the next middleware
+ */
+export async function rescindInvite(req, res, next) {
+  return updateInvite(req, res, next, InviteStatus.RESCINDED);
 }

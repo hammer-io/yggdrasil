@@ -41,7 +41,7 @@ app.use(session({
 // dependency injections //
 const userService = new UserService(sequelize.User, sequelize.Credentials, getActiveLogger());
 const projectService = new ProjectService(sequelize.Project, userService, getActiveLogger());
-const inviteService = new InviteService(sequalize.Invite, getActiveLogger());
+const inviteService = new InviteService(sequelize.Invite, getActiveLogger());
 const authService = new AuthService(sequelize.Token, sequelize.AccessCode, getActiveLogger());
 const clientService = new ClientService(sequelize.Client, userService, getActiveLogger());
 auth.setDependencies(userService, clientService, authService);
