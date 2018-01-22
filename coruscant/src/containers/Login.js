@@ -50,6 +50,7 @@ class Login extends Component {
             onClick={() => this.submitForm()}
             style={styles.button}
           />
+
         </Paper>
       </div>
     )

@@ -1,44 +1,34 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import theme from "../../style/theme.js"
 
-import Navbar from './../components/Navbar'
-import Sidebar from './../components/Sidebar'
+import { getSession } from '../actions/session'
 
 const mapStateToProps = state => ({
   session: state.session
 })
 
-@connect(mapStateToProps)
+const mapDispatchToProps = {
+  getSession
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
 class App extends Component {
 
   constructor (props) {
     super(props)
   }
 
-  componentDidMount () {
-    const { session, history } = this.props
+  async componentDidMount () {
+    const { session, history, getSession } = this.props
     if (session.authToken === null) {
-      history.replace('/login')
+      history.push('/login')
+    } else {
+      const { error } = await getSession(session.authToken)
+      if (error) {
+        history.push('/login')
+      }
     }
-
-  }
-
-  componentDidUpdate(prevProps) {
-    // const { dispatch, redirectUrl } = this.props
-    // const isLoggingOut = prevProps.isLoggedIn && !this.props.isLoggedIn
-    // const isLoggingIn = !prevProps.isLoggedIn && this.props.isLoggedIn
-    //
-    // if (isLoggingIn) {
-    //   dispatch(navigateTo(redirectUrl))
-    // } else if (isLoggingOut) {
-    //   // do any kind of cleanup or post-logout redirection here
-    // }
-  }
-
-  async validateToken (authToken) {
-
   }
 
   render () {
