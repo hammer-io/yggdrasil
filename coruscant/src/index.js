@@ -24,20 +24,20 @@ export default class Root extends React.Component {
     return (
       <MuiThemeProvider>
         <Provider store={store}>
-            <Router>
-              <App>
-                <div>
-                  <Route path={['/home']} component={Menu} />
-                  <Switch>
-                    <Route exact path="/" render={() => <Redirect to="/home"/>} />
-                    <Route path="/home" component={Home} />
-                    <Route path="/login" component={Login} />
-                    <Route path="/register" component={Register} />
-                    <Route component={NotFound} />
-                  </Switch>
-                </div>
-              </App>
-            </Router>
+          <Router>
+            <App>
+              <Switch>
+                <Route path={['/home']} component={Menu} />
+              </Switch>
+              <Switch>
+                <Route exact path="/" render={() => <Redirect to="/home"/>} />
+                <Route exact path="/home" component={Home} />
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/register" component={Register} />
+                <Route component={NotFound} />
+              </Switch>
+            </App>
+          </Router>
         </Provider>
       </MuiThemeProvider>
     )

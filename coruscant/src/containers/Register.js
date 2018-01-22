@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import RaisedButton from 'material-ui/RaisedButton'
 import { TextField, Paper } from 'material-ui'
 import Theme from "../../style/theme.js"
@@ -61,4 +62,4 @@ class Register extends Component {
   }
 }
 
-export default Register
+export default withRouter(Register)

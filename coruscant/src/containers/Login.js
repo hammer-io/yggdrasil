@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import { TextField, RaisedButton, Paper } from 'material-ui'
 import Theme from "../../style/theme.js"
 
@@ -55,4 +56,4 @@ class Login extends Component {
   }
 }
 
-export default Login
+export default withRouter(Login)

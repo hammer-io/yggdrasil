@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import theme from "../../style/theme.js"
 
 import Navbar from './../components/Navbar'
@@ -40,4 +41,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default withRouter(App)

@@ -4,7 +4,7 @@ import theme from "../../style/theme.js"
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 
-class App extends Component {
+class Menu extends Component {
 
   constructor (props) {
     super(props)
@@ -65,4 +65,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default Menu
