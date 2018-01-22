@@ -24,7 +24,7 @@ class App extends Component {
       getSession
     } = this.props
 
-    if (location.pathname === '/register') {
+    if (location.pathname === '/register' || location.pathname === '/login') {
       return
     }
 
