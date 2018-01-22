@@ -15,7 +15,7 @@ let clientService = {};
  *
  * @apiPermission none
  *
- * @apiHeader Authorization Basic Client-Basic Auth-Token
+ * @apiHeader Authorization Basic Auth-Token
  * @apiParam { json } client client to be created
  * @apiParam { String } client.name name of the client
  * @apiParam { String } client.clientId clientId of the client. Must be unique
@@ -43,38 +43,6 @@ let clientService = {};
    }
  */
 router.post('/clients', [authController.isAuthenticated].concat(clientValidator.checkClient()), clientController.createClient);
-
-/**
- * @api {get} /clients/:userId Get clients for user
- * @apiVersion 1.0.0
- * @apiName Retrieve clients for a user
- * @apiGroup Clients
- *
- * @apiPermissions None
- *
- * @apiDescription Returns all the clients for the given user.  If the user has no clients, it will
- * result in a 404 error with a message saying they have no clients
- *
- * @apiHeader Authorization Basic Client-Basic Auth-Token
- * @apiParam { Integer } userId the id of the user
- *
- * @apiSuccess { Object[] } clients list of all clients of the user
- * @apiSuccessExample { json } Success-Example:
- * {
- *   "clients": [
- *       {
- *           "id": 1,
- *           "clientId": "clientId",
- *           "name": "endor_frontend",
- *           "secret": "client_secret",
- *           "createdAt": "2017-12-02T19:40:27.000Z",
- *           "updatedAt": "2017-12-02T19:40:27.000Z",
- *           "userId": 3
- *       }
- *   ]
- * }
- */
-router.get('/clients/:userId', authController.isAuthenticated, clientController.getAllClients);
 
 export function setDependencies(newUserService, newClientService, newAuthService) {
   clientService = newClientService;

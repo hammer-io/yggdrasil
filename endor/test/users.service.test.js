@@ -108,6 +108,16 @@ describe('Testing User Service', () => {
       expect(userCreated.lastName).to.equal('James');
     });
 
+    it('should not require all fields if validation = false', async () => {
+      const user = {
+        username: 'the new jreach'
+      };
+      const newUser = await userService.createUser(user, 'my p4ssw0rd 1s s4f3', false);
+      expect(newUser.dataValues).to.have.keys(['id', 'username', 'updatedAt', 'createdAt']);
+      expect(newUser.username).to.equal(user.username);
+      expect(newUser.id).to.not.be.an('undefined');
+    });
+
     it('should have an error for duplicate username', async () => {
       const newUser = {
         username: 'BobSagat',
@@ -375,4 +385,59 @@ describe('Testing User Service', () => {
         ' already exists.').length === 1).to.equal(true);
     });
   });
+
+  describe('get credentials to validate the user', async () => {
+    it('should return the user if the username/password combo are correct', async () => {
+      let username = 'jreach';
+      let password = 'plaintext1';
+      const user = await userService.getCredentialsByUsername(username, password);
+      expect(user.username).to.equal(username);
+      expect(user.password).to.be.an('undefined');
+      expect(user.email).to.equal('jreach@gmail.com');
+      expect(user.firstName).to.equal('Jack');
+      expect(user.lastName).to.equal('Reacher');
+    });
+
+    it('should not return the user if the username/password combo are incorrect', async () => {
+      let username = 'jreach';
+      let password = 'wrong password';
+      let user;
+      try {
+        user = await userService.getCredentialsByUsername(username, password);
+      } catch (err) {
+        expect(err.type).to.equal('Invalid Credentials');
+        expect(err.status).to.equal(401);
+        expect(err.message).to.equal('Invalid credentials');
+      }
+      expect(user).to.be.an('undefined');
+    });
+
+    it('should not return the user if no password is given', async () => {
+      let username = 'jreach';
+      let password = '';
+      let user;
+      try {
+        user = await userService.getCredentialsByUsername(username, password);
+      } catch (err) {
+        expect(err.type).to.equal('Invalid Credentials');
+        expect(err.status).to.equal(401);
+        expect(err.message).to.equal('Invalid credentials');
+      }
+      expect(user).to.be.an('undefined');
+    });
+
+    it('should not return the user if * is given as a password', async () => {
+      let username = 'jreach';
+      let password = '*';
+      let user;
+      try {
+        user = await userService.getCredentialsByUsername(username, password);
+      } catch (err) {
+        expect(err.type).to.equal('Invalid Credentials');
+        expect(err.status).to.equal(401);
+        expect(err.message).to.equal('Invalid credentials');
+      }
+      expect(user).to.be.an('undefined');
+    });
+  })
 });

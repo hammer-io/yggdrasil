@@ -320,7 +320,7 @@ router.post(
  *
  * @apiPermission project owner
  *
- * @apiHeader Authorization Basic Client-Basic Auth-Token
+ * @apiHeader Authorization Basic Auth-Token
  * @apiParam {String} id the id of the project to update
  *
  * @apiSuccess {Object} project the updated project
@@ -352,7 +352,7 @@ router.patch(
  * @apiName delete project
  * @apiGroup Projects
  *
- * @apiHeader Authorization Basic Client-Basic Auth-Token
+ * @apiHeader Authorization Basic Auth-Token
  * @apiPermission project owner
  *
  * @apiSuccess {Object} project the deleted project
