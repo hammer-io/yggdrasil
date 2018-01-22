@@ -17,6 +17,14 @@ class App extends Component {
     super(props)
   }
 
+  componentDidMount () {
+    const { session, history } = this.props
+    if (session.authToken === null) {
+      history.replace('/login')
+    }
+
+  }
+
   componentDidUpdate(prevProps) {
     // const { dispatch, redirectUrl } = this.props
     // const isLoggingOut = prevProps.isLoggedIn && !this.props.isLoggedIn
@@ -29,8 +37,11 @@ class App extends Component {
     // }
   }
 
-  render() {
-    console.log(this.props)
+  async validateToken (authToken) {
+
+  }
+
+  render () {
     return (
       <div>
         {

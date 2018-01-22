@@ -19,18 +19,6 @@ class Menu extends Component {
     this.updateDrawerState = this.updateDrawerState.bind(this)
   }
 
-  componentDidUpdate(prevProps) {
-    // const { dispatch, redirectUrl } = this.props
-    // const isLoggingOut = prevProps.isLoggedIn && !this.props.isLoggedIn
-    // const isLoggingIn = !prevProps.isLoggedIn && this.props.isLoggedIn
-    //
-    // if (isLoggingIn) {
-    //   dispatch(navigateTo(redirectUrl))
-    // } else if (isLoggingOut) {
-    //   // do any kind of cleanup or post-logout redirection here
-    // }
-  }
-
   clickNavbarItem (event, item) {
     console.log(item.props.primaryText)
   }
@@ -48,7 +36,6 @@ class Menu extends Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div>
         <Navbar

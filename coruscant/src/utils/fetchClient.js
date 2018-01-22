@@ -48,7 +48,10 @@ class FetchClient {
     const o = {
       method: method,
       body: opts.body,
-      headers: Object.assign({}, opts.headers, { Authorization: `Bearer ${this.authToken}` })
+      headers: {
+        ...opts.headers,
+        Authorization: `Bearer ${this.authToken}`
+      }
     }
 
     try {
