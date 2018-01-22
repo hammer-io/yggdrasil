@@ -53,7 +53,6 @@ export function login(credentials) {
   }
 }
 
-
 export function logout(token) {
   return async function (dispatch) {
     try {
