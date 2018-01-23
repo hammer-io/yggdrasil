@@ -133,92 +133,88 @@ describe('Testing Invite Service', () => {
       const invite = await inviteService.createInvite(expected.projectId, expected.userId, expected.days);
       assertInvite(invite, expected);
     });
-    // it('should create an expired invite with days set to 0', async () => {
-    //   const expected = {
-    //     status: 'expired',
-    //     days: 0,
-    //     userId: 1,
-    //     projectId: 1
-    //   };
-    //   const invite = await inviteService.createInvite(expected.projectId, expected.userId, expected.days);
-    //   assertInvite(invite, expected);
-    // });
-    // it('should throw an error for missing required fields', async () => {
-    //   const testCases = [
-    //     {
-    //       projectId: null,
-    //       userId: 1,
-    //       days: 29,
-    //       expectedErr: 'todo1'
-    //     },
-    //     {
-    //       projectId: 1,
-    //       userId: null,
-    //       days: 30,
-    //       expectedErr: 'todo2'
-    //     },
-    //     {
-    //       projectId: 1,
-    //       userId: 1,
-    //       days: null,
-    //       expectedErr: 'todo3'
-    //     }
-    //   ];
-    //   for (let i = 0; i < testCases.length; i++) {
-    //     const testCase = testCases[i];
-    //     let errMsg = null;
-    //     try {
-    //       inviteService.createInvite(testCase.projectId, testCase.userId, testCase.days);
-    //       expect.fail();
-    //     } catch (err) {
-    //       errMsg = err.message;
-    //     }
-    //     expect(errMsg).to.equal(testCase.expectedErr);
-    //   }
-    // });
-    // it('should throw an error for invalid parameters', async () => {
-    //   const testCases = [
-    //     {
-    //       description: 'Project doesn\'t exist',
-    //       projectId: 777,
-    //       userId: 1,
-    //       days: 30,
-    //       expectedErr: 'todo1'
-    //     },
-    //     {
-    //       description: 'User doesn\'t exist',
-    //       projectId: 1,
-    //       userId: 777,
-    //       days: 30,
-    //       expectedErr: 'todo1'
-    //     },
-    //     {
-    //       description: 'Invalid days : negative integer',
-    //       projectId: 1,
-    //       userId: 1,
-    //       days: -1,
-    //       expectedErr: 'todo1'
-    //     },
-    //     {
-    //       description: 'Invalid days : not an integer',
-    //       projectId: 1,
-    //       userId: 1,
-    //       days: "30",
-    //       expectedErr: 'todo1'
-    //     }
-    //   ];
-    //   for (let i = 0; i < testCases.length; i++) {
-    //     const testCase = testCases[i];
-    //     let errMsg = null;
-    //     try {
-    //       inviteService.createInvite(testCase.projectId, testCase.userId, testCase.days);
-    //       expect.fail(testCase.description);
-    //     } catch (err) {
-    //       errMsg = err.message;
-    //     }
-    //     expect(errMsg, testCase.description).to.equal(testCase.expectedErr);
-    //   }
-    // });
+    it('should create an expired invite with days set to 0', async () => {
+      const expected = {
+        status: 'expired',
+        days: 0,
+        userId: 1,
+        projectId: 1
+      };
+      const invite = await inviteService.createInvite(expected.projectId, expected.userId, expected.days);
+      assertInvite(invite, expected);
+    });
+    it('should throw an error for missing required fields', async () => {
+      const testCases = [
+        {
+          projectId: null,
+          userId: 1,
+          days: 29,
+          expectedErr: 'Project is required.'
+        },
+        {
+          projectId: 1,
+          userId: null,
+          days: 30,
+          expectedErr: 'User is required.'
+        }
+      ];
+      for (let i = 0; i < testCases.length; i++) {
+        const testCase = testCases[i];
+        let errMsg = null;
+        try {
+          const invite = await inviteService.createInvite(testCase.projectId, testCase.userId, testCase.days);
+          console.error(invite);
+          expect.fail();
+        } catch (err) {
+          errMsg = err.errors[0].message;
+        }
+        expect(errMsg).to.equal(testCase.expectedErr);
+      }
+    });
+    it('should throw an error for invalid parameters', async () => {
+      const testCases = [
+        {
+          description: 'Project doesn\'t exist',
+          projectId: 777,
+          userId: 1,
+          days: 30,
+          expectedErr: 'Either the user or the project supplied to the invite service does not exist'
+        },
+        {
+          description: 'User doesn\'t exist',
+          projectId: 1,
+          userId: 777,
+          days: 30,
+          expectedErr: 'Either the user or the project supplied to the invite service does not exist'
+        },
+        {
+          description: 'Invalid days : negative integer',
+          projectId: 1,
+          userId: 1,
+          days: -1,
+          expectedErr: 'Must be a non-negative integer.'
+        },
+        {
+          description: 'Invalid days : not an integer',
+          projectId: 1,
+          userId: 1,
+          days: "30",
+          expectedErr: 'Must be a non-negative integer.'
+        }
+      ];
+      for (let i = 0; i < testCases.length; i++) {
+        const testCase = testCases[i];
+        let errMsg = null;
+        try {
+          const invite = await inviteService.createInvite(testCase.projectId, testCase.userId, testCase.days);
+          console.error(invite);
+          expect.fail(testCase.description);
+        } catch (err) {
+          errMsg = err.errors[0].message;
+        }
+        expect(errMsg, `Test Case ${i+1} (${testCase.description})`).to.equal(testCase.expectedErr);
+      }
+    });
   });
 
   // describe('Update invite', async () => {

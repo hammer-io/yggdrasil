@@ -26,14 +26,14 @@ export default class InviteService {
   static async validateInvite(invite, asNewInvite) {
     const errors = [];
     if (asNewInvite) {
-      if (!('userInvitedId' in invite)) {
+      if (!invite.userInvitedId) {
         errors.push(new RequestParamError('userInvitedId', 'User is required.'));
       }
 
-      if (!('projectInvitedToId' in invite)) {
+      if (!invite.projectInvitedToId) {
         errors.push(new RequestParamError('projectInvitedToId', 'Project is required.'));
       }
-    } else if (!('status' in invite)) {
+    } else if (!invite.status) {
       errors.push(new RequestParamError('status', 'Status is required for invite updates.'));
     }
 
@@ -116,10 +116,12 @@ export default class InviteService {
   async createInvite(projectId, userId, daysFromCreationUntilExpiration) {
     this.log.info(`InviteService: creating invite for user ${userId} to project ${projectId}`);
 
+    const status = (daysFromCreationUntilExpiration === 0)
+      ? InviteStatus.EXPIRED : InviteStatus.OPEN;
     const invite = {
       userInvitedId: userId,
       projectInvitedToId: projectId,
-      status: InviteStatus.OPEN,
+      status,
       daysFromCreationUntilExpiration
     };
 
@@ -128,7 +130,16 @@ export default class InviteService {
       throw new InvalidRequestException(errors);
     }
 
-    return this.inviteRepository.create(invite);
+    let resultingInvite = null;
+    try {
+      resultingInvite = await this.inviteRepository.create(invite);
+    } catch (err) {
+      // SequelizeForeignKeyConstraintError for non-existant user or project
+      throw new InvalidRequestException([
+        new RequestParamError('user or project', 'Either the user or the project supplied to the invite service does not exist')
+      ]);
+    }
+    return resultingInvite;
   }
 
   /**
