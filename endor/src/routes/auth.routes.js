@@ -148,7 +148,7 @@ router.post('/oauth2/token', [authController.isAuthenticated].concat(authValidat
 router.get('/oauth2/authorize/successRedirect', authController.isAuthenticated, authController.success);
 
 /**
- * @api { post } /oauth2/register Register a new user
+ * @api { post } /auth/register Register a new user
  * @apiVersion 1.0.0
  * @apiName Register User
  * @apiGroup Auth
@@ -182,7 +182,7 @@ router.get('/oauth2/authorize/successRedirect', authController.isAuthenticated, 
 router.post('/auth/register', authValidator.checkToken(), authController.register);
 
 /**
- * @api { get } /oauth2 Check Authentication Token
+ * @api { get } /auth/token Check Authentication Token
  * @apiVersion 1.0.0
  * @apiName Check Auth Token
  * @apiGroup Auth
@@ -194,7 +194,7 @@ router.post('/auth/register', authValidator.checkToken(), authController.registe
  *
  * @apiSuccess status 200
  */
-router.get('/auth', authController.isBearerAuthenticated, authController.checkToken);
+router.get('/auth/token', authController.isBearerAuthenticated, authController.checkToken);
 
 /**
  * Sets dependencies for the routes
