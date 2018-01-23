@@ -3,10 +3,7 @@ import { InviteStatus } from '../db/sequelize';
 import InviteNotFoundException from '../error/InviteNotFoundException';
 import InvalidRequestException from '../error/InvalidRequestException';
 import RequestParamError from '../error/RequestParamError';
-
-function isNonNegativeInteger(value) {
-  return Number.isInteger(value) && value >= 0;
-}
+import { isValidInviteStatus, getInvalidStatusMessage, isNonNegativeInteger } from '../middlewares/invites.middleware';
 
 export default class InviteService {
   /**
@@ -18,28 +15,6 @@ export default class InviteService {
     this.inviteRepository = inviteRepository;
     this.log = log;
   }
-
-
-  /**
-   * Returns true if the given status is a match to one of the possible enumerations
-   * @param status the string to check
-   * @returns {boolean} whether or not the string is a valid InviteStatus
-   */
-  static isValidInviteStatus(status) {
-    const inviteStatusValues = Object.keys(InviteStatus).map(key => InviteStatus[key]);
-    return inviteStatusValues.filter(value => value === status).length > 0;
-  }
-
-
-  /**
-   * @returns {RequestParamError} the error lists the possible valid status strings
-   */
-  static getInvalidStatusError() {
-    const inviteStatusValues = Object.keys(InviteStatus).map(key => InviteStatus[key]);
-    const enumValues = inviteStatusValues.join(', ');
-    return new RequestParamError('status', `Must be one of the following values: ${enumValues}. If updating the status, note that it can only be updated from a status of 'open', and it can only be updated with the correct permissions.`);
-  }
-
 
   /**
    * Validates a invite
@@ -67,8 +42,8 @@ export default class InviteService {
       errors.push(new RequestParamError('daysFromCreationUntilExpiration', 'Must be a non-negative integer.'));
     }
 
-    if (invite.status && !InviteService.isValidInviteStatus(invite.status)) {
-      errors.push(InviteService.getInvalidStatusError());
+    if (invite.status && !isValidInviteStatus(invite.status)) {
+      errors.push(new RequestParamError('status', getInvalidStatusMessage()));
     }
 
     return errors;
@@ -88,7 +63,7 @@ export default class InviteService {
     });
 
     if (inviteFound === null) {
-      throw new InviteNotFoundException(`Invite with ${inviteId} could not be found.`);
+      throw new InviteNotFoundException(`Invite with id ${inviteId} could not be found.`);
     }
 
     return inviteFound;
@@ -138,17 +113,18 @@ export default class InviteService {
    * Creates a new invite
    * @param projectId the id of the project to which the user is being invited to
    * @param userId the id of the user being invited
-   * @param daysUntilExpiration the number of days the invite will remain open before expiring
+   * @param daysFromCreationUntilExpiration the number of days the invite will
+   *   remain open before expiring
    * @returns {Object} the created invite
    */
-  async createInvite(projectId, userId, daysUntilExpiration) {
+  async createInvite(projectId, userId, daysFromCreationUntilExpiration) {
     this.log.info(`InviteService: creating invite for user ${userId} to project ${projectId}`);
 
     const invite = {
       userInvitedId: userId,
       projectInvitedToId: projectId,
       status: InviteStatus.OPEN,
-      daysFromCreationUntilExpiration: daysUntilExpiration
+      daysFromCreationUntilExpiration
     };
 
     const errors = await InviteService.validateInvite(invite, true);
@@ -168,8 +144,8 @@ export default class InviteService {
   async updateInvite(inviteId, status) {
     this.log.info(`InviteService: update invite ${inviteId} to ${status}`);
 
-    if (!InviteService.isValidInviteStatus(status)) {
-      throw new InvalidRequestException([InviteService.getInvalidStatusError()]);
+    if (!isValidInviteStatus(status)) {
+      throw new InvalidRequestException([new RequestParamError('status', getInvalidStatusMessage())]);
     }
 
     const foundInvite = await this.getInviteById(inviteId);
@@ -177,7 +153,7 @@ export default class InviteService {
       throw new InviteNotFoundException(`Invite ${inviteId} not found.`);
     }
     if (foundInvite.status !== InviteStatus.OPEN) {
-      throw new InvalidRequestException([InviteService.getInvalidStatusError()]);
+      throw new InvalidRequestException([new RequestParamError('status', 'Only an OPEN invite can be accepted, rescinded, or declined.')]);
     }
 
     foundInvite.update({ status });

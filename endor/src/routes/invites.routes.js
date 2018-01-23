@@ -1,9 +1,12 @@
 /* eslint-disable max-len */
 import express from 'express';
-import * as authController from '../controllers/auth.controller';
 import * as invitesController from './../controllers/invites.controller';
+import * as inviteValidator from './../middlewares/invites.middleware';
+
+import * as authController from './../controllers/auth.controller';
 
 export const router = express.Router();
+
 
 /**
  * Set dependencies for the invites routes
@@ -105,7 +108,12 @@ router.get('/user/invites', authController.isAuthenticated, invitesController.ge
   "updatedAt": "2017-11-12T20:26:47.000Z"
  }
  */
-router.post('/projects/:projectId/invites/:userId', authController.isAuthenticated, invitesController.addInviteToProject);
+router.post(
+  '/projects/:projectId/invites/:userId',
+  authController.isAuthenticated,
+  inviteValidator.checkForNonNegativeInteger,
+  invitesController.addInviteToProject
+);
 
 /**
  * @api {put} /invites/:id/accept Accept an invitation. May only be used on an open invite.

@@ -69,6 +69,13 @@ app.use((req, res) => {
   });
 });
 
+// route error logging
+// will print any errors that the middleware spits out
+app.use((err, req, res, next) => {
+  getActiveLogger().error(`Routing: ${req.method} ${req.originalUrl} : ${err}`)
+  next(err);
+});
+
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {

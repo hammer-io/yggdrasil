@@ -1,6 +1,5 @@
 /* eslint-disable prefer-destructuring */
 import { InviteStatus } from '../db/sequelize';
-import * as responseHelper from './../utils/response-helper';
 
 let inviteService = {};
 let userService = {};
@@ -68,7 +67,7 @@ export async function getInvitesByUserId(req, res, next) {
  * @param next the next middleware
  */
 export async function getInvitesByAuthenticatedUser(req, res, next) {
-  req.params.id = 1; // TODO get userId from authenticated request
+  req.params.id = req.user.id;
   return getInvitesByUserId(req, res, next);
 }
 
@@ -80,15 +79,20 @@ export async function getInvitesByAuthenticatedUser(req, res, next) {
  */
 export async function addInviteToProject(req, res, next) {
   try {
+    // noinspection JSUnresolvedVariable
     const projectId = req.params.projectId;
     const userId = req.params.userId;
-    const daysUntilExpiration = req.params.daysUntilExpiration;
+    const daysFromCreationUntilExpiration = req.body.daysFromCreationUntilExpiration;
 
     // Validate that the user and project actually exist
     await projectService.getProjectById(projectId);
     await userService.getUserByIdOrUsername(userId);
 
-    const invite = await inviteService.createInvite(projectId, userId, daysUntilExpiration);
+    const invite = await inviteService.createInvite(
+      projectId,
+      userId,
+      daysFromCreationUntilExpiration
+    );
     res.status(201).send(invite);
   } catch (error) {
     next(error);
