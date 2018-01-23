@@ -1,14 +1,15 @@
 import { expect } from 'chai';
 // Using Expect style
-const sequalize = require('../src/db/sequelize');
-import { defineTables, populateClients, populateUsers} from './setupMockDB';
+const sequelize = require('../src/db/sequelize');
+import { defineTables } from '../src/db/init_database';
+import { populateClients, populateUsers } from '../src/db/import_test_data';
 
-import UserService from './../dist/services/users.service';
-import ClientService from './../dist/services/client.service';
-import { getActiveLogger } from '../dist/utils/winston';
+import UserService from './../src/services/users.service';
+import ClientService from './../src/services/client.service';
+import { getMockLogger } from './mockLogger';
 
 // Initialize Sequelize with sqlite for testing
-sequalize.initSequelize(
+sequelize.initSequelize(
   'database',
   'root',
   'root', {
@@ -17,8 +18,8 @@ sequalize.initSequelize(
   }
 );
 
-const userService = new UserService(sequalize.User, sequalize.Credentials, getActiveLogger());
-const clientService = new ClientService(sequalize.Client, userService, getActiveLogger());
+const userService = new UserService(sequelize.User, sequelize.Credentials, getMockLogger());
+const clientService = new ClientService(sequelize.Client, userService, getMockLogger());
 
 describe('Testing Client Service', () => {
   beforeEach(async () => {

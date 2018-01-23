@@ -1,16 +1,16 @@
 import { expect } from 'chai';
 // Using Expect style
 const sequalize = require('../src/db/sequelize');
+import { defineTables } from '../src/db/init_database';
 import {
-  defineTables,
   populateClients,
   populateUsers,
   populateAccessCodes,
   populateTokens
-} from './setupMockDB';
+} from '../src/db/import_test_data';
 
-import AuthService from './../dist/services/auth.service';
-import { getActiveLogger } from '../dist/utils/winston';
+import AuthService from './../src/services/auth.service';
+import { getMockLogger } from './mockLogger';
 
 // Initialize Sequelize with sqlite for testing
 sequalize.initSequelize(
@@ -22,7 +22,7 @@ sequalize.initSequelize(
   }
 );
 
-const authService = new AuthService(sequalize.Token, sequalize.AccessCode, getActiveLogger());
+const authService = new AuthService(sequalize.Token, sequalize.AccessCode, getMockLogger());
 
 
 describe('Testing Client Service', () => {

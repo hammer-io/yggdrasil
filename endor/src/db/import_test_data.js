@@ -28,6 +28,12 @@ export async function populateUsers() {
       email: 'jbravo@cartoonnetwork.com',
       firstName: 'Johnny',
       lastName: 'Bravo'
+    },
+    {
+      username: 'buddy',
+      email: 'buddy@carnegiehall.org',
+      firstName: 'Buddy',
+      lastName: 'Rich'
     }
   ]);
 
@@ -63,20 +69,50 @@ export async function populateUsers() {
   await cred4.setUser(user4);
 }
 
+export async function populateClients() {
+  await sequelize.Client.bulkCreate([
+    {
+      name: 'endor_frontend1',
+      clientId: 'clientId',
+      secret: 'client_secret',
+      userId: 3
+    },
+    {
+      name: 'endor_frontend1',
+      clientId: 'clientId1',
+      secret: 'client_secret',
+      userId: 3
+    },
+    {
+      name: 'endor_frontend1',
+      clientId: 'clientId2',
+      secret: 'client_secret',
+      userId: 4
+    }
+  ]);
+}
+
 export async function populateProjects() {
-  const project = await sequelize.Project.create({
+  const project1 = await sequelize.Project.create({
     projectName: 'TMNT',
     description: 'You gotta know what a crumpet is to understand cricket!',
     version: '1.2.3',
     license: 'MIT',
     authors: 'Casey Jones, Raphael'
   });
-  const project1 = await sequelize.Project.create({
+  const project2 = await sequelize.Project.create({
     projectName: 'hammer-io',
     description: 'Hit it with a hammer!',
     version: '1.2.3',
     license: 'MIT',
     authors: 'Jack'
+  });
+  await sequelize.Project.create({
+    projectName: 'drumitdown',
+    description: 'Let us drum it down for you',
+    version: '3.2.1',
+    license: 'MIT',
+    authors: 'Krash'
   });
 
   // Add project owners
@@ -92,31 +128,100 @@ export async function populateProjects() {
   const user4 = await sequelize.User.findOne({
     where: { username: 'BobSagat' }
   });
-
-  // Add project owners
-  await project.addOwners(user1);
-  await project1.addOwners([user1, user2, user4]);
+  await project1.addOwners(user1);
+  await project2.addOwners([user1, user2, user4]);
   // Another way to do it (might be useful later)
   // await user2.addProjectsOwned(project);
 
   // Add project contributors
-  await project.addContributors([user2, user3, user4]);
-  await project1.addContributors([user3]);
+  await project1.addContributors([user2, user3, user4]);
+  await project2.addContributors([user3]);
 
   // Add tooling
   const depTools = await sequelize.Tool.findAll({
     where: { toolType: sequelize.ToolType.DEPLOYMENT }
   });
-  await project.setDeploymentTool(depTools[0]);
+  await project1.setDeploymentTool(depTools[0]);
   const ciTools = await sequelize.Tool.findAll({
     where: { toolType: sequelize.ToolType.CONTINUOUS_INTEGRATION }
   });
-  await project.setContinuousIntegrationTool(ciTools[0]);
+  await project1.setContinuousIntegrationTool(ciTools[0]);
+}
+
+export async function populateInvites() {
+  const userJreach = await sequelize.User.findOne({
+    where: { username: 'jreach' }
+  });
+  const userBuddy = await sequelize.User.findOne({
+    where: { username: 'buddy' }
+  });
+  const projectHammerIo = await sequelize.Project.findOne({
+    where: { projectName: 'hammer-io' }
+  });
+  const projectDrumItDown = await sequelize.Project.findOne({
+    where: { projectName: 'drumitdown' }
+  });
+
+  // Jreach invited to hammer-io
+  await sequelize.Invite.create({
+    status: sequelize.InviteStatus.OPEN,
+    userInvitedId: userJreach.id,
+    projectInvitedToId: projectHammerIo.id,
+    daysFromCreationUntilExpiration: 30
+  });
+  // Buddy invited to hammer-io and drumitdown
+  await sequelize.Invite.create({
+    status: sequelize.InviteStatus.OPEN,
+    userInvitedId: userBuddy.id,
+    projectInvitedToId: projectHammerIo.id,
+    daysFromCreationUntilExpiration: 15
+  });
+  await sequelize.Invite.create({
+    // status: sequelize.InviteStatus.OPEN,    -- Defaults to OPEN
+    userInvitedId: userBuddy.id,
+    projectInvitedToId: projectDrumItDown.id
+    // daysFromCreationUntilExpiration: 30     -- Default to 30
+  });
+}
+
+export async function populateAccessCodes() {
+  await sequelize.AccessCode.bulkCreate([
+    {
+      value: 'randomValue',
+      redirectURI: 'http://localhost:3000/api/v1/oauth2/authorize/successRedirect',
+      userId: 3,
+      clientId: 1
+    },
+    {
+      value: 'randomValueAgain',
+      redirectURI: 'http://localhost:3000/api/v1/oauth2/authorize/successRedirect',
+      userId: 4,
+      clientId: 3
+    }
+  ]);
+}
+
+export async function populateTokens() {
+  await sequelize.Token.bulkCreate([
+    {
+      value: 'longRandomTokenValue',
+      expired: false,
+      userId: 3,
+      clientId: 1
+    },
+    {
+      value: 'anotherLongRandomUnpredictableTokenValue',
+      expired: false,
+      userId: 3,
+      clientId: 1
+    }
+  ]);
 }
 
 async function populateTestData() {
   await populateUsers();
   await populateProjects();
+  await populateInvites();
 }
 
 

@@ -4,11 +4,31 @@ import { getActiveLogger } from '../utils/winston';
 // Added for convenience
 const { STRING, BOOLEAN } = Sequelize.DataTypes;
 
+const ToolType = {
+  CONTAINERIZATION: 'containerization',
+  CONTINUOUS_INTEGRATION: 'continuousIntegration',
+  DEPLOYMENT: 'deployment',
+  WEB_FRAMEWORK: 'webFramework'
+};
+
+const InviteStatus = {
+  OPEN: 'open',
+  ACCEPTED: 'accepted',
+  DECLINED: 'declined',
+  RESCINDED: 'rescinded',
+  EXPIRED: 'expired'
+};
+
+// Exports provided for convenience
+module.exports.ToolType = ToolType;
+module.exports.InviteStatus = InviteStatus;
+module.exports.DataTypes = Sequelize.DataTypes;
+
 let initialized = false;
 
 module.exports.initSequelize = (database, username, password, options) => {
   if (initialized) {
-    getActiveLogger().warn('Sequelize can only be initialized once!')
+    getActiveLogger().warn('Sequelize can only be initialized once!');
     return;
   }
   initialized = true;
@@ -56,12 +76,6 @@ module.exports.initSequelize = (database, username, password, options) => {
   Token.belongsTo(User, { as: 'user', through: 'username' });
   Token.belongsTo(Client, { as: 'client', through: 'id' });
 
-  const ToolType = {
-    CONTAINERIZATION: 'containerization',
-    CONTINUOUS_INTEGRATION: 'continuousIntegration',
-    DEPLOYMENT: 'deployment',
-    WEB_FRAMEWORK: 'webFramework'
-  };
   const Tool = model.define('tool', {
     name: { type: STRING, unique: true },
     toolType: {
@@ -114,13 +128,6 @@ module.exports.initSequelize = (database, username, password, options) => {
   User.belongsToMany(Project, { as: 'projectsContributed', through: 'projectContributor' });
 
 
-  const InviteStatus = {
-    OPEN: 'open',
-    ACCEPTED: 'accepted',
-    DECLINED: 'declined',
-    RESCINDED: 'rescinded',
-    EXPIRED: 'expired'
-  };
   const Invite = model.define('invite', {
     // userInvited and projectInvitedTo defined below
     status: {
@@ -158,9 +165,4 @@ module.exports.initSequelize = (database, username, password, options) => {
   module.exports.Project = Project;
   module.exports.ProjectOwner = ProjectOwner;
   module.exports.ProjectContributor = ProjectContributor;
-
-  // Other things provided for convenience
-  module.exports.ToolType = ToolType;
-  module.exports.InviteStatus = InviteStatus;
-  module.exports.DataTypes = Sequelize.DataTypes;
 };

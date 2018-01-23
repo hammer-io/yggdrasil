@@ -82,10 +82,6 @@ export default class InviteService {
       }
     });
 
-    if (invitesFound === null) {
-      throw new InviteNotFoundException(`Invites belonging to project ${projectId} could not be found.`);
-    }
-
     return invitesFound;
   }
 

@@ -1,15 +1,18 @@
 import { expect } from 'chai';
-import { defineTables, populateUsers } from './setupMockDB';
+
+import { defineTables } from '../src/db/init_database';
+import { populateUsers, populateProjects, populateInvites } from '../src/db/import_test_data';
+
 // Using Expect style
-const sequalize = require('../src/db/sequelize');
+const sequelize = require('../src/db/sequelize');
 
-import InviteService from './../dist/services/invites.service';
-import { getActiveLogger } from '../dist/utils/winston';
+import InviteService from './../src/services/invites.service';
+import { getMockLogger } from './mockLogger';
 
-const InviteStatus = sequalize.InviteStatus;
+const InviteStatus = sequelize.InviteStatus;
 
 // Initialize Sequelize with sqlite for testing
-sequalize.initSequelize(
+sequelize.initSequelize(
   'database',
   'root',
   'root', {
@@ -18,15 +21,25 @@ sequalize.initSequelize(
   }
 );
 
-const inviteService = new InviteService(sequalize.Invite, getActiveLogger());
+const inviteService = new InviteService(sequelize.Invite, getMockLogger());
+
+function assertInvite(actual, expected) {
+  expect(actual.status).to.equal(expected.status);
+  expect(actual.daysFromCreationUntilExpiration).to.equal(expected.days);
+  expect(actual.userInvitedId).to.equal(expected.userId);
+  expect(actual.projectInvitedToId).to.equal(expected.projectId);
+}
 
 describe('Testing Invite Service', () => {
   beforeEach(async () => {
     await defineTables();
     await populateUsers();
+    await populateProjects();
+    await populateInvites();
   });
 
   describe('Validate invite', async () => {
+    expect.fail('Not yet implemented', 'TODO');
   });
 
   describe('Get invite by id', async () => {
@@ -34,15 +47,16 @@ describe('Testing Invite Service', () => {
       const query = 1;
       const invite = await inviteService.getInviteById(query);
       expect(invite.id).to.equal(query);
-      expect(invite.status).to.equal('open');
-      expect(invite.daysFromCreationUntilExpiration).to.equal(30);
-      // TODO: Make test data available
-      expect(invite.userInvitedId).to.equal(1);
-      expect(invite.projectInvitedToId).to.equal(1);
+      assertInvite(invite, {
+        status: 'open',
+        days: 30,
+        userId: 3,
+        projectId: 2
+      });
     });
     it('should throw InviteNotFoundException if the invite doesn\'t exist', async () => {
+      const query = 777;
       try {
-        const query = 777;
         const invite = await inviteService.getInviteById(query);
         // this will fail if the error is not thrown and the
         // object actually has value. Theoretically should not be called.
@@ -58,127 +72,229 @@ describe('Testing Invite Service', () => {
 
   describe('Get invites by project id', async () => {
     it('should find all invites relevant to the project', async () => {
-      const query = 1;
-      const invites = await inviteService.getInvitesByProjectId(query);
-      expect(invites.length).to.equal(4);
+      const projectHammer = await sequelize.Project.findOne({
+        where: { projectName: 'hammer-io' }
+      });
+      const invites = await inviteService.getInvitesByProjectId(projectHammer.id);
+      expect(invites.length).to.equal(2);
       expect(Array.isArray(invites)).to.equal(true);
     });
     it('should return an empty array if no invites are found', async () => {
-      const query = 2;
-      const invites = await inviteService.getInvitesByProjectId(query);
+      const projectTMNT = await sequelize.Project.findOne({
+        where: { projectName: 'TMNT' }
+      });
+      const invites = await inviteService.getInvitesByProjectId(projectTMNT.id);
       expect(invites.length).to.equal(0);
       expect(Array.isArray(invites)).to.equal(true);
     });
-    it('should throw ProjectNotFoundException if the project doesn\'t exist', async () => {
-      try {
-        const query = 777;
-        const invite = await inviteService.getInvitesByProjectId(query);
-        // this will fail if the error is not thrown and the
-        // object actually has value. Theoretically should not be called.
-        expect(invite).to.be.a('undefined');
-      } catch (error) {
-        expect(error).to.be.a('object');
-        expect(error.message).to.equal(`Project with id ${query} not found`);
-        expect(error.type).to.equal('Not Found');
-        expect(error.status).to.equal(404);
-      }
+    it('should return an empty array if the project doesn\'t exist', async () => {
+      const invites = await inviteService.getInvitesByProjectId(777);
+      expect(invites.length).to.equal(0);
+      expect(Array.isArray(invites)).to.equal(true);
     });
   });
 
   describe('Get invites by user', async () => {
     it('should find all invites for the given user id', async () => {
-      const query = 1;
-      const invites = await inviteService.getInvitesByUserId(query);
-      expect(invites.length).to.equal(4);
+      const userBuddy = await sequelize.User.findOne({
+        where: { username: 'buddy' }
+      });
+      const invites = await inviteService.getInvitesByUserId(userBuddy.id);
+      expect(invites.length).to.equal(2);
       expect(Array.isArray(invites)).to.equal(true);
-    });
-    it('should find all invites for the given username', async () => {
-      const query = 'jreach';
-      const invites = await inviteService.getInvitesByUserId(query);
-      expect(invites.length).to.equal(4);
-      expect(Array.isArray(invites)).to.equal(true);
+      expect(invites[0].userInvitedId).to.equal(userBuddy.id);
+      expect(invites[1].userInvitedId).to.equal(userBuddy.id);
+      expect(invites[0].id).to.not.equal(invites[1].id);
     });
     it('should return an empty array if no invites are found', async () => {
-      const query = 2;
-      const invites = await inviteService.getInvitesByUserId(query);
+      const userBob = await sequelize.User.findOne({
+        where: { username: 'BobSagat' }
+      });
+      const invites = await inviteService.getInvitesByUserId(userBob.id);
       expect(invites.length).to.equal(0);
       expect(Array.isArray(invites)).to.equal(true);
     });
-    it('should throw a UserNotFoundException if the user doesn\'t exist', async () => {
-      try {
-        const query = 777;
-        const invite = await inviteService.getInvitesByUserId(query);
-        // this will fail if the error is not thrown and the
-        // object actually has value. Theoretically should not be called.
-        expect(invite).to.be.a('undefined');
-      } catch (error) {
-        expect(error).to.be.a('object');
-        expect(error.message).to.equal(`User with ${query} could not be found.`);
-        expect(error.type).to.equal('Not Found');
-        expect(error.status).to.equal(404);
-      }
+    it('should return an empty array if the user doesn\'t exist', async () => {
+      const query = 777;
+      const invites = await inviteService.getInvitesByUserId(query);
+      expect(invites.length).to.equal(0);
+      expect(Array.isArray(invites)).to.equal(true);
     });
   });
 
   describe('Create invite', async () => {
     it('should create a new invite', async () => {
-      const projectId = 1;
-      const userId = 1;
-      const days = 42;
-      const invite = await inviteService.createInvite(projectId, userId, days);
-      // expect(invite.id).to.equal(query); // TODO: isInt?
-      expect(invite.status).to.equal('open');
-      expect(invite.daysFromCreationUntilExpiration).to.equal(days);
-      expect(invite.userInvitedId).to.equal(userId);
-      expect(invite.projectInvitedToId).to.equal(projectId);
+      const expected = {
+        status: 'open',
+        days: 42,
+        userId: 1,
+        projectId: 1
+      };
+      const invite = await inviteService.createInvite(expected.projectId, expected.userId, expected.days);
+      assertInvite(invite, expected);
     });
-    it('should throw an error for missing required fields', async () => {
-      const projectId = null;
-      const userId = 1;
-      const days = 42;
-      const invite = await inviteService.createInvite(projectId, userId, days);
-    });
-    it('should throw an error for invalid parameters', async () => {
-      const projectId = 1;
-      const userId = 1;
-      const days = "42"; // String, not an int...?
-      const invite = await inviteService.createInvite(projectId, userId, days);
-    });
-    // TODO: Missing user, missing project, invalid days (various forms)
+    // it('should create an expired invite with days set to 0', async () => {
+    //   const expected = {
+    //     status: 'expired',
+    //     days: 0,
+    //     userId: 1,
+    //     projectId: 1
+    //   };
+    //   const invite = await inviteService.createInvite(expected.projectId, expected.userId, expected.days);
+    //   assertInvite(invite, expected);
+    // });
+    // it('should throw an error for missing required fields', async () => {
+    //   const testCases = [
+    //     {
+    //       projectId: null,
+    //       userId: 1,
+    //       days: 29,
+    //       expectedErr: 'todo1'
+    //     },
+    //     {
+    //       projectId: 1,
+    //       userId: null,
+    //       days: 30,
+    //       expectedErr: 'todo2'
+    //     },
+    //     {
+    //       projectId: 1,
+    //       userId: 1,
+    //       days: null,
+    //       expectedErr: 'todo3'
+    //     }
+    //   ];
+    //   for (let i = 0; i < testCases.length; i++) {
+    //     const testCase = testCases[i];
+    //     let errMsg = null;
+    //     try {
+    //       inviteService.createInvite(testCase.projectId, testCase.userId, testCase.days);
+    //       expect.fail();
+    //     } catch (err) {
+    //       errMsg = err.message;
+    //     }
+    //     expect(errMsg).to.equal(testCase.expectedErr);
+    //   }
+    // });
+    // it('should throw an error for invalid parameters', async () => {
+    //   const testCases = [
+    //     {
+    //       description: 'Project doesn\'t exist',
+    //       projectId: 777,
+    //       userId: 1,
+    //       days: 30,
+    //       expectedErr: 'todo1'
+    //     },
+    //     {
+    //       description: 'User doesn\'t exist',
+    //       projectId: 1,
+    //       userId: 777,
+    //       days: 30,
+    //       expectedErr: 'todo1'
+    //     },
+    //     {
+    //       description: 'Invalid days : negative integer',
+    //       projectId: 1,
+    //       userId: 1,
+    //       days: -1,
+    //       expectedErr: 'todo1'
+    //     },
+    //     {
+    //       description: 'Invalid days : not an integer',
+    //       projectId: 1,
+    //       userId: 1,
+    //       days: "30",
+    //       expectedErr: 'todo1'
+    //     }
+    //   ];
+    //   for (let i = 0; i < testCases.length; i++) {
+    //     const testCase = testCases[i];
+    //     let errMsg = null;
+    //     try {
+    //       inviteService.createInvite(testCase.projectId, testCase.userId, testCase.days);
+    //       expect.fail(testCase.description);
+    //     } catch (err) {
+    //       errMsg = err.message;
+    //     }
+    //     expect(errMsg, testCase.description).to.equal(testCase.expectedErr);
+    //   }
+    // });
   });
 
-  describe('Update invite', async () => {
-    it('should update the invite status to accepted', async () => {
-      const inviteId = 1;
-      const status = InviteStatus.OPEN;
-      const invite = await inviteService.updateInvite(inviteId, status);
-    });
-    it('should update the invite status to declined', async () => {
-      const inviteId = 1;
-      const status = InviteStatus.OPEN;
-      const invite = await inviteService.updateInvite(inviteId, status);
-    });
-    it('should update the invite status to rescinded', async () => {
-      const inviteId = 1;
-      const status = InviteStatus.OPEN;
-      const invite = await inviteService.updateInvite(inviteId, status);
-    });
-    describe('should throw an error if it', async () => {
-      it('tries to update the status when it\'s not OPEN', async () => {
-        const inviteId = 1;
-        const status = InviteStatus.OPEN;
-        const invite = await inviteService.updateInvite(inviteId, status);
-      });
-      it('tries to update with an invalid status', async () => {
-        const inviteId = 1;
-        const status = InviteStatus.OPEN;
-        const invite = await inviteService.updateInvite(inviteId, status);
-      });
-      it('tries to update an expired invite', async () => {
-        const inviteId = 1;
-        const status = InviteStatus.OPEN;
-        const invite = await inviteService.updateInvite(inviteId, status);
-      });
-    });
-  });
+  // describe('Update invite', async () => {
+  //   it('should update the invite status to accepted', async () => {
+  //     const userJreach = sequelize.User.findOne({
+  //       where: { username: 'jreach' }
+  //     });
+  //     const projectHammer = sequelize.Project.findOne({
+  //       where: { projectName: 'hammer-io' }
+  //     });
+  //     const expected = {
+  //       status: 'accepted',
+  //       days: 30,
+  //       userId: userJreach.id,
+  //       projectId: projectHammer.id
+  //     };
+  //     const inviteId = 1;
+  //     const invite = await inviteService.updateInvite(inviteId, InviteStatus.ACCEPTED);
+  //     assertInvite(invite, expected);
+  //   });
+  //   it('should update the invite status to declined', async () => {
+  //     const userJreach = sequelize.User.findOne({
+  //       where: { username: 'jreach' }
+  //     });
+  //     const projectHammer = sequelize.Project.findOne({
+  //       where: { projectName: 'hammer-io' }
+  //     });
+  //     const expected = {
+  //       status: 'declined',
+  //       days: 30,
+  //       userId: userJreach.id,
+  //       projectId: projectHammer.id
+  //     };
+  //     const inviteId = 1;
+  //     const invite = await inviteService.updateInvite(inviteId, InviteStatus.DECLINED);
+  //     assertInvite(invite, expected);
+  //   });
+  //   it('should update the invite status to rescinded', async () => {
+  //     const userJreach = sequelize.User.findOne({
+  //       where: { username: 'jreach' }
+  //     });
+  //     const projectHammer = sequelize.Project.findOne({
+  //       where: { projectName: 'hammer-io' }
+  //     });
+  //     const expected = {
+  //       status: 'rescinded',
+  //       days: 30,
+  //       userId: userJreach.id,
+  //       projectId: projectHammer.id
+  //     };
+  //     const inviteId = 1;
+  //     const invite = await inviteService.updateInvite(inviteId, InviteStatus.RESCINDED);
+  //     assertInvite(invite, expected);
+  //   });
+  //   describe('should throw an error if it', async () => {
+  //     it('tries to update the status when it\'s not OPEN', async () => {
+  //       // TODO
+  //       expect.fail('Not yet implemented', 'TODO');
+  //       const inviteId = 1;
+  //       const status = InviteStatus.OPEN;
+  //       const invite = await inviteService.updateInvite(inviteId, status);
+  //     });
+  //     it('tries to update with an invalid status', async () => {
+  //       // TODO
+  //       expect.fail('Not yet implemented', 'TODO');
+  //       const inviteId = 1;
+  //       const status = InviteStatus.OPEN;
+  //       const invite = await inviteService.updateInvite(inviteId, status);
+  //     });
+  //     it('tries to update an expired invite', async () => {
+  //       // TODO
+  //       expect.fail('Not yet implemented', 'TODO');
+  //       const inviteId = 1;
+  //       const status = InviteStatus.OPEN;
+  //       const invite = await inviteService.updateInvite(inviteId, status);
+  //     });
+  //   });
+  // });
 });
