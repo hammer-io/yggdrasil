@@ -114,7 +114,7 @@ export async function populateProjects() {
   await project.setContinuousIntegrationTool(ciTools[0]);
 }
 
-async function importTestData() {
+async function populateTestData() {
   await populateUsers();
   await populateProjects();
 }
@@ -124,11 +124,23 @@ async function importTestData() {
  * ---------------------------- MAIN ----------------------------
  * The main function only gets run if this file is run as a script
  */
-async function main() {
-  importTestData().then(() => {
+function main() {
+  // eslint-disable-next-line global-require
+  const dbConfig = require('../../../dbConfig.json');
+
+  // First, we need to initialize the data model
+  sequelize.initSequelize(
+    dbConfig.database,
+    dbConfig.username,
+    dbConfig.password,
+    dbConfig.options
+  );
+
+  // Then, continue populating the test data
+  populateTestData().then(() => {
     process.exit(0);
   }).catch((err) => {
-    console.error(err.errors);
+    console.error(err);
     process.exit(1);
   });
 }
