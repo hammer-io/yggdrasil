@@ -11,7 +11,7 @@ A web API to generate node.js applications in an opinionated way.
 3. git clone https://github.com/username/yggdrasil
 4 `cd yggdrasil/endor && npm install`
 5. Follow the steps below to [set up the database](#setting-up-the-database)
-6. Create an endorConfig.json in the yggdrasil folder with the following inside:
+6. Create an endorConfig.json in the endor folder with the following inside:
 ```javascript
 {
   session: {

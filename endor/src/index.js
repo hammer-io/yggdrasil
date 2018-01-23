@@ -19,7 +19,7 @@ import UserService from './services/users.service';
 import AuthService from './services/auth.service';
 import ClientService from './services/client.service';
 // eslint-disable-next-line import/no-unresolved
-import config from '../../endorConfig.json';
+import config from '../endorConfig.json';
 
 const app = express();
 

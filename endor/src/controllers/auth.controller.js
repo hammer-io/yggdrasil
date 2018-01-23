@@ -137,7 +137,8 @@ server.exchange(oauth2orize.exchange.password((client, username, password, scope
  */
 export async function register(req, res, next) {
   const user = {
-    username: req.body.username
+    username: req.body.username,
+    email: req.body.email
   };
   try {
     const newUser = await userService.createUser(user, req.body.password, false);
