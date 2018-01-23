@@ -37,12 +37,8 @@ export function setDependencies(inviteService, userService, projectService) {
   "id": 1,
   "status": "open",
   "daysFromCreationUntilExpiration": 30,
-  "userInvited": {
-    // User object
-  },
-  "projectInvitedTo": {
-    // Project object
-  },
+  "userInvitedId": "3",
+  "projectInvitedToId": "1",
   "createdAt": "2017-11-12T20:26:47.000Z",
   "updatedAt": "2017-11-12T20:26:47.000Z"
  }
@@ -65,12 +61,8 @@ router.get('/projects/:id/invites', authController.isAuthenticated, invitesContr
   "id": 1,
   "status": "open",
   "daysFromCreationUntilExpiration": 30,
-  "userInvited": {
-    // User object
-  },
-  "projectInvitedTo": {
-    // Project object
-  },
+  "userInvitedId": "3",
+  "projectInvitedToId": "1",
   "createdAt": "2017-11-12T20:26:47.000Z",
   "updatedAt": "2017-11-12T20:26:47.000Z"
  }
@@ -87,7 +79,7 @@ router.get('/user/invites', authController.isAuthenticated, invitesController.ge
  * @apiPermission project owner
  *
  * @apiParam {String} projectId the id of the project
- * @apiParam {String} userId user id or username of the user to invite as a contributor
+ * @apiParam {String} user the username or id of the user to invite as a contributor
  * @apiParam {Number} [daysUntilExpiration] the invite will expire after this many days have passed
  *   since the invite was created. Must be a non-negative integer. Optional: Defaults to 30 days.
  *
@@ -98,18 +90,14 @@ router.get('/user/invites', authController.isAuthenticated, invitesController.ge
   "id": 1,
   "status": "open",
   "daysFromCreationUntilExpiration": 30,
-  "userInvited": {
-    // User object
-  },
-  "projectInvitedTo": {
-    // Project object
-  },
+  "userInvitedId": "3",
+  "projectInvitedToId": "1",
   "createdAt": "2017-11-12T20:26:47.000Z",
   "updatedAt": "2017-11-12T20:26:47.000Z"
  }
  */
 router.post(
-  '/projects/:projectId/invites/:userId',
+  '/projects/:projectId/invites/:user',
   authController.isAuthenticated,
   inviteValidator.checkForNonNegativeInteger,
   invitesController.addInviteToProject
@@ -132,12 +120,8 @@ router.post(
   "id": 1,
   "status": "accepted",
   "daysFromCreationUntilExpiration": 30,
-  "userInvited": {
-    // User object
-  },
-  "projectInvitedTo": {
-    // Project object
-  },
+  "userInvitedId": "3",
+  "projectInvitedToId": "1",
   "createdAt": "2017-11-12T20:26:47.000Z",
   "updatedAt": "2017-11-27T10:22:12.000Z"
  }
@@ -161,12 +145,8 @@ router.put('/invites/:id/accept', authController.isAuthenticated, invitesControl
   "id": 1,
   "status": "declined",
   "daysFromCreationUntilExpiration": 30,
-  "userInvited": {
-    // User object
-  },
-  "projectInvitedTo": {
-    // Project object
-  },
+  "userInvitedId": "3",
+  "projectInvitedToId": "1",
   "createdAt": "2017-11-12T20:26:47.000Z",
   "updatedAt": "2017-11-27T10:22:12.000Z"
  }
@@ -190,12 +170,8 @@ router.put('/invites/:id/decline', authController.isAuthenticated, invitesContro
   "id": 1,
   "status": "rescinded",
   "daysFromCreationUntilExpiration": 30,
-  "userInvited": {
-    // User object
-  },
-  "projectInvitedTo": {
-    // Project object
-  },
+  "userInvitedId": "3",
+  "projectInvitedToId": "1",
   "createdAt": "2017-11-12T20:26:47.000Z",
   "updatedAt": "2017-11-27T10:22:12.000Z"
  }

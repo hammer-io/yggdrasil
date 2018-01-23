@@ -661,7 +661,7 @@
       "examples": [
         {
           "title": "Success-Response",
-          "content": "\n{\n \"id\": 1,\n \"status\": \"accepted\",\n \"daysFromCreationUntilExpiration\": 30,\n \"userInvited\": {\n   // User object\n },\n \"projectInvitedTo\": {\n   // Project object\n },\n \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n \"updatedAt\": \"2017-11-27T10:22:12.000Z\"\n}",
+          "content": "\n{\n \"id\": 1,\n \"status\": \"accepted\",\n \"daysFromCreationUntilExpiration\": 30,\n \"userInvitedId\": \"3\",\n \"projectInvitedToId\": \"1\",\n \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n \"updatedAt\": \"2017-11-27T10:22:12.000Z\"\n}",
           "type": "json"
         }
       ]
@@ -709,7 +709,7 @@
       "examples": [
         {
           "title": "Success-Response",
-          "content": "\n{\n \"id\": 1,\n \"status\": \"declined\",\n \"daysFromCreationUntilExpiration\": 30,\n \"userInvited\": {\n   // User object\n },\n \"projectInvitedTo\": {\n   // Project object\n },\n \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n \"updatedAt\": \"2017-11-27T10:22:12.000Z\"\n}",
+          "content": "\n{\n \"id\": 1,\n \"status\": \"declined\",\n \"daysFromCreationUntilExpiration\": 30,\n \"userInvitedId\": \"3\",\n \"projectInvitedToId\": \"1\",\n \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n \"updatedAt\": \"2017-11-27T10:22:12.000Z\"\n}",
           "type": "json"
         }
       ]
@@ -757,7 +757,7 @@
       "examples": [
         {
           "title": "Success-Response",
-          "content": "[\n {\n  \"id\": 1,\n  \"status\": \"open\",\n  \"daysFromCreationUntilExpiration\": 30,\n  \"userInvited\": {\n    // User object\n  },\n  \"projectInvitedTo\": {\n    // Project object\n  },\n  \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n  \"updatedAt\": \"2017-11-12T20:26:47.000Z\"\n }\n ]",
+          "content": "[\n {\n  \"id\": 1,\n  \"status\": \"open\",\n  \"daysFromCreationUntilExpiration\": 30,\n  \"userInvitedId\": \"3\",\n  \"projectInvitedToId\": \"1\",\n  \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n  \"updatedAt\": \"2017-11-12T20:26:47.000Z\"\n }\n ]",
           "type": "json"
         }
       ]
@@ -791,8 +791,8 @@
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "userId",
-            "description": "<p>user id or username of the user to invite as a contributor</p>"
+            "field": "user",
+            "description": "<p>the username or id of the user to invite as a contributor</p>"
           },
           {
             "group": "Parameter",
@@ -819,7 +819,7 @@
       "examples": [
         {
           "title": "Success-Response",
-          "content": "\n{\n \"id\": 1,\n \"status\": \"open\",\n \"daysFromCreationUntilExpiration\": 30,\n \"userInvited\": {\n   // User object\n },\n \"projectInvitedTo\": {\n   // Project object\n },\n \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n \"updatedAt\": \"2017-11-12T20:26:47.000Z\"\n}",
+          "content": "\n{\n \"id\": 1,\n \"status\": \"open\",\n \"daysFromCreationUntilExpiration\": 30,\n \"userInvitedId\": \"3\",\n \"projectInvitedToId\": \"1\",\n \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n \"updatedAt\": \"2017-11-12T20:26:47.000Z\"\n}",
           "type": "json"
         }
       ]
@@ -867,7 +867,7 @@
       "examples": [
         {
           "title": "Success-Response",
-          "content": "\n{\n \"id\": 1,\n \"status\": \"rescinded\",\n \"daysFromCreationUntilExpiration\": 30,\n \"userInvited\": {\n   // User object\n },\n \"projectInvitedTo\": {\n   // Project object\n },\n \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n \"updatedAt\": \"2017-11-27T10:22:12.000Z\"\n}",
+          "content": "\n{\n \"id\": 1,\n \"status\": \"rescinded\",\n \"daysFromCreationUntilExpiration\": 30,\n \"userInvitedId\": \"3\",\n \"projectInvitedToId\": \"1\",\n \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n \"updatedAt\": \"2017-11-27T10:22:12.000Z\"\n}",
           "type": "json"
         }
       ]
@@ -902,7 +902,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "[\n {\n  \"id\": 1,\n  \"status\": \"open\",\n  \"daysFromCreationUntilExpiration\": 30,\n  \"userInvited\": {\n    // User object\n  },\n  \"projectInvitedTo\": {\n    // Project object\n  },\n  \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n  \"updatedAt\": \"2017-11-12T20:26:47.000Z\"\n }\n ]",
+          "content": "[\n {\n  \"id\": 1,\n  \"status\": \"open\",\n  \"daysFromCreationUntilExpiration\": 30,\n  \"userInvitedId\": \"3\",\n  \"projectInvitedToId\": \"1\",\n  \"createdAt\": \"2017-11-12T20:26:47.000Z\",\n  \"updatedAt\": \"2017-11-12T20:26:47.000Z\"\n }\n ]",
           "type": "json"
         }
       ]

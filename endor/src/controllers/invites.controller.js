@@ -81,16 +81,16 @@ export async function addInviteToProject(req, res, next) {
   try {
     // noinspection JSUnresolvedVariable
     const projectId = req.params.projectId;
-    const userId = req.params.userId;
+    const userIdOrUsername = req.params.user;
     const daysFromCreationUntilExpiration = req.body.daysFromCreationUntilExpiration;
 
     // Validate that the user and project actually exist
     await projectService.getProjectById(projectId);
-    await userService.getUserByIdOrUsername(userId);
+    await userService.getUserByIdOrUsername(userIdOrUsername);
 
     const invite = await inviteService.createInvite(
       projectId,
-      userId,
+      userIdOrUsername,
       daysFromCreationUntilExpiration
     );
     res.status(201).send(invite);
