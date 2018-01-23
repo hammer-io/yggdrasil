@@ -11,7 +11,16 @@ A web API to generate node.js applications in an opinionated way.
 3. git clone https://github.com/username/yggdrasil
 4 `cd yggdrasil/endor && npm install`
 5. Follow the steps below to [set up the database](#setting-up-the-database)
-6. You're all set!
+6. Create an endorConfig.json in the endor folder with the following inside:
+```javascript
+{
+  session: {
+    secret: "<get this value from one of the other contributors or make your own for local development>"
+  }
+}
+```
+
+7. You're all set!
 
 ### Usage
 `npm start`: starts the API server on `localhost:3000`
@@ -97,34 +106,18 @@ sequelize.User.findAll({
 Uses the user's username and password in the Authentication header to authenticate
 the user.
 
-### Client-Basic
-Uses the client's clientId and secret like a username and password to authenticate and
-to protect a user's credentials.
-
 ### Bearer
 A token is used to authenticate the user.
 
-**Steps:**
-* **Note:** All steps must be authenticated, posting a token requires Client-Basic
-* Create a client - post /clients
-* Authorize - get /oauth2/authorize?client_id=<client_id_goes_here>2&response_type=code&redirect_uri=http://localhost:3000/api/v1/oauth2/authorize/successRedirect
-    - returns a transaction_id
-* Post Authorization - post /oauth2/authorize with body:
-    - returns access code if redirect_uri is http://localhost:3000/api/v1/oauth2/authorize/successRedirect
-
-```javascript
-{
-    "transaction_id": <transaction_id_goes_here>,
-    "allow": true
-}
-```
+**To exchange a user name and password for auth-token:**
        
-* Post a new Token - post /oauth2/token?grant_type=authorization_code
+* Post a new Token - post /oauth2/token
     - returns authentication token
 ```javascript
 {
-    "code": "code_goes_here",
-    "grant_type": "authorization_code",
-    "redirect_uri": "http://localhost:3000/api/v1/oauth2/authorize/successRedirect"
-}
+    "username": "<username>",
+    "password": "<password>"
+    "grant_type": "password"
+} 
 ```
+**Note:** All steps must be authenticated, posting a token requires Client-Basic

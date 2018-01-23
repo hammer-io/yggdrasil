@@ -15,7 +15,7 @@ import { getActiveLogger } from '../dist/utils/winston';
 const authService = new AuthService(sequalize.Token, sequalize.AccessCode, getActiveLogger());
 
 
-describe('Testing Client Service', () => {
+describe('Testing Auth Service', () => {
   beforeEach(async () => {
     await defineTables();
     await populateUsers();
@@ -30,7 +30,6 @@ describe('Testing Client Service', () => {
       const accessCodeValue = 'randomValue';
       const accessCode = await authService.findOneCodeByValue(accessCodeValue);
       expect(accessCode.value).to.equal(accessCodeValue);
-      expect(accessCode.clientId).to.equal(1);
       expect(accessCode.userId).to.equal(3);
       expect(accessCode.redirectURI).to.equal('http://localhost:3000/api/v1/oauth2/authorize/successRedirect');
     });
@@ -46,22 +45,16 @@ describe('Testing Client Service', () => {
   });
 
   describe('should create an access token with the correct information', async () => {
-    it('should create an access token given a valid client id and user id', async () => {
-      // const reqBody = {
-      //   // code: "randomValue",
-      //   // grant_type: "authorization_code",
-      //   // redirect_uri: "http://localhost:3000/api/v1/oauth2/authorize/successRedirect"
-      // };
-      const token = await authService.createToken(1, 3);
+    it('should create an access token given a valid user id', async () => {
+      const token = await authService.createToken(1);
       expect(token).to.be.an('object');
       expect(token.expired).to.equal(false);
-      expect(token.clientId).to.equal(1);
-      expect(token.userId).to.equal(3);
+      expect(token.userId).to.equal(1);
     });
 
-    it('should not create a token if the user id/client combo does not exist', async () => {
+    it('should not create a token if the user id does not exist', async () => {
       try {
-        const token = await authService.createToken(1, 1000);
+        const token = await authService.createToken(1000);
         expect(token).to.be.an('undefined');
       } catch (err) {
         expect(err.type).to.equal('Invalid Request')
@@ -73,7 +66,6 @@ describe('Testing Client Service', () => {
     it('should find a newly created token by its value', async () => {
       const token = await authService.findOneTokenByValue('longRandomTokenValue');
       expect(token.value).to.equal('longRandomTokenValue');
-      expect(token.clientId).to.equal(1);
       expect(token.userId).to.equal(3);
       expect(token.expired).to.equal(false);
     });
@@ -92,21 +84,18 @@ describe('Testing Client Service', () => {
     it('should create a new code', async () => {
       const redirectURI = 'http://localhost:3000/api/v1/oauth2/authorize/successRedirect';
       const accessCode = await authService.createCode(
-        3,
         redirectURI,
         1
       );
       expect(accessCode).to.be.an('object');
       expect(accessCode.redirectURI).to.equal(redirectURI);
-      expect(accessCode.clientId).to.equal(3);
       expect(accessCode.userId).to.equal(1);
     });
 
-    it('should not create a new code if the clientId/userIds are invalid', async () => {
+    it('should not create a new code if the userIds are invalid', async () => {
       try {
         const redirectURI = 'http://localhost:3000/api/v1/oauth2/authorize/successRedirect';
         const accessCode = await authService.createCode(
-          3,
           redirectURI,
           1000
         );

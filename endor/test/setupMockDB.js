@@ -80,20 +80,17 @@ export async function populateClients() {
     {
       name: "endor_frontend1",
       clientId: "clientId",
-      secret: "client_secret",
-      userId: 3
+      secret: "client_secret"
     },
     {
       name: "endor_frontend1",
       clientId: "clientId1",
-      secret: "client_secret",
-      userId: 3
+      secret: "client_secret"
     },
     {
       name: "endor_frontend1",
       clientId: "clientId2",
-      secret: "client_secret",
-      userId: 4
+      secret: "client_secret"
     }
   ]);
 }
@@ -192,14 +189,12 @@ export async function populateAccessCodes() {
     {
       value: 'randomValue',
       redirectURI: 'http://localhost:3000/api/v1/oauth2/authorize/successRedirect',
-      userId: 3,
-      clientId: 1
+      userId: 3
     },
     {
       value: 'randomValueAgain',
       redirectURI: 'http://localhost:3000/api/v1/oauth2/authorize/successRedirect',
-      userId: 4,
-      clientId: 3
+      userId: 4
     }
   ]);
 }
@@ -209,14 +204,12 @@ export async function populateTokens() {
     {
       value: 'longRandomTokenValue',
       expired: false,
-      userId: 3,
-      clientId: 1
+      userId: 3
     },
     {
       value: 'anotherLongRandomUnpredictableTokenValue',
       expired: false,
-      userId: 3,
-      clientId: 1
+      userId: 3
     }
   ]);
 }

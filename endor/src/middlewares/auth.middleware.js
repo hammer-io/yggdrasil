@@ -8,8 +8,6 @@ export function checkAuthorize() {
 
 export function checkToken() {
   return [
-    check('code').exists().withMessage('Code is required'),
-    check('grant_type').exists().withMessage('Grant_type is required'),
-    check('redirect_uri').exists().withMessage('Redirect_URI is required')
+    check('grant_type').exists().withMessage('Grant_type is required')
   ];
 }

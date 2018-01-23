@@ -3,13 +3,12 @@ import oauth2orize from 'oauth2orize';
 
 import { BasicStrategy } from 'passport-http';
 import BearerStrategy from 'passport-http-bearer';
-import { getActiveLogger } from '../utils/winston';
+
 
 let clientService = {};
 let authService = {};
 let userService = {};
 const server = oauth2orize.createServer();
-const log = getActiveLogger();
 const TOKEN_LENGTH = 256;
 
 /**
@@ -98,17 +97,14 @@ server.grant(oauth2orize.grant.code((client, redirectUri, user, ares, next) => {
 server.exchange(oauth2orize.exchange.code((client, code, redirectUri, next) => {
   authService.findOneCodeByValue(code)
     .then((authCode) => {
-      if (authCode.clientId !== client.id) {
-        return next(null, false);
-      }
       if (redirectUri !== authCode.redirectURI) {
         return next(null, false);
       }
 
-      const { clientId, userId } = authCode;
+      const { userId } = authCode;
       authService.deleteCode(code)
         .then(() => {
-          authService.createToken(clientId, userId, TOKEN_LENGTH)
+          authService.createToken(userId, TOKEN_LENGTH)
             .then(newToken => next(null, newToken))
             .catch(err => next(err));
         })
@@ -116,6 +112,53 @@ server.exchange(oauth2orize.exchange.code((client, code, redirectUri, next) => {
     })
     .catch(err => next(err));
 }));
+
+/**
+ * Server's password for token exchange.  This method will be used if the grant_type is "password".
+ * The username must first be converted into a userId for the function to operate.
+ */
+server.exchange(oauth2orize.exchange.password((client, username, password, scope, next) => {
+  userService.getUserByIdOrUsername(username)
+    .then((user) => {
+      authService.createToken(user.id)
+        .then(newToken => next(null, newToken))
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+}));
+
+/**
+ * Given a username, and password create a bare-bones user and a token for the new user.
+ *
+ * @param req the request
+ * @param res the response
+ * @param next the next middleware
+ * @returns {Promise.<void>}
+ */
+export async function register(req, res, next) {
+  const user = {
+    username: req.body.username,
+    email: req.body.email
+  };
+  try {
+    const newUser = await userService.createUser(user, req.body.password, false);
+    const newToken = await authService.createToken(newUser.id);
+    res.send({ user: newUser, token: newToken });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * If the request gets this far, then return success because the token is valid.
+ *
+ * @param req the request
+ * @param res the response
+ * @returns {Promise.<void>}
+ */
+export async function checkToken(req, res) {
+  res.status(200).send();
+}
 
 /**
  * A simple function used to return the access code to the client
@@ -127,8 +170,12 @@ export function success(req, res) {
   res.send({ code: req.query.code });
 }
 
+/**
+ * Returns the server's authorization function
+ *
+ * @returns {[null,null]}
+ */
 export function authorization() {
-  log.info('Entered authorization function');
   return [
     server.authorization((clientId, redirectUri, next) => {
       clientService.findOneClientByClientId(clientId)
@@ -175,8 +222,8 @@ export function setDependencies(newUserService, newClientService, newAuthService
   authService = newAuthService;
 }
 
-/** Registering the authentication strategies with Passpost */
+/** Registering the authentication strategies with Passport */
 exports.isClientAuthenticated = passport.authenticate('client-basic', { session: false });
 exports.isBearerAuthenticated = passport.authenticate('bearer', { session: false });
-exports.isAuthenticated = passport.authenticate(['bearer', 'basic', 'client-basic'], { session: false });
+exports.isAuthenticated = passport.authenticate(['bearer', 'basic'], { session: false });
 /** Done Registering */

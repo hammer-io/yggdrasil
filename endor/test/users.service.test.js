@@ -108,6 +108,32 @@ describe('Testing User Service', () => {
       expect(userCreated.lastName).to.equal('James');
     });
 
+    it('should not require all fields if validation = false', async () => {
+      const user = {
+        username: 'the new jreach',
+        email: 'anotherjreach@gmail.com'
+      };
+      const newUser = await userService.createUser(user, 'my p4ssw0rd 1s s4f3', false);
+      expect(newUser.dataValues).to.have.keys(['id', 'email', 'username', 'updatedAt', 'createdAt']);
+      expect(newUser.username).to.equal(user.username);
+      expect(newUser.id).to.not.be.an('undefined');
+    });
+
+    it('should not require all fields if validation = false', async () => {
+      const user = {
+        username: 'the new jreach'
+      };
+      try {
+        const newUser = await userService.createUser(user, 'my p4ssw0rd 1s s4f3', false);
+        expect(newUser).to.be.an('undefined');
+      } catch (err) {
+        expect(err.type).to.equal('Invalid Request');
+        expect(err.errors.length).to.equal(1);
+        expect(err.errors.filter(e => e.field === 'email' && e.message === 'Email is' +
+          ' required.').length === 1).to.equal(true);
+      }
+    });
+
     it('should have an error for duplicate username', async () => {
       const newUser = {
         username: 'BobSagat',
@@ -191,7 +217,7 @@ describe('Testing User Service', () => {
         email: 'UpdateBob@AFV.com',
         firstName: 'UpdateBob',
         lastName: 'UpdateSagat'
-      }
+      };
 
       const updatedUser = await userService.updateUser(1, user);
       expect(updatedUser.id).to.equal(1);
@@ -337,7 +363,7 @@ describe('Testing User Service', () => {
   describe('validate a user', async () => {
     it('should validate for missing fields', async () => {
       const newUser = {};
-      const errors = await userService.validateUser(newUser, true);
+      const errors = await userService.validateUser(newUser, true, true);
       expect(errors.length).to.equal(4);
       expect(errors.filter(e => e.field === 'username' && e.message === 'Username is' +
         ' required.').length === 1).to.equal(true);
@@ -345,6 +371,45 @@ describe('Testing User Service', () => {
       expect(errors.filter(e => e.field === 'email' && e.message === 'Email is' +
         ' required.').length === 1).to.equal(true);
 
+      expect(errors.filter(e => e.field === 'firstName' && e.message === 'First Name is' +
+        ' required.').length === 1).to.equal(true);
+
+      expect(errors.filter(e => e.field === 'lastName' && e.message === 'Last Name is' +
+        ' required.').length === 1).to.equal(true);
+    });
+
+    it('should validate for missing fields', async () => {
+      const newUser = {};
+      const errors = await userService.validateUser(newUser, true, true);
+      expect(errors.length).to.equal(4);
+      expect(errors.filter(e => e.field === 'username' && e.message === 'Username is' +
+        ' required.').length === 1).to.equal(true);
+
+      expect(errors.filter(e => e.field === 'email' && e.message === 'Email is' +
+        ' required.').length === 1).to.equal(true);
+
+      expect(errors.filter(e => e.field === 'firstName' && e.message === 'First Name is' +
+        ' required.').length === 1).to.equal(true);
+
+      expect(errors.filter(e => e.field === 'lastName' && e.message === 'Last Name is' +
+        ' required.').length === 1).to.equal(true);
+    });
+
+    it('should validate for missing username and email fields', async () => {
+      const newUser = {};
+      const errors = await userService.validateUser(newUser, true, false);
+      expect(errors.length).to.equal(2);
+      expect(errors.filter(e => e.field === 'username' && e.message === 'Username is' +
+        ' required.').length === 1).to.equal(true);
+
+      expect(errors.filter(e => e.field === 'email' && e.message === 'Email is' +
+        ' required.').length === 1).to.equal(true);
+    });
+
+    it('should validate for missing name fields', async () => {
+      const newUser = {};
+      const errors = await userService.validateUser(newUser, false, true);
+      expect(errors.length).to.equal(2);
       expect(errors.filter(e => e.field === 'firstName' && e.message === 'First Name is' +
         ' required.').length === 1).to.equal(true);
 
@@ -375,4 +440,59 @@ describe('Testing User Service', () => {
         ' already exists.').length === 1).to.equal(true);
     });
   });
+
+  describe('get credentials to validate the user', async () => {
+    it('should return the user if the username/password combo are correct', async () => {
+      let username = 'jreach';
+      let password = 'plaintext1';
+      const user = await userService.getCredentialsByUsername(username, password);
+      expect(user.username).to.equal(username);
+      expect(user.password).to.be.an('undefined');
+      expect(user.email).to.equal('jreach@gmail.com');
+      expect(user.firstName).to.equal('Jack');
+      expect(user.lastName).to.equal('Reacher');
+    });
+
+    it('should not return the user if the username/password combo are incorrect', async () => {
+      let username = 'jreach';
+      let password = 'wrong password';
+      let user;
+      try {
+        user = await userService.getCredentialsByUsername(username, password);
+      } catch (err) {
+        expect(err.type).to.equal('Invalid Credentials');
+        expect(err.status).to.equal(401);
+        expect(err.message).to.equal('Invalid credentials');
+      }
+      expect(user).to.be.an('undefined');
+    });
+
+    it('should not return the user if no password is given', async () => {
+      let username = 'jreach';
+      let password = '';
+      let user;
+      try {
+        user = await userService.getCredentialsByUsername(username, password);
+      } catch (err) {
+        expect(err.type).to.equal('Invalid Credentials');
+        expect(err.status).to.equal(401);
+        expect(err.message).to.equal('Invalid credentials');
+      }
+      expect(user).to.be.an('undefined');
+    });
+
+    it('should not return the user if * is given as a password', async () => {
+      let username = 'jreach';
+      let password = '*';
+      let user;
+      try {
+        user = await userService.getCredentialsByUsername(username, password);
+      } catch (err) {
+        expect(err.type).to.equal('Invalid Credentials');
+        expect(err.status).to.equal(401);
+        expect(err.message).to.equal('Invalid credentials');
+      }
+      expect(user).to.be.an('undefined');
+    });
+  })
 });

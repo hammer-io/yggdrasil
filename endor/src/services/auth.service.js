@@ -1,4 +1,5 @@
 import uid from 'uid-safe';
+import sequelize from 'sequelize';
 
 import RequestParamError from '../error/RequestParamError';
 import InvalidRequestException from '../error/InvalidRequestException';
@@ -68,15 +69,13 @@ export default class AuthService {
   /**
    * Creates a token of length 256 for the client and user to use as an auth strategy.
    *
-   * @param clientId the client id for the client associated with this token
    * @param userId the user id of the user associated with the token
    * @returns {Promise.<*>} the newly created token
    */
-  async createToken(clientId, userId) {
+  async createToken(userId) {
     this.log.info('AuthService: create token');
 
-    let errors = await this.validateId(this.CLIENT, clientId);
-    errors = errors.concat(await this.validateId(this.USER, clientId));
+    const errors = await this.validateId(this.USER, userId);
     if (errors.length !== 0) {
       return Promise.reject(new InvalidRequestException(errors));
     }
@@ -84,12 +83,11 @@ export default class AuthService {
     try {
       const token = await this.tokenRepository.create({
         value: uid.sync(this.TOKEN_LENGTH),
-        clientId,
         userId
       });
       return token;
     } catch (err) {
-      if (err.name === 'SequelizeForeignKeyConstraintError') {
+      if (err instanceof sequelize.ForeignKeyConstraintError) {
         return Promise.reject(new InvalidRequestException([err]));
       }
       return Promise.reject(err);
@@ -126,16 +124,14 @@ export default class AuthService {
   /**
    * Create a code for a given client.
    *
-   * @param client the client id
    * @param redirectUri where the client should be redirected upon success
    * @param user the user id who owns the client
    * @returns {Promise.<*>} the newly created code
    */
-  async createCode(client, redirectUri, user) {
+  async createCode(redirectUri, user) {
     this.log.info(`AuthService: create new access code and redirect to ${redirectUri}`);
 
-    let errors = await this.validateId(this.CLIENT, client);
-    errors = errors.concat(await this.validateId(this.USER, user));
+    let errors = await this.validateId(this.USER, user);
     errors = errors.concat(await this.exists(this.REDIRECT_URI, redirectUri));
     if (errors.length !== 0) {
       return Promise.reject(new InvalidRequestException(errors));
@@ -144,17 +140,16 @@ export default class AuthService {
     const code = {
       value: uid.sync(this.CODE_LENGTH),
       redirectURI: redirectUri,
-      clientId: client,
       userId: user
     };
     try {
       const createdCode = await this.codeRepository.create(code);
       return createdCode;
     } catch (err) {
-      if (err.name === 'SequelizeForeignKeyConstraintError') {
+      if (err instanceof sequelize.ForeignKeyConstraintError) {
         return Promise.reject(new InvalidRequestException([err]));
       }
-      console.log(err);
+
       return Promise.reject(err);
     }
   }

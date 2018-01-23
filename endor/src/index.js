@@ -19,7 +19,7 @@ import UserService from './services/users.service';
 import AuthService from './services/auth.service';
 import ClientService from './services/client.service';
 // eslint-disable-next-line import/no-unresolved
-import config from '../../endorConfig.json';
+import config from '../endorConfig.json';
 
 const app = express();
 
@@ -40,7 +40,7 @@ app.use(session({
 const userService = new UserService(sequelize.User, sequelize.Credentials, getActiveLogger());
 const projectService = new ProjectService(sequelize.Project, userService, getActiveLogger());
 const authService = new AuthService(sequelize.Token, sequelize.AccessCode, getActiveLogger());
-const clientService = new ClientService(sequelize.Client, userService, getActiveLogger());
+const clientService = new ClientService(sequelize.Client, getActiveLogger());
 auth.setDependencies(userService, clientService, authService);
 client.setDependencies(userService, clientService, authService);
 projects.setProjectService(projectService);
