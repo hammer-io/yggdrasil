@@ -22,6 +22,16 @@ import AuthService from './services/auth.service';
 import ClientService from './services/client.service';
 // eslint-disable-next-line import/no-unresolved
 import config from '../../endorConfig.json';
+// eslint-disable-next-line import/no-unresolved
+import dbConfig from '../../dbConfig.json';
+
+// Initialize the data model
+sequelize.initSequelize(
+  dbConfig.database,
+  dbConfig.username,
+  dbConfig.password,
+  dbConfig.options
+);
 
 const app = express();
 

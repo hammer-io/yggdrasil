@@ -1,10 +1,20 @@
 import { expect } from 'chai';
 import { defineTables, populateUsers } from './setupMockDB';
 // Using Expect style
-const sequalize = require('./sequalize-mock');
+const sequalize = require('../src/db/sequelize');
 
 import UserService from './../dist/services/users.service';
 import { getActiveLogger } from '../dist/utils/winston';
+
+// Initialize Sequelize with sqlite for testing
+sequalize.initSequelize(
+  'database',
+  'root',
+  'root', {
+    dialect: 'sqlite',
+    logging: false
+  }
+);
 
 const userService = new UserService(sequalize.User, sequalize.Credentials, getActiveLogger());
 

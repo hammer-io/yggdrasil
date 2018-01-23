@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 // Using Expect style
-const sequalize = require('./sequalize-mock');
+const sequalize = require('../src/db/sequelize');
 import {
   defineTables,
   populateClients,
@@ -11,6 +11,16 @@ import {
 
 import AuthService from './../dist/services/auth.service';
 import { getActiveLogger } from '../dist/utils/winston';
+
+// Initialize Sequelize with sqlite for testing
+sequalize.initSequelize(
+  'database',
+  'root',
+  'root', {
+    dialect: 'sqlite',
+    logging: false
+  }
+);
 
 const authService = new AuthService(sequalize.Token, sequalize.AccessCode, getActiveLogger());
 
