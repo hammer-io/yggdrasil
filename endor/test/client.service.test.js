@@ -1,12 +1,23 @@
 import { expect } from 'chai';
 // Using Expect style
-const sequalize = require('./sequalize-mock');
-import { defineTables, populateClients, populateUsers} from './setupMockDB';
+const sequelize = require('../src/db/sequelize');
+import { defineTables } from '../src/db/init_database';
+import { populateClients, populateUsers } from '../src/db/import_test_data';
 
-import ClientService from './../dist/services/client.service';
-import { getActiveLogger } from '../dist/utils/winston';
+import ClientService from './../src/services/client.service';
+import { getMockLogger } from './mockLogger';
 
-const clientService = new ClientService(sequalize.Client, getActiveLogger());
+// Initialize Sequelize with sqlite for testing
+sequelize.initSequelize(
+  'database',
+  'root',
+  'root', {
+    dialect: 'sqlite',
+    logging: false
+  }
+);
+
+const clientService = new ClientService(sequelize.Client, getMockLogger());
 
 describe('Testing Client Service', () => {
   beforeEach(async () => {

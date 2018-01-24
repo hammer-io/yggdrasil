@@ -1,12 +1,23 @@
 import { expect } from 'chai';
-import { defineTables, populateUsers } from './setupMockDB';
+import { defineTables } from '../src/db/init_database';
+import { populateUsers } from '../src/db/import_test_data';
 // Using Expect style
-const sequalize = require('./sequalize-mock');
+const sequalize = require('../src/db/sequelize');
 
-import UserService from './../dist/services/users.service';
-import { getActiveLogger } from '../dist/utils/winston';
+import UserService from './../src/services/users.service';
+import { getMockLogger } from './mockLogger';
 
-const userService = new UserService(sequalize.User, sequalize.Credentials, getActiveLogger());
+// Initialize Sequelize with sqlite for testing
+sequalize.initSequelize(
+  'database',
+  'root',
+  'root', {
+    dialect: 'sqlite',
+    logging: false
+  }
+);
+
+const userService = new UserService(sequalize.User, sequalize.Credentials, getMockLogger());
 
 describe('Testing User Service', () => {
   beforeEach(async () => {
@@ -87,7 +98,7 @@ describe('Testing User Service', () => {
   describe('get all users', async () => {
     it('should find all users in the database', async () => {
       const users = await userService.getAllUsers();
-      expect(users.length).to.equal(4);
+      expect(users.length).to.equal(5);
       expect(Array.isArray(users)).to.equal(true);
     });
   });
@@ -101,7 +112,7 @@ describe('Testing User Service', () => {
         lastName: 'James'
       };
       const userCreated = await userService.createUser(newUser, 'plaintext1');
-      expect(userCreated.id).to.equal(5);
+      expect(userCreated.id).to.equal(6);
       expect(userCreated.username).to.equal('lebron');
       expect(userCreated.email).to.equal('lebron@cavs.com');
       expect(userCreated.firstName).to.equal('LeBron');
@@ -153,7 +164,7 @@ describe('Testing User Service', () => {
 
         // check that the user was not created
         const users = await userService.getAllUsers();
-        expect(users.length).to.equal(4);
+        expect(users.length).to.equal(5);
       }
     });
 
@@ -176,7 +187,7 @@ describe('Testing User Service', () => {
 
         // check that the user was not created
         const users = await userService.getAllUsers();
-        expect(users.length).to.equal(4);
+        expect(users.length).to.equal(5);
       }
     });
 
@@ -192,7 +203,7 @@ describe('Testing User Service', () => {
 
         // check that the user was not created
         const users = await userService.getAllUsers();
-        expect(users.length).to.equal(4);
+        expect(users.length).to.equal(5);
 
         // test that the errors are there
         expect(error.errors.filter(e => e.field === 'username' && e.message === 'Username is' +
@@ -286,7 +297,7 @@ describe('Testing User Service', () => {
 
       // check that the user was actually deleted
       const users = await userService.getAllUsers();
-      expect(users.length).to.equal(3);
+      expect(users.length).to.equal(4);
 
       // check that the user can no longer be retrieved
       try {

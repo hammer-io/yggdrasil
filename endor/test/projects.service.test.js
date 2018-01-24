@@ -1,15 +1,25 @@
 import { expect } from 'chai';
-import bcrypt from 'bcrypt';
 // Using Expect style
-const sequalize = require('./sequalize-mock');
+const sequalize = require('../src/db/sequelize');
 
-import UserService from './../dist/services/users.service';
-import { getActiveLogger } from '../dist/utils/winston';
+import UserService from './../src/services/users.service';
+import { getMockLogger } from './mockLogger';
 import ProjectService from '../src/services/projects.service';
-import { defineTables, populateUsers, populateProjects, populateTools } from './setupMockDB';
+import { defineTables, populateTools } from '../src/db/init_database';
+import { populateUsers, populateProjects } from '../src/db/import_test_data';
 
-const userService = new UserService(sequalize.User, sequalize.Credentials, getActiveLogger());
-const projectService = new ProjectService(sequalize.Project, userService, getActiveLogger());
+// Initialize Sequelize with sqlite for testing
+sequalize.initSequelize(
+  'database',
+  'root',
+  'root', {
+    dialect: 'sqlite',
+    logging: false
+  }
+);
+
+const userService = new UserService(sequalize.User, sequalize.Credentials, getMockLogger());
+const projectService = new ProjectService(sequalize.Project, userService, getMockLogger());
 
 describe('Testing Project Service', async () => {
   beforeEach(async () => {
@@ -22,7 +32,7 @@ describe('Testing Project Service', async () => {
   describe('get all projects', async () => {
     it('should get all projects from the database', async () => {
       const projects = await projectService.getAllProjects();
-      expect(projects.length).to.equal(2);
+      expect(projects.length).to.equal(3);
       expect(Array.isArray(projects)).to.equal(true);
     });
   });
@@ -134,7 +144,7 @@ describe('Testing Project Service', async () => {
       };
 
       const project = await projectService.createProject(newProject, 1);
-      expect(project.id).to.equal(3);
+      expect(project.id).to.equal(4);
       expect(project.projectName).to.equal('hello world');
       expect(project.description).to.equal('good bye world');
       expect(project.version).to.equal('1.2.3');
@@ -154,12 +164,12 @@ describe('Testing Project Service', async () => {
 
       // // double check to make sure that the project was created
       const project = await projectService.createProject(newProject, 1);
-      expect(project.id).to.equal(3);
+      expect(project.id).to.equal(4);
 
       // filter projects by the id to make sure it can be retrieved via mass retrieve
       const projects = await projectService.getAllProjects();
       const filteredProjects = projects.filter((p) => {
-        return (p.id === 3);
+        return (p.id === 4);
       });
 
       expect(filteredProjects.length).to.equal(1);
@@ -176,7 +186,7 @@ describe('Testing Project Service', async () => {
 
       // double check to make sure that the project was created
       const project = await projectService.createProject(newProject, 1);
-      expect(project.id).to.equal(3);
+      expect(project.id).to.equal(4);
 
       const owners = await project.getOwners();
       expect(owners.length).to.equal(1);
@@ -186,7 +196,7 @@ describe('Testing Project Service', async () => {
       const owned = await projectService.getProjectsByUser(1);
 
       const filteredOwned = owned.owned.filter((p) => {
-        return p.id === 3;
+        return p.id === 4;
       });
 
       expect(filteredOwned.length).to.equal(1);
@@ -381,7 +391,7 @@ describe('Testing Project Service', async () => {
     it('should delete a project from the database', async () => {
       await projectService.deleteProjectById(1, false);
       const projects = await projectService.getAllProjects();
-      expect(projects.length).to.equal(1);
+      expect(projects.length).to.equal(2);
     });
 
     it('should return the deleted project', async () => {

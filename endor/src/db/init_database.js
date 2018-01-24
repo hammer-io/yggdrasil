@@ -1,10 +1,11 @@
+/* eslint-disable import/no-unresolved */
 import sequelize from './sequelize';
 
 // When syncing tables, this corresponds to the 'force' option.
 // force: true will drop the table if it already exists
 const overwriteExistingTables = true;
 
-async function createTools() {
+export async function populateTools() {
   await sequelize.Tool.create({
     name: 'TravisCI (open source)',
     toolType: sequelize.ToolType.CONTINUOUS_INTEGRATION,
@@ -25,6 +26,7 @@ async function createTools() {
     logoLargeUrl: 'https://www.docker.com/sites/default/files/vertical_large.png',
     logoSmallUrl: 'https://www.docker.com/sites/default/files/vertical_small.png',
   });
+  // noinspection HtmlUnknownAttribute
   await sequelize.Tool.create({
     name: 'Heroku',
     toolType: sequelize.ToolType.DEPLOYMENT,
@@ -45,21 +47,41 @@ async function createTools() {
   });
 }
 
+export async function defineTables() {
+  // Make all calls to initialize tables here!
+  await sequelize.User.sync({ force: overwriteExistingTables });
+  await sequelize.Credentials.sync({ force: overwriteExistingTables });
+  await sequelize.Tool.sync({ force: overwriteExistingTables });
+  await sequelize.Project.sync({ force: overwriteExistingTables });
+  await sequelize.ProjectOwner.sync({ force: overwriteExistingTables });
+  await sequelize.ProjectContributor.sync({ force: overwriteExistingTables });
+  await sequelize.Invite.sync({ force: overwriteExistingTables });
+  await sequelize.Client.sync({ force: overwriteExistingTables });
+  await sequelize.AccessCode.sync({ force: overwriteExistingTables });
+  await sequelize.Token.sync({ force: overwriteExistingTables });
+}
+
+
+/**
+ * ---------------------------- MAIN ----------------------------
+ * The main function only gets run if this file is run as a script
+ */
 async function main() {
   try {
-    // Make all calls to initialize tables here!
-    await sequelize.User.sync({ force: overwriteExistingTables });
-    await sequelize.Credentials.sync({ force: overwriteExistingTables });
-    await sequelize.Tool.sync({ force: overwriteExistingTables });
-    await sequelize.Project.sync({ force: overwriteExistingTables });
-    await sequelize.ProjectOwner.sync({ force: overwriteExistingTables });
-    await sequelize.ProjectContributor.sync({ force: overwriteExistingTables });
-    await sequelize.Client.sync({ force: overwriteExistingTables });
-    await sequelize.AccessCode.sync({ force: overwriteExistingTables });
-    await sequelize.Token.sync({ force: overwriteExistingTables });
+    // eslint-disable-next-line global-require
+    const dbConfig = require('../../dbConfig.json');
 
-    // Add initial values
-    await createTools();
+    // First, we need to initialize the data model
+    await sequelize.initSequelize(
+      dbConfig.database,
+      dbConfig.username,
+      dbConfig.password,
+      dbConfig.options
+    );
+
+    // Then, define the tables and set initial values
+    await defineTables();
+    await populateTools();
   } catch (err) {
     console.error('Database did not initialize correctly:', err);
     process.exit(1);
@@ -69,4 +91,8 @@ async function main() {
   process.exit(0);
 }
 
-main();
+
+// ---------------- If this is running as a script, call main ----------------
+if (!module.parent) {
+  main();
+}

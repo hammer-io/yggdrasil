@@ -1,18 +1,28 @@
 import { expect } from 'chai';
 // Using Expect style
-const sequalize = require('./sequalize-mock');
+const sequalize = require('../src/db/sequelize');
+import { defineTables } from '../src/db/init_database';
 import {
-  defineTables,
   populateClients,
   populateUsers,
   populateAccessCodes,
   populateTokens
-} from './setupMockDB';
+} from '../src/db/import_test_data';
 
-import AuthService from './../dist/services/auth.service';
-import { getActiveLogger } from '../dist/utils/winston';
+import AuthService from './../src/services/auth.service';
+import { getMockLogger } from './mockLogger';
 
-const authService = new AuthService(sequalize.Token, sequalize.AccessCode, getActiveLogger());
+// Initialize Sequelize with sqlite for testing
+sequalize.initSequelize(
+  'database',
+  'root',
+  'root', {
+    dialect: 'sqlite',
+    logging: false
+  }
+);
+
+const authService = new AuthService(sequalize.Token, sequalize.AccessCode, getMockLogger());
 
 
 describe('Testing Auth Service', () => {

@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/hammer-io/yggdrasil#readme",
   "devDependencies": {
+    "@types/mocha": "^2.2.47",
     "babel-cli": "6.26.0",
     "babel-plugin-transform-async-to-generator": "6.24.1",
     "babel-preset-env": "1.6.0",

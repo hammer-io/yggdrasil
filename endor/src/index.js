@@ -11,6 +11,8 @@ import index from './routes/index.routes';
 import * as projects from './routes/projects.routes';
 import * as contributors from './routes/contributors.routes';
 import * as users from './routes/users.routes';
+import * as invites from './routes/invites.routes';
+import InviteService from './services/invites.service';
 import ProjectService from './services/projects.service';
 import sequelize from './db/sequelize';
 import { getActiveLogger } from './utils/winston';
@@ -20,6 +22,16 @@ import AuthService from './services/auth.service';
 import ClientService from './services/client.service';
 // eslint-disable-next-line import/no-unresolved
 import config from '../endorConfig.json';
+// eslint-disable-next-line import/no-unresolved
+import dbConfig from '../../dbConfig.json';
+
+// Initialize the data model
+sequelize.initSequelize(
+  dbConfig.database,
+  dbConfig.username,
+  dbConfig.password,
+  dbConfig.options
+);
 
 const app = express();
 
@@ -39,6 +51,7 @@ app.use(session({
 // dependency injections //
 const userService = new UserService(sequelize.User, sequelize.Credentials, getActiveLogger());
 const projectService = new ProjectService(sequelize.Project, userService, getActiveLogger());
+const inviteService = new InviteService(sequelize.Invite, getActiveLogger());
 const authService = new AuthService(sequelize.Token, sequelize.AccessCode, getActiveLogger());
 const clientService = new ClientService(sequelize.Client, getActiveLogger());
 auth.setDependencies(userService, clientService, authService);
@@ -47,12 +60,13 @@ projects.setProjectService(projectService);
 users.setDependencies(userService);
 contributors.setDependencies(projectService);
 owners.setDependencies(projectService);
+invites.setDependencies(inviteService, userService, projectService);
 // end dependency injections //
 
 // API ENDPOINTS //
 app.use('/', express.static('doc'));
 app.use('/api', [index]);
-app.use('/api/v1', [auth.router, client.router, projects.router, users.router, contributors.router, owners.router]);
+app.use('/api/v1', [auth.router, client.router, projects.router, users.router, contributors.router, owners.router, invites.router]);
 // END API ENDPOINTS //
 
 // default 404 handler
@@ -63,6 +77,13 @@ app.use((req, res) => {
     message: 'Not Found',
     documentation_url: `http://${req.get('host')}`
   });
+});
+
+// route error logging
+// will print any errors that the middleware spits out
+app.use((err, req, res, next) => {
+  getActiveLogger().error(`Routing: ${req.method} ${req.originalUrl} : ${err}`)
+  next(err);
 });
 
 // development error handler
