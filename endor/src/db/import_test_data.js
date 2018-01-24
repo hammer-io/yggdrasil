@@ -169,9 +169,9 @@ export async function populateInvites() {
     projectInvitedToId: projectHammerIo.id,
     daysFromCreationUntilExpiration: 30
   });
-  // Buddy invited to hammer-io and drumitdown
+  // Buddy invited to hammer-io and drumitdown, but he declined
   await sequelize.Invite.create({
-    status: sequelize.InviteStatus.OPEN,
+    status: sequelize.InviteStatus.DECLINED,
     userInvitedId: userBuddy.id,
     projectInvitedToId: projectHammerIo.id,
     daysFromCreationUntilExpiration: 15

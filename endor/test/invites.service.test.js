@@ -78,6 +78,27 @@ describe('Testing Invite Service', () => {
       const invites = await inviteService.getInvitesByProjectId(projectHammer.id);
       expect(invites.length).to.equal(2);
       expect(Array.isArray(invites)).to.equal(true);
+      invites.sort((a, b) => a.userInvitedId - b.userInvitedId);
+      const inviteJreach = invites[0];
+      const userJreach = await sequelize.User.findOne({
+        where: { username: 'jreach' }
+      });
+      const inviteBuddy = invites[1];
+      const userBuddy = await sequelize.User.findOne({
+        where: { username: 'buddy' }
+      });
+      assertInvite(inviteJreach, {
+        status: InviteStatus.OPEN,
+        days: 30,
+        userId: userJreach.id,
+        projectId: projectHammer.id
+      });
+      assertInvite(inviteBuddy, {
+        status: InviteStatus.DECLINED,
+        days: 15,
+        userId: userBuddy.id,
+        projectId: projectHammer.id
+      });
     });
     it('should return an empty array if no invites are found', async () => {
       const projectTMNT = await sequelize.Project.findOne({
@@ -217,80 +238,106 @@ describe('Testing Invite Service', () => {
     });
   });
 
-  // describe('Update invite', async () => {
-  //   it('should update the invite status to accepted', async () => {
-  //     const userJreach = sequelize.User.findOne({
-  //       where: { username: 'jreach' }
-  //     });
-  //     const projectHammer = sequelize.Project.findOne({
-  //       where: { projectName: 'hammer-io' }
-  //     });
-  //     const expected = {
-  //       status: 'accepted',
-  //       days: 30,
-  //       userId: userJreach.id,
-  //       projectId: projectHammer.id
-  //     };
-  //     const inviteId = 1;
-  //     const invite = await inviteService.updateInvite(inviteId, InviteStatus.ACCEPTED);
-  //     assertInvite(invite, expected);
-  //   });
-  //   it('should update the invite status to declined', async () => {
-  //     const userJreach = sequelize.User.findOne({
-  //       where: { username: 'jreach' }
-  //     });
-  //     const projectHammer = sequelize.Project.findOne({
-  //       where: { projectName: 'hammer-io' }
-  //     });
-  //     const expected = {
-  //       status: 'declined',
-  //       days: 30,
-  //       userId: userJreach.id,
-  //       projectId: projectHammer.id
-  //     };
-  //     const inviteId = 1;
-  //     const invite = await inviteService.updateInvite(inviteId, InviteStatus.DECLINED);
-  //     assertInvite(invite, expected);
-  //   });
-  //   it('should update the invite status to rescinded', async () => {
-  //     const userJreach = sequelize.User.findOne({
-  //       where: { username: 'jreach' }
-  //     });
-  //     const projectHammer = sequelize.Project.findOne({
-  //       where: { projectName: 'hammer-io' }
-  //     });
-  //     const expected = {
-  //       status: 'rescinded',
-  //       days: 30,
-  //       userId: userJreach.id,
-  //       projectId: projectHammer.id
-  //     };
-  //     const inviteId = 1;
-  //     const invite = await inviteService.updateInvite(inviteId, InviteStatus.RESCINDED);
-  //     assertInvite(invite, expected);
-  //   });
-  //   describe('should throw an error if it', async () => {
-  //     it('tries to update the status when it\'s not OPEN', async () => {
-  //       // TODO
-  //       expect.fail('Not yet implemented', 'TODO');
-  //       const inviteId = 1;
-  //       const status = InviteStatus.OPEN;
-  //       const invite = await inviteService.updateInvite(inviteId, status);
-  //     });
-  //     it('tries to update with an invalid status', async () => {
-  //       // TODO
-  //       expect.fail('Not yet implemented', 'TODO');
-  //       const inviteId = 1;
-  //       const status = InviteStatus.OPEN;
-  //       const invite = await inviteService.updateInvite(inviteId, status);
-  //     });
-  //     it('tries to update an expired invite', async () => {
-  //       // TODO
-  //       expect.fail('Not yet implemented', 'TODO');
-  //       const inviteId = 1;
-  //       const status = InviteStatus.OPEN;
-  //       const invite = await inviteService.updateInvite(inviteId, status);
-  //     });
-  //   });
-  // });
+  describe('Update invite', async () => {
+    it('should update the invite status to accepted', async () => {
+      const userJreach = await sequelize.User.findOne({
+        where: { username: 'jreach' }
+      });
+      const projectHammer = await sequelize.Project.findOne({
+        where: { projectName: 'hammer-io' }
+      });
+      const expected = {
+        status: 'accepted',
+        days: 30,
+        userId: userJreach.id,
+        projectId: projectHammer.id
+      };
+      const inviteId = 1;
+      const invite = await inviteService.updateInvite(inviteId, InviteStatus.ACCEPTED);
+      assertInvite(invite, expected);
+    });
+    it('should update the invite status to declined', async () => {
+      const userJreach = await sequelize.User.findOne({
+        where: { username: 'jreach' }
+      });
+      const projectHammer = await sequelize.Project.findOne({
+        where: { projectName: 'hammer-io' }
+      });
+      const expected = {
+        status: 'declined',
+        days: 30,
+        userId: userJreach.id,
+        projectId: projectHammer.id
+      };
+      const inviteId = 1;
+      const invite = await inviteService.updateInvite(inviteId, InviteStatus.DECLINED);
+      assertInvite(invite, expected);
+    });
+    it('should update the invite status to rescinded', async () => {
+      const userJreach = await sequelize.User.findOne({
+        where: { username: 'jreach' }
+      });
+      const projectHammer = await sequelize.Project.findOne({
+        where: { projectName: 'hammer-io' }
+      });
+      const expected = {
+        status: 'rescinded',
+        days: 30,
+        userId: userJreach.id,
+        projectId: projectHammer.id
+      };
+      const inviteId = 1;
+      const invite = await inviteService.updateInvite(inviteId, InviteStatus.RESCINDED);
+      assertInvite(invite, expected);
+    });
+    describe('should throw an error if it', async () => {
+      it('tries to update the status when it\'s not OPEN', async () => {
+        const userBuddy = await sequelize.User.findOne({
+          where: { username: 'buddy' }
+        });
+        const buddysInvites = await inviteService.getInvitesByUserId(userBuddy.id);
+        const declinedInvite = buddysInvites.filter(invite => invite.status === InviteStatus.DECLINED)[0];
+
+        let errMsg = null;
+        try {
+          const updatedInvite = await inviteService.updateInvite(declinedInvite.id, InviteStatus.ACCEPTED);
+          console.error(updatedInvite);
+          expect.fail();
+        } catch (err) {
+          errMsg = err.errors[0].message;
+        }
+        expect(errMsg).to.equal('Only an OPEN invite can be accepted, rescinded, or declined.');
+      });
+      it('tries to update with an invalid status', async () => {
+        const userJreach = await sequelize.User.findOne({
+          where: { username: 'jreach' }
+        });
+        const invites = await inviteService.getInvitesByUserId(userJreach.id);
+        const invite = invites[0];
+
+        let errMsg = null;
+        try {
+          const updatedInvite = await inviteService.updateInvite(invite.id, 'collywobbled');
+          console.error(updatedInvite);
+          expect.fail();
+        } catch (err) {
+          errMsg = err.errors[0].message;
+        }
+        expect(errMsg).to.equal('The status must be set to one of the following values: open, accepted, declined, rescinded, expired.');
+      });
+      it('tries to update an expired invite', async () => {
+        const invite = await inviteService.createInvite(1, 1, 0);
+        expect(invite.status).to.equal(InviteStatus.EXPIRED);
+        let errMsg = null;
+        try {
+          const updatedInvite = await inviteService.updateInvite(invite.id, 'open');
+          console.error(updatedInvite);
+          expect.fail();
+        } catch (err) {
+          errMsg = err.errors[0].message;
+        }
+        expect(errMsg).to.equal('Only an OPEN invite can be accepted, rescinded, or declined.');
+      });
+    });
+  });
 });
