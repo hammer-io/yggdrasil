@@ -72,17 +72,24 @@ export default class InviteService {
   /**
    * Gets all invites for the given project
    * @param projectId the project id to find by
+   * @param statusFilter the status to filter invites by
    * @returns {Object} the invite that was found
    */
-  async getInvitesByProjectId(projectId) {
+  async getInvitesByProjectId(projectId, statusFilter) {
     this.log.info(`InviteService: find invite with project id of ${projectId}`);
-    const invitesFound = await this.inviteRepository.findAll({
-      where: {
-        projectInvitedToId: projectId
-      }
-    });
 
-    return invitesFound;
+    const filter = { projectInvitedToId: projectId };
+    if (statusFilter) {
+      if (isValidInviteStatus(statusFilter)) {
+        filter.status = statusFilter
+      } else {
+        throw new InvalidRequestException([new RequestParamError('status', getInvalidStatusMessage())]);
+      }
+    }
+
+    return this.inviteRepository.findAll({
+      where: filter
+    });
   }
 
   /**

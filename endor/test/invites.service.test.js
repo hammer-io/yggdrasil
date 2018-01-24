@@ -75,7 +75,7 @@ describe('Testing Invite Service', () => {
       const projectHammer = await sequelize.Project.findOne({
         where: { projectName: 'hammer-io' }
       });
-      const invites = await inviteService.getInvitesByProjectId(projectHammer.id);
+      const invites = await inviteService.getInvitesByProjectId(projectHammer.id, null);
       expect(invites.length).to.equal(2);
       expect(Array.isArray(invites)).to.equal(true);
       invites.sort((a, b) => a.userInvitedId - b.userInvitedId);
@@ -100,18 +100,60 @@ describe('Testing Invite Service', () => {
         projectId: projectHammer.id
       });
     });
+    it('should find all invites relevant to the project, but filtered by the status supplied', async () => {
+      const projectHammer = await sequelize.Project.findOne({
+        where: { projectName: 'hammer-io' }
+      });
+      const openInvites = await inviteService.getInvitesByProjectId(projectHammer.id, InviteStatus.OPEN);
+      const inviteJreach = openInvites[0];
+      const userJreach = await sequelize.User.findOne({
+        where: { username: 'jreach' }
+      });
+      assertInvite(inviteJreach, {
+        status: InviteStatus.OPEN,
+        days: 30,
+        userId: userJreach.id,
+        projectId: projectHammer.id
+      });
+
+      const declinedInvites = await inviteService.getInvitesByProjectId(projectHammer.id, InviteStatus.DECLINED);
+      const inviteBuddy = declinedInvites[0];
+      const userBuddy = await sequelize.User.findOne({
+        where: { username: 'buddy' }
+      });
+      assertInvite(inviteBuddy, {
+        status: InviteStatus.DECLINED,
+        days: 15,
+        userId: userBuddy.id,
+        projectId: projectHammer.id
+      });
+    });
     it('should return an empty array if no invites are found', async () => {
       const projectTMNT = await sequelize.Project.findOne({
         where: { projectName: 'TMNT' }
       });
-      const invites = await inviteService.getInvitesByProjectId(projectTMNT.id);
+      const invites = await inviteService.getInvitesByProjectId(projectTMNT.id, null);
       expect(invites.length).to.equal(0);
       expect(Array.isArray(invites)).to.equal(true);
     });
     it('should return an empty array if the project doesn\'t exist', async () => {
-      const invites = await inviteService.getInvitesByProjectId(777);
+      const invites = await inviteService.getInvitesByProjectId(777, null);
       expect(invites.length).to.equal(0);
       expect(Array.isArray(invites)).to.equal(true);
+    });
+    it('should throw an Exception if the user passes an invalid status parameter', async () => {
+      const projectHammer = await sequelize.Project.findOne({
+        where: { projectName: 'hammer-io' }
+      });
+      let errMsg = null;
+      try {
+        const invites = await inviteService.getInvitesByProjectId(projectHammer.id, 'baby beluga');
+        console.error(invites);
+        expect.fail();
+      } catch (err) {
+        errMsg = err.errors[0].message;
+      }
+      expect(errMsg).to.equal('The status must be set to one of the following values: open, accepted, declined, rescinded, expired.');
     });
   });
 
