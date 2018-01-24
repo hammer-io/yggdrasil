@@ -1,6 +1,101 @@
 [
   {
     "type": " get ",
+    "url": "/oauth2/authorize/successRedirect",
+    "title": "Get access code redirect",
+    "version": "1.0.0",
+    "name": "Authorize_Redirect",
+    "group": "Auth",
+    "permission": [
+      {
+        "name": "None"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "STRING",
+            "optional": false,
+            "field": "code",
+            "description": "<p>the access code in query.code</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "code",
+            "description": "<p>returns the access code</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Example:",
+          "content": "{\n    \"code\": \"jk2q43jk2dsr4qqewfds_\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/auth.routes.js",
+    "groupTitle": "Auth"
+  },
+  {
+    "type": " get ",
+    "url": "/auth/token",
+    "title": "Check Authentication Token",
+    "version": "1.0.0",
+    "name": "Check_Auth_Token",
+    "group": "Auth",
+    "description": "<p>Ensures that the token provided in the Authenitcation header is valid and non expired.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Auth-Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "status",
+            "description": "<p>200</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/routes/auth.routes.js",
+    "groupTitle": "Auth"
+  },
+  {
+    "type": " get ",
     "url": "/oauth2/authorize",
     "title": "Get permissions",
     "version": "1.0.0",
@@ -19,7 +114,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -62,7 +157,14 @@
             "description": "<p>a transaction id, user, and a client</p>"
           }
         ]
-      }
+      },
+      "examples": [
+        {
+          "title": "Success-Example:",
+          "content": "{\n  \"transactionID\": \"IRGn6Bom\",\n  \"user\": {\n      \"id\": 3,\n      \"username\": \"jreach\",\n      \"email\": \"jreach@gmail.com\",\n      \"firstName\": \"Jack\",\n      \"lastName\": \"Reacher\",\n      \"createdAt\": \"2017-12-02T19:28:53.000Z\",\n      \"updatedAt\": \"2017-12-02T19:28:53.000Z\"\n  },\n  \"client\": {\n      \"id\": 1,\n      \"clientId\": \"clientId\",\n      \"name\": \"endor_frontend\",\n      \"secret\": \"client_secret\",\n      \"createdAt\": \"2017-12-02T19:40:27.000Z\",\n      \"updatedAt\": \"2017-12-02T19:40:27.000Z\",\n      \"userId\": 3\n  }\n}",
+          "type": "json"
+        }
+      ]
     },
     "filename": "src/routes/auth.routes.js",
     "groupTitle": "Auth"
@@ -87,7 +189,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Client-Basic</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -100,28 +202,40 @@
             "type": "STRING",
             "optional": false,
             "field": "code",
-            "description": "<p>the access code</p>"
+            "description": "<p>the access code if grant_type = authorization_code</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "STRING",
+            "optional": false,
+            "field": "username",
+            "description": "<p>the username if grant_type = password</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "STRING",
+            "optional": false,
+            "field": "password",
+            "description": "<p>the corresponding password if grant_type = password</p>"
           },
           {
             "group": "Parameter",
             "type": "STRING",
             "optional": false,
             "field": "grant_type",
-            "description": "<p>the value should be &quot;authorization_code&quot;</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "STRING",
-            "optional": false,
-            "field": "redirect_uri",
-            "description": "<p>the value should be &quot;http://localhost:3000/api/v1/oauth2/authorize/successRedirect&quot;</p>"
+            "description": "<p>the value should be &quot;authorization_code&quot; or &quot;password&quot;</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Param-Example:",
-          "content": "{\n  \"code\": \"YxTKMd9l8ZAvof2GEwiP6w\",\n  \"grant_type\": \"authorization_code\",\n  \"redirect_uri\": \"http://localhost:3000/api/v1/oauth2/authorize/successRedirect\"\n}",
+          "content": "{\n  \"code\": \"YxTKMd9l8ZAvof2GEwiP6w\",\n  \"grant_type\": \"authorization_code\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Param-Example:",
+          "content": "{\n  \"username\": \"jreach\",\n  \"password\": \"password_of_jreach\",\n  \"grant_type\": \"password\"\n}",
           "type": "json"
         }
       ]
@@ -156,6 +270,11 @@
     "version": "1.0.0",
     "name": "Post_permission",
     "group": "Auth",
+    "permission": [
+      {
+        "name": "None"
+      }
+    ],
     "description": "<p>Upon success, it redirects to the redirect_URI given to GET /oauth2/authorize. To return a simple JSON indicating { success: true }, redirect to GET /oauth2/authorize/successRedirect. Sends the code in req.query.code to the redirectURI.</p>",
     "header": {
       "fields": {
@@ -164,7 +283,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -213,6 +332,73 @@
     "groupTitle": "Auth"
   },
   {
+    "type": " post ",
+    "url": "/auth/register",
+    "title": "Register a new user",
+    "version": "1.0.0",
+    "name": "Register_User",
+    "group": "Auth",
+    "permission": [
+      {
+        "name": "None"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Basic Auth-Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "STRING",
+            "optional": false,
+            "field": "username",
+            "description": "<p>the new user's desired username</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "STRING",
+            "optional": false,
+            "field": "password",
+            "description": "<p>the new user's desired password</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "returns",
+            "description": "<p>the new user and corresponding token</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Example:",
+          "content": "{\n \"user\": {\n      \"id\": 10,\n      \"username\": \"jreach6\",\n      \"updatedAt\": \"2018-01-22T02:02:12.447Z\",\n      \"createdAt\": \"2018-01-22T02:02:12.447Z\"\n  },\n  \"token\": {\n      \"expired\": false,\n      \"id\": 12,\n      \"value\": \"<a really long token value here>\"\n      \"userId\": 10,\n      \"updatedAt\": \"2018-01-22T02:02:12.473Z\",\n      \"createdAt\": \"2018-01-22T02:02:12.473Z\"\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/routes/auth.routes.js",
+    "groupTitle": "Auth"
+  },
+  {
     "type": "post",
     "url": "/clients",
     "title": "Create a new client",
@@ -231,7 +417,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -308,62 +494,6 @@
     "groupTitle": "Clients"
   },
   {
-    "type": "get",
-    "url": "/clients/:userId",
-    "title": "Get clients for user",
-    "version": "1.0.0",
-    "name": "Retrieve_clients_for_a_user",
-    "group": "Clients",
-    "description": "<p>Returns all the clients for the given user.  If the user has no clients, it will result in a 404 error with a message saying they have no clients</p>",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
-          }
-        ]
-      }
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Integer",
-            "optional": false,
-            "field": "userId",
-            "description": "<p>the id of the user</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object[]",
-            "optional": false,
-            "field": "clients",
-            "description": "<p>list of all clients of the user</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Example:",
-          "content": "{\n  \"clients\": [\n      {\n          \"id\": 1,\n          \"clientId\": \"clientId\",\n          \"name\": \"endor_frontend\",\n          \"secret\": \"client_secret\",\n          \"createdAt\": \"2017-12-02T19:40:27.000Z\",\n          \"updatedAt\": \"2017-12-02T19:40:27.000Z\",\n          \"userId\": 3\n      }\n  ]\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "src/routes/client.routes.js",
-    "groupTitle": "Clients"
-  },
-  {
     "type": "post",
     "url": "/projects/:id/contributors/:user",
     "title": "Add contributor to project",
@@ -382,7 +512,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -449,7 +579,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -514,7 +644,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -574,7 +704,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -929,7 +1059,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -996,7 +1126,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -1061,7 +1191,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -1121,7 +1251,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -1172,7 +1302,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -1339,7 +1469,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -1739,18 +1869,6 @@
         "name": "authenticated user"
       }
     ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
-          }
-        ]
-      }
-    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1829,7 +1947,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -1878,7 +1996,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -1925,7 +2043,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -1972,7 +2090,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -2014,7 +2132,7 @@
             "group": "Header",
             "optional": false,
             "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
+            "description": "<p>Basic Auth-Token</p>"
           }
         ]
       }
@@ -2089,65 +2207,5 @@
     },
     "filename": "src/routes/users.routes.js",
     "groupTitle": "Users"
-  },
-  {
-    "type": " get ",
-    "url": "/oauth2/authorize/successRedirect",
-    "title": "Get access code redirect",
-    "version": "1.0.0",
-    "name": "Authorize_Redirect",
-    "permission": [
-      {
-        "name": "None"
-      }
-    ],
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Basic Client-Basic Auth-Token</p>"
-          }
-        ]
-      }
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "STRING",
-            "optional": false,
-            "field": "code",
-            "description": "<p>the access code in query.code</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "json",
-            "optional": false,
-            "field": "code",
-            "description": "<p>returns the access code</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Example:",
-          "content": "{\n    \"code\": \"jk2q43jk2dsr4qqewfds_\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "src/routes/auth.routes.js",
-    "group": "_home_nkarasch_GitStuff_yggdrasil_endor_src_routes_auth_routes_js",
-    "groupTitle": "_home_nkarasch_GitStuff_yggdrasil_endor_src_routes_auth_routes_js"
   }
 ]

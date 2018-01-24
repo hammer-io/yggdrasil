@@ -56,9 +56,10 @@ export default class UserService {
    * Validates a user
    * @param user the user to validate
    * @param withRequired check required fields or not (useful for POST to PATH)
+   * @param requireName true if name should be validated
    * @returns {Array} list of errors
    */
-  async validateUser(user, withRequired) {
+  async validateUser(user, withRequired, requireName = false) {
     const errors = [];
     if (withRequired) {
       if (!('username' in user)) {
@@ -68,7 +69,8 @@ export default class UserService {
       if (!('email' in user)) {
         errors.push(new RequestParamError('email', 'Email is required.'));
       }
-
+    }
+    if (requireName) {
       if (!('firstName' in user)) {
         errors.push(new RequestParamError('firstName', 'First Name is required.'));
       }
@@ -196,12 +198,13 @@ export default class UserService {
    * Creates a new user
    * @param user the user to create
    * @param password the credentials object associated with the user being created
+   * @param validateName if the user should be validated defaults to true
    * @returns {Object} the created user
    */
-  async createUser(user, password) {
+  async createUser(user, password, validateName = true) {
     this.log.info(`UserService: creating user ${user}`);
 
-    const userErrors = await this.validateUser(user, true);
+    const userErrors = await this.validateUser(user, true, validateName);
     if (userErrors.length !== 0) {
       return Promise.reject(new InvalidRequestException(userErrors));
     }

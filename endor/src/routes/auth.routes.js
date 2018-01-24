@@ -21,14 +21,14 @@ export const router = express.Router();
  * The response of the user should be sent to POST /oauth/authorize
  * This endpoint will return the client, the user and a transaction ID
  *
- * @apiHeader Authorization Basic Client-Basic Auth-Token
+ * @apiHeader Authorization Basic Auth-Token
  * @apiParam { STRING } clientId the id of the client requesting access
  * @apiParam { STRING } response_type value should be 'code'
  * @apiParam { STRING } redirect_uri uri of redirect upon permission granted, which is the endpoint
  *     requesting access to the user's account
  *
  * @apiSuccess { json } returns a transaction id, user, and a client
- * @apiSucccessExample { json } Success-Example:
+ * @apiSuccessExample { json } Success-Example:
  * {
  *   "transactionID": "IRGn6Bom",
  *   "user": {
@@ -59,14 +59,14 @@ router.get('/oauth2/authorize', authController.isAuthenticated, authController.a
  * @apiName Post permission
  * @apiGroup Auth
  *
- * @apiPermissions None
+ * @apiPermission None
  *
  * @apiDescription Upon success, it redirects to the redirect_URI given to GET /oauth2/authorize.
  * To return a simple JSON indicating { success: true }, redirect to
  * GET /oauth2/authorize/successRedirect. Sends the code in req.query.code to the
  * redirectURI.
  *
- * @apiHeader Authorization Basic Client-Basic Auth-Token
+ * @apiHeader Authorization Basic Auth-Token
  * @apiParam { STRING } transaction_id from GET /oauth2/authorize
  * @apiParamExample { json } Success-Example:
  * {
@@ -96,15 +96,21 @@ router.post('/oauth2/authorize', [authController.isAuthenticated].concat(authVal
  * to in the response. The Authentication at this endpoint should be client authentication so as
  * to verify that this is the client's token
  *
- * @apiHeader Authorization Client-Basic
- * @apiParam { STRING } code the access code
- * @apiParam { STRING } grant_type the value should be "authorization_code"
- * @apiParam { STRING } redirect_uri the value should be "http://localhost:3000/api/v1/oauth2/authorize/successRedirect"
+ * @apiHeader Authorization Basic Auth-Token
+ * @apiParam { STRING } code the access code if grant_type = authorization_code
+ * @apiParam { STRING } username the username if grant_type = password
+ * @apiParam { STRING } password the corresponding password if grant_type = password
+ * @apiParam { STRING } grant_type the value should be "authorization_code" or "password"
  * @apiParamExample Param-Example:
  * {
  *   "code": "YxTKMd9l8ZAvof2GEwiP6w",
- *   "grant_type": "authorization_code",
- *   "redirect_uri": "http://localhost:3000/api/v1/oauth2/authorize/successRedirect"
+ *   "grant_type": "authorization_code"
+ * }
+ * @apiParamExample Param-Example:
+ * {
+ *   "username": "jreach",
+ *   "password": "password_of_jreach",
+ *   "grant_type": "password"
  * }
  *
  * @apiSuccess { json } returns the access token and the token_type ("bearer")
@@ -120,16 +126,17 @@ router.post('/oauth2/authorize', [authController.isAuthenticated].concat(authVal
  *   "token_type": "Bearer"
  * }
  */
-router.post('/oauth2/token', [authController.isClientAuthenticated].concat(authValidator.checkToken()), authController.token());
+router.post('/oauth2/token', [authController.isAuthenticated].concat(authValidator.checkToken()), authController.token());
 
 /**
  * @api { get } /oauth2/authorize/successRedirect Get access code redirect
  * @apiVersion 1.0.0
  * @apiName Authorize Redirect
+ * @apiGroup Auth
  *
  * @apiPermission None
  *
- * @apiHeader Authorization Basic Client-Basic Auth-Token
+ * @apiHeader Authorization Basic Auth-Token
  * @apiParam { STRING } code the access code in query.code
  *
  * @apiSuccess { json } code returns the access code
@@ -139,6 +146,55 @@ router.post('/oauth2/token', [authController.isClientAuthenticated].concat(authV
  * }
  */
 router.get('/oauth2/authorize/successRedirect', authController.isAuthenticated, authController.success);
+
+/**
+ * @api { post } /auth/register Register a new user
+ * @apiVersion 1.0.0
+ * @apiName Register User
+ * @apiGroup Auth
+ *
+ * @apiPermission None
+ *
+ * @apiHeader Authorization Basic Auth-Token
+ * @apiParam { STRING } username the new user's desired username
+ * @apiParam { STRING } password the new user's desired password
+ *
+ * @apiSuccess { json } returns the new user and corresponding token
+ * @apiSuccessExample { json } Success-Example:
+ * {
+ *  "user": {
+ *       "id": 10,
+ *       "username": "jreach6",
+ *       "updatedAt": "2018-01-22T02:02:12.447Z",
+ *       "createdAt": "2018-01-22T02:02:12.447Z"
+ *   },
+ *   "token": {
+ *       "expired": false,
+ *       "id": 12,
+ *       "value": "<a really long token value here>"
+ *       "userId": 10,
+ *       "updatedAt": "2018-01-22T02:02:12.473Z",
+ *       "createdAt": "2018-01-22T02:02:12.473Z"
+ *   }
+ * }
+ *
+ */
+router.post('/auth/register', authValidator.checkToken(), authController.register);
+
+/**
+ * @api { get } /auth/token Check Authentication Token
+ * @apiVersion 1.0.0
+ * @apiName Check Auth Token
+ * @apiGroup Auth
+ *
+ * @apiDescription Ensures that the token provided in the Authenitcation header is valid
+ * and non expired.
+ *
+ * @apiHeader Authorization Auth-Token
+ *
+ * @apiSuccess status 200
+ */
+router.get('/auth/token', authController.isBearerAuthenticated, authController.checkToken);
 
 /**
  * Sets dependencies for the routes

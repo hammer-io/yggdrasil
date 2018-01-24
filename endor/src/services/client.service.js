@@ -1,3 +1,4 @@
+import sequelize from 'sequelize';
 
 import InvalidRequestException from '../error/InvalidRequestException';
 import ClientNotFoundException from '../error/ClientNotFoundException';
@@ -5,9 +6,8 @@ import RequestParamError from '../error/RequestParamError';
 import NonUniqueError from '../error/NonUniqueError';
 
 export default class ClientService {
-  constructor(clientRepository, userService, log) {
+  constructor(clientRepository, log) {
     this.clientRepository = clientRepository;
-    this.userService = userService;
     this.log = log;
     this.CLIENT = 'client';
     this.USER = 'user';
@@ -32,9 +32,6 @@ export default class ClientService {
     }
     if (!client.secret) {
       errors.push(new RequestParamError('client', 'Secret is required'));
-    }
-    if (!client.userId) {
-      errors.push(new RequestParamError('client', 'UserId is required'));
     }
     return errors;
   }
@@ -97,40 +94,11 @@ export default class ClientService {
       const createdClient = await this.clientRepository.create(client);
       return createdClient;
     } catch (err) {
-      if (err.name === 'SequelizeUniqueConstraintError') {
+      if (err instanceof sequelize.UniqueConstraintError) {
         return Promise.reject(new NonUniqueError(err.errors, err.fields));
-      } else if (err.name === 'SequelizeForeignKeyConstraintError') {
-        return Promise.reject(new ClientNotFoundException('No user exists with the given id'));
       }
       return Promise.reject(err);
     }
-  }
-
-  /**
-   * Find all the clients of the given userId.
-   *
-   * @param userId the userId
-   * @returns {Promise.<*>} the found clients
-   */
-  async findAllClients(userId) {
-    this.log.info(`ClientService: find all clients for user ${userId}`);
-
-    const errors = await this.validateId(this.USER, userId);
-    if (errors.length !== 0) {
-      return Promise.reject(new InvalidRequestException(errors));
-    }
-
-    const clients = await this.clientRepository.findAll({
-      where:
-        {
-          userId
-        }
-    });
-    if (clients === null || clients.length === 0) {
-      return Promise.reject(new ClientNotFoundException(`Clients not found for user ${userId}`));
-    }
-
-    return clients;
   }
 
   /**

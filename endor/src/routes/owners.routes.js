@@ -16,7 +16,7 @@ let projectService = {};
  *
  * @apiPermission none
  *
- * @apiHeader Authorization Basic Client-Basic Auth-Token
+ * @apiHeader Authorization Basic Auth-Token
  * @apiParam {String} id the id of the project to get owners for
  *
  * @apiSuccess {Object[]} owners of the project
@@ -49,7 +49,7 @@ router.get('/projects/:id/owners', authController.isAuthenticated, ownersControl
  *
  * @apiPermission none
  *
- * @apiHeader Authorization Basic Client-Basic Auth-Token
+ * @apiHeader Authorization Basic Auth-Token
  * @apiParam {String} id the id of the project
  * @apiParam {String} user user id or username
  *
@@ -69,7 +69,7 @@ router.get('/projects/:id/owners/:user', authController.isAuthenticated, ownersC
  *
  * @apiPermission project owner
  *
- * @apiHeader Authorization Basic Client-Basic Auth-Token
+ * @apiHeader Authorization Basic Auth-Token
  * @apiParam {String} id the id of the project
  * @apiParam {String} user user id or username of the user to add as a owner
  *
@@ -103,7 +103,7 @@ router.post('/projects/:id/owners/:user', authController.isAuthenticated, owners
  *
  * @apiPermission project owner
  *
- * @apiHeader Authorization Basic Client-Basic Auth-Token
+ * @apiHeader Authorization Basic Auth-Token
  * @apiParam {String} id the id of the project
  * @apiParam {String} user user id or username of the user to add as a owner
  *
