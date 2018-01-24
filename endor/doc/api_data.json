@@ -1024,6 +1024,19 @@
         "name": "authenticated user"
       }
     ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "status",
+            "description": "<p>the status to filter results by. May be one of the following: <code>['open','accepted','declined','rescinded','expired']</code></p>"
+          }
+        ]
+      }
+    },
     "success": {
       "fields": {
         "Success 200": [

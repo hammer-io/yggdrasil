@@ -105,6 +105,8 @@ describe('Testing Invite Service', () => {
         where: { projectName: 'hammer-io' }
       });
       const openInvites = await inviteService.getInvitesByProjectId(projectHammer.id, InviteStatus.OPEN);
+      expect(openInvites.length).to.equal(1);
+      expect(Array.isArray(openInvites)).to.equal(true);
       const inviteJreach = openInvites[0];
       const userJreach = await sequelize.User.findOne({
         where: { username: 'jreach' }
@@ -117,6 +119,8 @@ describe('Testing Invite Service', () => {
       });
 
       const declinedInvites = await inviteService.getInvitesByProjectId(projectHammer.id, InviteStatus.DECLINED);
+      expect(declinedInvites.length).to.equal(1);
+      expect(Array.isArray(declinedInvites)).to.equal(true);
       const inviteBuddy = declinedInvites[0];
       const userBuddy = await sequelize.User.findOne({
         where: { username: 'buddy' }
@@ -162,26 +166,67 @@ describe('Testing Invite Service', () => {
       const userBuddy = await sequelize.User.findOne({
         where: { username: 'buddy' }
       });
-      const invites = await inviteService.getInvitesByUserId(userBuddy.id);
+      const invites = await inviteService.getInvitesByUserId(userBuddy.id, null);
       expect(invites.length).to.equal(2);
       expect(Array.isArray(invites)).to.equal(true);
       expect(invites[0].userInvitedId).to.equal(userBuddy.id);
       expect(invites[1].userInvitedId).to.equal(userBuddy.id);
       expect(invites[0].id).to.not.equal(invites[1].id);
     });
+    it('should find all invites for the given user id, but filtered by the status supplied', async () => {
+      const userBuddy = await sequelize.User.findOne({
+        where: { username: 'buddy' }
+      });
+      const openInvites = await inviteService.getInvitesByUserId(userBuddy.id, InviteStatus.OPEN);
+      expect(openInvites.length).to.equal(1);
+      expect(Array.isArray(openInvites)).to.equal(true);
+      const projectDrumItDown = await sequelize.Project.findOne({
+        where: { projectName: 'drumitdown' }
+      });
+      assertInvite(openInvites[0], {
+        status: InviteStatus.OPEN,
+        days: 30,
+        userId: userBuddy.id,
+        projectId: projectDrumItDown.id
+      });
+
+      const declinedInvites = await inviteService.getInvitesByUserId(userBuddy.id, InviteStatus.DECLINED);
+      expect(declinedInvites.length).to.equal(1);
+      expect(Array.isArray(declinedInvites)).to.equal(true);
+      const projectHammer = await sequelize.Project.findOne({
+        where: { projectName: 'hammer-io' }
+      });
+      assertInvite(declinedInvites[0], {
+        status: InviteStatus.DECLINED,
+        days: 15,
+        userId: userBuddy.id,
+        projectId: projectHammer.id
+      });
+    });
     it('should return an empty array if no invites are found', async () => {
       const userBob = await sequelize.User.findOne({
         where: { username: 'BobSagat' }
       });
-      const invites = await inviteService.getInvitesByUserId(userBob.id);
+      const invites = await inviteService.getInvitesByUserId(userBob.id, null);
       expect(invites.length).to.equal(0);
       expect(Array.isArray(invites)).to.equal(true);
     });
     it('should return an empty array if the user doesn\'t exist', async () => {
       const query = 777;
-      const invites = await inviteService.getInvitesByUserId(query);
+      const invites = await inviteService.getInvitesByUserId(query, null);
       expect(invites.length).to.equal(0);
       expect(Array.isArray(invites)).to.equal(true);
+    });
+    it('should throw an Exception if the user passes an invalid status parameter', async () => {
+      let errMsg = null;
+      try {
+        const invites = await inviteService.getInvitesByUserId(1, 'forest gump');
+        console.error(invites);
+        expect.fail();
+      } catch (err) {
+        errMsg = err.errors[0].message;
+      }
+      expect(errMsg).to.equal('The status must be set to one of the following values: open, accepted, declined, rescinded, expired.');
     });
   });
 
@@ -337,7 +382,7 @@ describe('Testing Invite Service', () => {
         const userBuddy = await sequelize.User.findOne({
           where: { username: 'buddy' }
         });
-        const buddysInvites = await inviteService.getInvitesByUserId(userBuddy.id);
+        const buddysInvites = await inviteService.getInvitesByUserId(userBuddy.id, null);
         const declinedInvite = buddysInvites.filter(invite => invite.status === InviteStatus.DECLINED)[0];
 
         let errMsg = null;
@@ -354,7 +399,7 @@ describe('Testing Invite Service', () => {
         const userJreach = await sequelize.User.findOne({
           where: { username: 'jreach' }
         });
-        const invites = await inviteService.getInvitesByUserId(userJreach.id);
+        const invites = await inviteService.getInvitesByUserId(userJreach.id, null);
         const invite = invites[0];
 
         let errMsg = null;

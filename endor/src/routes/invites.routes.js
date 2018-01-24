@@ -56,6 +56,9 @@ router.get('/projects/:id/invites', authController.isAuthenticated, invitesContr
  *
  * @apiPermission authenticated user
  *
+ * @apiParam {String} [status] the status to filter results by.
+ *   May be one of the following: `['open','accepted','declined','rescinded','expired']`
+ *
  * @apiSuccess {Object[]} invites list of invites for authenticated user
  * @apiSuccessExample {json} Success-Response:
  * [
