@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import sequelize from './sequelize';
 
 // When syncing tables, this corresponds to the 'force' option.

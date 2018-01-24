@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import bcrypt from 'bcrypt';
 import sequelize from './sequelize';
 
