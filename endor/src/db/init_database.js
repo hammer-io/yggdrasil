@@ -68,7 +68,7 @@ export async function defineTables() {
 async function main() {
   try {
     // eslint-disable-next-line global-require
-    const dbConfig = require('../../../dbConfig.json');
+    const dbConfig = require('../../dbConfig.json');
 
     // First, we need to initialize the data model
     await sequelize.initSequelize(
