@@ -29,6 +29,8 @@ export function setDependencies(inviteService, userService, projectService) {
  * @apiPermission project owner
  *
  * @apiParam {String} id the id of the project to get contributor invites to
+ * @apiParam {String} [status] the status to filter results by.
+ *   May be one of the following: `['open','accepted','declined','rescinded','expired']`
  *
  * @apiSuccess {Object[]} contributor invites to the project
  * @apiSuccessExample {json} Success-Response
@@ -53,6 +55,9 @@ router.get('/projects/:id/invites', authController.isAuthenticated, invitesContr
  * @apiGroup Invites
  *
  * @apiPermission authenticated user
+ *
+ * @apiParam {String} [status] the status to filter results by.
+ *   May be one of the following: `['open','accepted','declined','rescinded','expired']`
  *
  * @apiSuccess {Object[]} invites list of invites for authenticated user
  * @apiSuccessExample {json} Success-Response:

@@ -49,6 +49,17 @@ export default class InviteService {
     return errors;
   }
 
+  static attachStatusToFilter(status, filter) {
+    if (status) {
+      if (isValidInviteStatus(status)) {
+        // eslint-disable-next-line no-param-reassign
+        filter.status = status
+      } else {
+        throw new InvalidRequestException([new RequestParamError('status', getInvalidStatusMessage())]);
+      }
+    }
+  }
+
   /**
    * Gets a invite by the invite id
    * @param inviteId the invite id to find by
@@ -72,37 +83,31 @@ export default class InviteService {
   /**
    * Gets all invites for the given project
    * @param projectId the project id to find by
+   * @param statusToFilterBy the status to filter invites by
    * @returns {Object} the invite that was found
    */
-  async getInvitesByProjectId(projectId) {
+  async getInvitesByProjectId(projectId, statusToFilterBy) {
     this.log.info(`InviteService: find invite with project id of ${projectId}`);
-    const invitesFound = await this.inviteRepository.findAll({
-      where: {
-        projectInvitedToId: projectId
-      }
-    });
 
-    return invitesFound;
+    const filter = { projectInvitedToId: projectId };
+    InviteService.attachStatusToFilter(statusToFilterBy, filter);
+
+    return this.inviteRepository.findAll({ where: filter });
   }
 
   /**
    * Gets all invites for the given user
    * @param userId the user id to find by
+   * @param statusToFilterBy the status to filter invites by
    * @returns {Object} the invite that was found
    */
-  async getInvitesByUserId(userId) {
+  async getInvitesByUserId(userId, statusToFilterBy) {
     this.log.info(`InviteService: find invite with user id of ${userId}`);
-    const invitesFound = await this.inviteRepository.findAll({
-      where: {
-        userInvitedId: userId
-      }
-    });
 
-    if (invitesFound === null) {
-      throw new InviteNotFoundException(`Invites for user ${userId} could not be found.`);
-    }
+    const filter = { userInvitedId: userId };
+    InviteService.attachStatusToFilter(statusToFilterBy, filter);
 
-    return invitesFound;
+    return this.inviteRepository.findAll({ where: filter });
   }
 
   /**

@@ -37,7 +37,7 @@ export function setProjectService(newProjectService) {
  */
 export async function getInvitesByProjectId(req, res, next) {
   try {
-    const invites = await inviteService.getInvitesByProjectId(req.params.id);
+    const invites = await inviteService.getInvitesByProjectId(req.params.id, req.query.status);
     res.send(invites);
   } catch (error) {
     next(error);
@@ -52,7 +52,7 @@ export async function getInvitesByProjectId(req, res, next) {
  */
 export async function getInvitesByUserId(req, res, next) {
   try {
-    const invites = await inviteService.getInvitesByUserId(req.params.id);
+    const invites = await inviteService.getInvitesByUserId(req.params.id, req.query.status);
     invites.other = req.params.other;
     res.send(invites);
   } catch (error) {
