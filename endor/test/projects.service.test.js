@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 // Using Expect style
-const sequalize = require('../src/db/sequelize');
+const sequelize = require('../src/db/sequelize');
 
 import UserService from './../src/services/users.service';
 import { getMockLogger } from './mockLogger';
@@ -9,17 +9,19 @@ import { defineTables, populateTools } from '../src/db/init_database';
 import { populateUsers, populateProjects } from '../src/db/import_test_data';
 
 // Initialize Sequelize with sqlite for testing
-sequalize.initSequelize(
-  'database',
-  'root',
-  'root', {
-    dialect: 'sqlite',
-    logging: false
-  }
-);
+if (!sequelize.isInitialized()) {
+  sequelize.initSequelize(
+    'database',
+    'root',
+    'root', {
+      dialect: 'sqlite',
+      logging: false
+    }
+  );
+}
 
-const userService = new UserService(sequalize.User, sequalize.Credentials, getMockLogger());
-const projectService = new ProjectService(sequalize.Project, userService, getMockLogger());
+const userService = new UserService(sequelize.User, sequelize.Credentials, getMockLogger());
+const projectService = new ProjectService(sequelize.Project, userService, getMockLogger());
 
 describe('Testing Project Service', async () => {
   beforeEach(async () => {

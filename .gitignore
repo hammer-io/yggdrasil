@@ -17,6 +17,7 @@ endor/dist/
 
 dbConfig.json
 endorConfig.json
+emailConfig.json
 
 .DS_Store
 */.DS_Store

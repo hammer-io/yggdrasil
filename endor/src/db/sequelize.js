@@ -26,6 +26,7 @@ module.exports.DataTypes = Sequelize.DataTypes;
 
 let initialized = false;
 
+module.exports.isInitialized = () => initialized;
 module.exports.initSequelize = (database, username, password, options) => {
   if (initialized) {
     getActiveLogger().warn('Sequelize can only be initialized once!');

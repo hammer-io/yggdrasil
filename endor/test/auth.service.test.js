@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 // Using Expect style
-const sequalize = require('../src/db/sequelize');
+const sequelize = require('../src/db/sequelize');
 import { defineTables } from '../src/db/init_database';
 import {
   populateClients,
@@ -13,16 +13,18 @@ import AuthService from './../src/services/auth.service';
 import { getMockLogger } from './mockLogger';
 
 // Initialize Sequelize with sqlite for testing
-sequalize.initSequelize(
-  'database',
-  'root',
-  'root', {
-    dialect: 'sqlite',
-    logging: false
-  }
-);
+if (!sequelize.isInitialized()) {
+  sequelize.initSequelize(
+    'database',
+    'root',
+    'root', {
+      dialect: 'sqlite',
+      logging: false
+    }
+  );
+}
 
-const authService = new AuthService(sequalize.Token, sequalize.AccessCode, getMockLogger());
+const authService = new AuthService(sequelize.Token, sequelize.AccessCode, getMockLogger());
 
 
 describe('Testing Auth Service', () => {

@@ -12,14 +12,16 @@ import { getMockLogger } from './mockLogger';
 const InviteStatus = sequelize.InviteStatus;
 
 // Initialize Sequelize with sqlite for testing
-sequelize.initSequelize(
-  'database',
-  'root',
-  'root', {
-    dialect: 'sqlite',
-    logging: false
-  }
-);
+if (!sequelize.isInitialized()) {
+  sequelize.initSequelize(
+    'database',
+    'root',
+    'root', {
+      dialect: 'sqlite',
+      logging: false
+    }
+  );
+}
 
 const inviteService = new InviteService(sequelize.Invite, getMockLogger());
 
@@ -39,7 +41,79 @@ describe('Testing Invite Service', () => {
   });
 
   describe('Validate invite', async () => {
-    expect.fail('Not yet implemented', 'TODO');
+    it('should not return errors for valid new invites', async () => {
+      let errors = await InviteService.validateInvite({
+        userInvitedId: 1,
+        projectInvitedToId: 1
+      }, true);
+      expect(errors.length).to.equal(0);
+      errors = await InviteService.validateInvite({
+        userInvitedId: 1,
+        projectInvitedToId: 1,
+        status: InviteStatus.OPEN,
+        daysFromCreationUntilExpiration: 15
+      }, true);
+      expect(errors.length).to.equal(0);
+    });
+    it('should not return errors for valid updated invite', async () => {
+      let errors = await InviteService.validateInvite({
+        status: InviteStatus.DECLINED
+      }, false);
+      expect(errors.length).to.equal(0);
+      errors = await InviteService.validateInvite({
+        userInvitedId: 1,
+        projectInvitedToId: 1,
+        status: InviteStatus.RESCINDED,
+        daysFromCreationUntilExpiration: 777
+      }, false);
+      expect(errors.length).to.equal(0);
+    });
+    it('should throw Error if new invite doesn\'t have userInvitedId', async () => {
+      const errors = await InviteService.validateInvite({
+        projectInvitedToId: 1
+      }, true);
+      expect(errors.length).to.equal(1);
+      expect(errors[0].message).to.equal('User is required.');
+    });
+    it('should throw Error if new invite doesn\'t have projectInvitedToId', async () => {
+      const errors = await InviteService.validateInvite({
+        userInvitedId: 1
+      }, true);
+      expect(errors.length).to.equal(1);
+      expect(errors[0].message).to.equal('Project is required.');
+    });
+    it('should throw Error if updated invite doesn\'t have status', async () => {
+      const errors = await InviteService.validateInvite({}, false);
+      expect(errors.length).to.equal(1);
+      expect(errors[0].message).to.equal('Status is required for invite updates.');
+    });
+    it('should throw Error if daysFromCreationUntilExpiration isn\'t a non-negative integer', async () => {
+      let errors = await InviteService.validateInvite({
+        status: InviteStatus.ACCEPTED,
+        daysFromCreationUntilExpiration: true
+      }, false);
+      expect(errors.length).to.equal(1);
+      expect(errors[0].message).to.equal('Must be a non-negative integer.');
+      errors = await InviteService.validateInvite({
+        status: InviteStatus.DECLINED,
+        daysFromCreationUntilExpiration: 'scuttlebutt'
+      }, false);
+      expect(errors.length).to.equal(1);
+      expect(errors[0].message).to.equal('Must be a non-negative integer.');
+      errors = await InviteService.validateInvite({
+        status: InviteStatus.EXPIRED,
+        daysFromCreationUntilExpiration: '30'
+      }, false);
+      expect(errors.length).to.equal(1);
+      expect(errors[0].message).to.equal('Must be a non-negative integer.');
+    });
+    it('should throw Error if status isn\'t a valid InviteStatus option', async () => {
+      let errors = await InviteService.validateInvite({
+        status: 'hot diggity!',
+      }, false);
+      expect(errors.length).to.equal(1);
+      expect(errors[0].message).to.include('The status must be set to one of the following values:');
+    });
   });
 
   describe('Get invite by id', async () => {

@@ -8,14 +8,16 @@ import ClientService from './../src/services/client.service';
 import { getMockLogger } from './mockLogger';
 
 // Initialize Sequelize with sqlite for testing
-sequelize.initSequelize(
-  'database',
-  'root',
-  'root', {
-    dialect: 'sqlite',
-    logging: false
-  }
-);
+if (!sequelize.isInitialized()) {
+  sequelize.initSequelize(
+    'database',
+    'root',
+    'root', {
+      dialect: 'sqlite',
+      logging: false
+    }
+  );
+}
 
 const clientService = new ClientService(sequelize.Client, getMockLogger());
 

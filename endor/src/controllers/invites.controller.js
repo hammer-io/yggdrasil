@@ -4,6 +4,7 @@ import { InviteStatus } from '../db/sequelize';
 let inviteService = {};
 let userService = {};
 let projectService = {};
+let emailService = {};
 
 /**
  * Sets the invite service for the controller
@@ -27,6 +28,14 @@ export function setUserService(newUserService) {
  */
 export function setProjectService(newProjectService) {
   projectService = newProjectService;
+}
+
+/**
+ * Sets the email service for the controller
+ * @param newEmailService the new email service
+ */
+export function setEmailService(newEmailService) {
+  emailService = newEmailService;
 }
 
 /**
@@ -85,14 +94,17 @@ export async function addInviteToProject(req, res, next) {
     const daysFromCreationUntilExpiration = req.body.daysFromCreationUntilExpiration;
 
     // Validate that the user and project actually exist
-    await projectService.getProjectById(projectId);
-    await userService.getUserByIdOrUsername(userIdOrUsername);
+    const project = await projectService.getProjectById(projectId);
+    const user = await userService.getUserByIdOrUsername(userIdOrUsername);
 
     const invite = await inviteService.createInvite(
       projectId,
       userIdOrUsername,
       daysFromCreationUntilExpiration
     );
+
+    await emailService.emailInvite(user, project, invite);
+
     res.status(201).send(invite);
   } catch (error) {
     next(error);

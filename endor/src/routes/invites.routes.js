@@ -14,10 +14,11 @@ export const router = express.Router();
  * @param userService the user service dependency
  * @param projectService the project service dependency
  */
-export function setDependencies(inviteService, userService, projectService) {
+export function setDependencies(inviteService, userService, projectService, emailService) {
   invitesController.setInviteService(inviteService);
   invitesController.setUserService(userService);
   invitesController.setProjectService(projectService);
+  invitesController.setEmailService(emailService);
 }
 
 /**
