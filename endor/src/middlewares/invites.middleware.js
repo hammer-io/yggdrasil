@@ -18,7 +18,7 @@ export function isNonNegativeInteger(value) {
  */
 export function checkForNonNegativeInteger(req, res, next) {
   const value = req.body.daysFromCreationUntilExpiration;
-  if (!isNonNegativeInteger(value)) {
+  if (value && !isNonNegativeInteger(value)) {
     throw new RequestParamError('daysFromCreationUntilExpiration', 'Must be a non-negative integer.');
   }
   next();
