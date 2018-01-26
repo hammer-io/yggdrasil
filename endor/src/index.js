@@ -20,10 +20,25 @@ import * as owners from './routes/owners.routes';
 import UserService from './services/users.service';
 import AuthService from './services/auth.service';
 import ClientService from './services/client.service';
+import EmailService from './services/email.service';
 // eslint-disable-next-line import/no-unresolved
 import config from '../endorConfig.json';
 // eslint-disable-next-line import/no-unresolved
 import dbConfig from '../dbConfig.json';
+// eslint-disable-next-line import/no-unresolved
+import emailConfig from '../emailConfig.json';
+
+// TODO: Set email from address and email transport options for production
+const emailFromAddress = '"Hammer-IO" <hello@hammer-io.github.io>';
+const emailTransportOptions = {
+  host: 'smtp.ethereal.email',
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: emailConfig.user,
+    pass: emailConfig.pass
+  }
+};
 
 // Initialize the data model
 sequelize.initSequelize(
@@ -54,13 +69,14 @@ const projectService = new ProjectService(sequelize.Project, userService, getAct
 const inviteService = new InviteService(sequelize.Invite, getActiveLogger());
 const authService = new AuthService(sequelize.Token, sequelize.AccessCode, getActiveLogger());
 const clientService = new ClientService(sequelize.Client, getActiveLogger());
+const emailService = new EmailService(emailFromAddress, getActiveLogger(), emailTransportOptions);
 auth.setDependencies(userService, clientService, authService);
 client.setDependencies(userService, clientService, authService);
 projects.setProjectService(projectService);
 users.setDependencies(userService);
 contributors.setDependencies(projectService);
 owners.setDependencies(projectService);
-invites.setDependencies(inviteService, userService, projectService);
+invites.setDependencies(inviteService, userService, projectService, emailService);
 // end dependency injections //
 
 // API ENDPOINTS //

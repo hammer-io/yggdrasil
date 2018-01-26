@@ -54,6 +54,7 @@
     "mocha": "3.5.3",
     "morgan": "1.9.0",
     "mysql2": "^1.5.1",
+    "nodemailer": "^4.4.2",
     "oauth2orize": "^1.11.0",
     "passport": "0.4.0",
     "passport-http": "^0.3.0",
