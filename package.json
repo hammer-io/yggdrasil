@@ -17,7 +17,11 @@
     "url": "https://github.com/hammer-io/yggradsil/issues"
   },
   "homepage": "https://github.com/hammer-io/yggdrasil#readme",
-  "dependencies": {},
+  "dependencies": {
+    "babel-polyfill": "6.26.0",
+    "express-session": "^1.15.6",
+    "passport-http": "^0.3.0"
+  },
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-plugin-transform-async-to-generator": "6.24.1",

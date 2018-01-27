@@ -1,4 +1,4 @@
-/* eslint-disable prefer-destructuring */
+
 import { validationResult } from 'express-validator/check';
 import * as responseHelper from '../utils/response-helper';
 import * as errorFormatter from '../utils/error-formatter';
@@ -32,7 +32,7 @@ export async function getAllUsers(req, res, next) {
  */
 export async function getUserByIdOrUsername(req, res, next) {
   try {
-    const user = req.params.user;
+    const { user } = req.params;
     const userFound = await userService.getUserByIdOrUsername(user);
     res.send(userFound);
   } catch (error) {
@@ -73,7 +73,10 @@ export async function createUser(req, res, next) {
 
   try {
     const user = req.body;
-    const userCreated = await userService.createUser(user);
+    const { password } = user;
+    delete user.password;
+    const userCreated = await userService.createUser(user, password);
+
     res.status(201).send(userCreated);
   } catch (error) {
     next(error);
@@ -107,7 +110,7 @@ export async function updateUserByIdOrUsername(req, res, next) {
  */
 export async function deleteUserById(req, res, next) {
   try {
-    const user = req.params.user;
+    const { user } = req.params;
     await userService.deleteUserByIdOrUsername(user);
     responseHelper.noContent(res);
   } catch (error) {

@@ -1,48 +1,30 @@
 import { expect } from 'chai';
+import { defineTables } from '../src/db/init_database';
+import { populateUsers } from '../src/db/import_test_data';
 // Using Expect style
-const sequalize = require('./sequalize-mock');
+const sequelize = require('../src/db/sequelize');
 
-import UserService from './../dist/services/users.service';
-import { getActiveLogger } from '../dist/utils/winston';
+import UserService from './../src/services/users.service';
+import { getMockLogger } from './mockLogger';
 
-const userService = new UserService(sequalize.User, getActiveLogger());
+// Initialize Sequelize with sqlite for testing
+if (!sequelize.isInitialized()) {
+  sequelize.initSequelize(
+    'database',
+    'root',
+    'root', {
+      dialect: 'sqlite',
+      logging: false
+    }
+  );
+}
+
+const userService = new UserService(sequelize.User, sequelize.Credentials, getMockLogger());
 
 describe('Testing User Service', () => {
   beforeEach(async () => {
-    await sequalize.User.sync({ force: true });
-    await sequalize.Tool.sync({ force: true });
-    await sequalize.Project.sync({ force: true });
-    await sequalize.ProjectOwner.sync({ force: true });
-    await sequalize.ProjectContributor.sync({ force: true });
-
-    await sequalize.User.bulkCreate([
-      {
-        username: 'BobSagat',
-        email: 'Bob@AFV.com',
-        firstName: 'Bob',
-        lastName: 'Sagat'
-      },
-      {
-        username: 'globalwarmingguy56',
-        email: 'Al@saveourplanet.com',
-        firstName: 'Al',
-        lastName: 'Gore'
-      },
-      {
-        username: 'jreach',
-        email: 'jreach@gmail.com',
-        firstName: 'Jack',
-        lastName: 'Reacher'
-      },
-      {
-        username: 'johnnyb',
-        email: 'jbravo@cartoonnetwork.com',
-        firstName: 'Johnny',
-        lastName: 'Bravo'
-      }
-    ]);
-
-
+    await defineTables();
+    await populateUsers();
   });
 
   describe('get user by username or id', async () => {
@@ -118,7 +100,7 @@ describe('Testing User Service', () => {
   describe('get all users', async () => {
     it('should find all users in the database', async () => {
       const users = await userService.getAllUsers();
-      expect(users.length).to.equal(4);
+      expect(users.length).to.equal(5);
       expect(Array.isArray(users)).to.equal(true);
     });
   });
@@ -131,13 +113,38 @@ describe('Testing User Service', () => {
         firstName: 'LeBron',
         lastName: 'James'
       };
-
-      const userCreated = await userService.createUser(newUser);
-      expect(userCreated.id).to.equal(5);
+      const userCreated = await userService.createUser(newUser, 'plaintext1');
+      expect(userCreated.id).to.equal(6);
       expect(userCreated.username).to.equal('lebron');
       expect(userCreated.email).to.equal('lebron@cavs.com');
       expect(userCreated.firstName).to.equal('LeBron');
       expect(userCreated.lastName).to.equal('James');
+    });
+
+    it('should not require all fields if validation = false', async () => {
+      const user = {
+        username: 'the new jreach',
+        email: 'anotherjreach@gmail.com'
+      };
+      const newUser = await userService.createUser(user, 'my p4ssw0rd 1s s4f3', false);
+      expect(newUser.dataValues).to.have.keys(['id', 'email', 'username', 'updatedAt', 'createdAt']);
+      expect(newUser.username).to.equal(user.username);
+      expect(newUser.id).to.not.be.an('undefined');
+    });
+
+    it('should not require all fields if validation = false', async () => {
+      const user = {
+        username: 'the new jreach'
+      };
+      try {
+        const newUser = await userService.createUser(user, 'my p4ssw0rd 1s s4f3', false);
+        expect(newUser).to.be.an('undefined');
+      } catch (err) {
+        expect(err.type).to.equal('Invalid Request');
+        expect(err.errors.length).to.equal(1);
+        expect(err.errors.filter(e => e.field === 'email' && e.message === 'Email is' +
+          ' required.').length === 1).to.equal(true);
+      }
     });
 
     it('should have an error for duplicate username', async () => {
@@ -152,13 +159,14 @@ describe('Testing User Service', () => {
         const userCreated = await userService.createUser(newUser);
         expect(userCreated).to.be('undefined');
       } catch (error) {
+        expect(error.errors).to.not.be.an('undefined');
         expect(error.errors.length).to.equal(1);
         expect(error.errors[0].field).to.equal('username');
         expect(error.errors[0].message).to.equal('User with username BobSagat already exists.');
 
         // check that the user was not created
         const users = await userService.getAllUsers();
-        expect(users.length).to.equal(4);
+        expect(users.length).to.equal(5);
       }
     });
 
@@ -174,13 +182,14 @@ describe('Testing User Service', () => {
         const userCreated = await userService.createUser(newUser);
         expect(userCreated).to.be('undefined');
       } catch (error) {
+        expect(error.errors).to.not.be.an('undefined');
         expect(error.errors.length).to.equal(1);
         expect(error.errors[0].field).to.equal('email');
         expect(error.errors[0].message).to.equal('User with email Bob@AFV.com already exists.')
 
         // check that the user was not created
         const users = await userService.getAllUsers();
-        expect(users.length).to.equal(4);
+        expect(users.length).to.equal(5);
       }
     });
 
@@ -191,11 +200,12 @@ describe('Testing User Service', () => {
         const userCreated = await userService.createUser(newUser);
         expect(userCreated).to.be('undefined');
       } catch (error) {
+        expect(error.errors).to.not.be.an('undefined');
         expect(error.errors.length).to.equal(4);
 
         // check that the user was not created
         const users = await userService.getAllUsers();
-        expect(users.length).to.equal(4);
+        expect(users.length).to.equal(5);
 
         // test that the errors are there
         expect(error.errors.filter(e => e.field === 'username' && e.message === 'Username is' +
@@ -220,7 +230,7 @@ describe('Testing User Service', () => {
         email: 'UpdateBob@AFV.com',
         firstName: 'UpdateBob',
         lastName: 'UpdateSagat'
-      }
+      };
 
       const updatedUser = await userService.updateUser(1, user);
       expect(updatedUser.id).to.equal(1);
@@ -289,7 +299,7 @@ describe('Testing User Service', () => {
 
       // check that the user was actually deleted
       const users = await userService.getAllUsers();
-      expect(users.length).to.equal(3);
+      expect(users.length).to.equal(4);
 
       // check that the user can no longer be retrieved
       try {
@@ -366,7 +376,7 @@ describe('Testing User Service', () => {
   describe('validate a user', async () => {
     it('should validate for missing fields', async () => {
       const newUser = {};
-      const errors = await userService.validateUser(newUser, true);
+      const errors = await userService.validateUser(newUser, true, true);
       expect(errors.length).to.equal(4);
       expect(errors.filter(e => e.field === 'username' && e.message === 'Username is' +
         ' required.').length === 1).to.equal(true);
@@ -374,6 +384,45 @@ describe('Testing User Service', () => {
       expect(errors.filter(e => e.field === 'email' && e.message === 'Email is' +
         ' required.').length === 1).to.equal(true);
 
+      expect(errors.filter(e => e.field === 'firstName' && e.message === 'First Name is' +
+        ' required.').length === 1).to.equal(true);
+
+      expect(errors.filter(e => e.field === 'lastName' && e.message === 'Last Name is' +
+        ' required.').length === 1).to.equal(true);
+    });
+
+    it('should validate for missing fields', async () => {
+      const newUser = {};
+      const errors = await userService.validateUser(newUser, true, true);
+      expect(errors.length).to.equal(4);
+      expect(errors.filter(e => e.field === 'username' && e.message === 'Username is' +
+        ' required.').length === 1).to.equal(true);
+
+      expect(errors.filter(e => e.field === 'email' && e.message === 'Email is' +
+        ' required.').length === 1).to.equal(true);
+
+      expect(errors.filter(e => e.field === 'firstName' && e.message === 'First Name is' +
+        ' required.').length === 1).to.equal(true);
+
+      expect(errors.filter(e => e.field === 'lastName' && e.message === 'Last Name is' +
+        ' required.').length === 1).to.equal(true);
+    });
+
+    it('should validate for missing username and email fields', async () => {
+      const newUser = {};
+      const errors = await userService.validateUser(newUser, true, false);
+      expect(errors.length).to.equal(2);
+      expect(errors.filter(e => e.field === 'username' && e.message === 'Username is' +
+        ' required.').length === 1).to.equal(true);
+
+      expect(errors.filter(e => e.field === 'email' && e.message === 'Email is' +
+        ' required.').length === 1).to.equal(true);
+    });
+
+    it('should validate for missing name fields', async () => {
+      const newUser = {};
+      const errors = await userService.validateUser(newUser, false, true);
+      expect(errors.length).to.equal(2);
       expect(errors.filter(e => e.field === 'firstName' && e.message === 'First Name is' +
         ' required.').length === 1).to.equal(true);
 
@@ -404,4 +453,59 @@ describe('Testing User Service', () => {
         ' already exists.').length === 1).to.equal(true);
     });
   });
+
+  describe('get credentials to validate the user', async () => {
+    it('should return the user if the username/password combo are correct', async () => {
+      let username = 'jreach';
+      let password = 'plaintext1';
+      const user = await userService.getCredentialsByUsername(username, password);
+      expect(user.username).to.equal(username);
+      expect(user.password).to.be.an('undefined');
+      expect(user.email).to.equal('jreach@gmail.com');
+      expect(user.firstName).to.equal('Jack');
+      expect(user.lastName).to.equal('Reacher');
+    });
+
+    it('should not return the user if the username/password combo are incorrect', async () => {
+      let username = 'jreach';
+      let password = 'wrong password';
+      let user;
+      try {
+        user = await userService.getCredentialsByUsername(username, password);
+      } catch (err) {
+        expect(err.type).to.equal('Invalid Credentials');
+        expect(err.status).to.equal(401);
+        expect(err.message).to.equal('Invalid credentials');
+      }
+      expect(user).to.be.an('undefined');
+    });
+
+    it('should not return the user if no password is given', async () => {
+      let username = 'jreach';
+      let password = '';
+      let user;
+      try {
+        user = await userService.getCredentialsByUsername(username, password);
+      } catch (err) {
+        expect(err.type).to.equal('Invalid Credentials');
+        expect(err.status).to.equal(401);
+        expect(err.message).to.equal('Invalid credentials');
+      }
+      expect(user).to.be.an('undefined');
+    });
+
+    it('should not return the user if * is given as a password', async () => {
+      let username = 'jreach';
+      let password = '*';
+      let user;
+      try {
+        user = await userService.getCredentialsByUsername(username, password);
+      } catch (err) {
+        expect(err.type).to.equal('Invalid Credentials');
+        expect(err.status).to.equal(401);
+        expect(err.message).to.equal('Invalid credentials');
+      }
+      expect(user).to.be.an('undefined');
+    });
+  })
 });

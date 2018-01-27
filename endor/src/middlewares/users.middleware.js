@@ -1,6 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 import { check } from 'express-validator/check';
 
+
 /**
  * Middleware for the POST /users route
  * @returns {Array} the middlewares

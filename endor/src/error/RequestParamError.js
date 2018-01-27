@@ -8,5 +8,9 @@ export default class RequestParamError {
     this.field = field;
     this.message = message;
   }
+
+  toString() {
+    return `${this.field}: ${this.message}`;
+  }
 }
 

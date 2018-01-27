@@ -11,7 +11,16 @@ A web API to generate node.js applications in an opinionated way.
 3. git clone https://github.com/username/yggdrasil
 4 `cd yggdrasil/endor && npm install`
 5. Follow the steps below to [set up the database](#setting-up-the-database)
-6. You're all set!
+6. Create an endorConfig.json in the endor folder with the following inside:
+```javascript
+{
+  session: {
+    secret: "<get this value from one of the other contributors or make your own for local development>"
+  }
+}
+```
+
+7. You're all set!
 
 ### Usage
 `npm start`: starts the API server on `localhost:3000`
@@ -90,3 +99,25 @@ sequelize.User.findAll({
   console.error(err);
 });
 ```
+
+## Authentication
+
+### Basic-Auth
+Uses the user's username and password in the Authentication header to authenticate
+the user.
+
+### Bearer
+A token is used to authenticate the user.
+
+**To exchange a user name and password for auth-token:**
+       
+* Post a new Token - post /oauth2/token
+    - returns authentication token
+```javascript
+{
+    "username": "<username>",
+    "password": "<password>"
+    "grant_type": "password"
+} 
+```
+**Note:** All steps must be authenticated, posting a token requires Client-Basic
