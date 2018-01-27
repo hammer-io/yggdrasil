@@ -1,5 +1,6 @@
 module.exports = {
   entry: [
+    'babel-polyfill',
     './index.js'
   ],
   output: {
@@ -12,6 +13,7 @@ module.exports = {
       exclude: /node_modules/,
       loader: 'babel',
       query: {
+        plugins: ['transform-decorators-legacy'],
         presets: ['react', 'es2015', 'stage-1']
       }
     }]
@@ -21,6 +23,7 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
-    contentBase: './'
+    contentBase: './',
+    port: 8000
   }
 };
