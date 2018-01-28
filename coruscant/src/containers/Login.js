@@ -71,11 +71,16 @@ class Login extends Component {
       username,
       password
     }
-    const { result, error } = await login(credentials)
-    if (result) {
-      history.push('/home')
-    } else {
+    const { error } = await login(credentials)
+    if (error) {
       console.log(error)
+      return
+    }
+
+    if (history.action === 'PUSH') {
+      history.goBack()
+    } else {
+      history.push('/home')
     }
   }
 
