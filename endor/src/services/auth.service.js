@@ -41,9 +41,6 @@ export default class AuthService {
     if (!id) {
       errors.push(new RequestParamError(`${type}Id`, `${type}Id is required.`));
     }
-    if (Number.isNaN(Number(id))) {
-      errors.push(new RequestParamError(`${type}Id`, `${type}Id must be a valid id.`));
-    }
 
     return errors;
   }

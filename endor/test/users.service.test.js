@@ -3,19 +3,17 @@ import { defineTables } from '../src/db/init_database';
 import { populateUsers } from '../src/db/import_test_data';
 // Using Expect style
 const sequelize = require('../src/db/sequelize');
-
+import dbTestConfig from '../dbTestConfig.json';
 import UserService from './../src/services/users.service';
 import { getMockLogger } from './mockLogger';
 
 // Initialize Sequelize with sqlite for testing
 if (!sequelize.isInitialized()) {
   sequelize.initSequelize(
-    'database',
-    'root',
-    'root', {
-      dialect: 'sqlite',
-      logging: false
-    }
+    dbTestConfig.database,
+    dbTestConfig.username,
+    dbTestConfig.password,
+    dbTestConfig.options
   );
 }
 
@@ -114,7 +112,6 @@ describe('Testing User Service', () => {
         lastName: 'James'
       };
       const userCreated = await userService.createUser(newUser, 'plaintext1');
-      expect(userCreated.id).to.equal(6);
       expect(userCreated.username).to.equal('lebron');
       expect(userCreated.email).to.equal('lebron@cavs.com');
       expect(userCreated.firstName).to.equal('LeBron');
@@ -123,7 +120,7 @@ describe('Testing User Service', () => {
 
     it('should not require all fields if validation = false', async () => {
       const user = {
-        username: 'the new jreach',
+        username: 'the_new_jreach',
         email: 'anotherjreach@gmail.com'
       };
       const newUser = await userService.createUser(user, 'my p4ssw0rd 1s s4f3', false);
@@ -134,7 +131,7 @@ describe('Testing User Service', () => {
 
     it('should not require all fields if validation = false', async () => {
       const user = {
-        username: 'the new jreach'
+        username: 'the_new_jreach'
       };
       try {
         const newUser = await userService.createUser(user, 'my p4ssw0rd 1s s4f3', false);
@@ -147,6 +144,24 @@ describe('Testing User Service', () => {
       }
     });
 
+    it('should not use the given id if an id is given', async () => {
+      // username of 256 characters
+      const newUser = {
+        id: '10',
+        username: 'LeroyJenkins',
+        email: 'newemail@gmail.com',
+        firstName: 'Leroy',
+        lastName: 'Jenkins'
+      };
+
+      const userCreated = await userService.createUser(newUser, 'plaintext1');
+      expect(userCreated.username).to.equal(newUser.username);
+      expect(userCreated.email).to.equal(newUser.email);
+      expect(userCreated.firstName).to.equal(newUser.firstName);
+      expect(userCreated.lastName).to.equal(newUser.lastName);
+      expect(userCreated.id).to.not.equal(newUser.id);
+    });
+
     it('should have an error for duplicate username', async () => {
       const newUser = {
         username: 'BobSagat',
@@ -156,13 +171,179 @@ describe('Testing User Service', () => {
       };
 
       try {
-        const userCreated = await userService.createUser(newUser);
+        const userCreated = await userService.createUser(newUser, 'plaintext1');
         expect(userCreated).to.be('undefined');
       } catch (error) {
         expect(error.errors).to.not.be.an('undefined');
         expect(error.errors.length).to.equal(1);
         expect(error.errors[0].field).to.equal('username');
         expect(error.errors[0].message).to.equal('User with username BobSagat already exists.');
+
+        // check that the user was not created
+        const users = await userService.getAllUsers();
+        expect(users.length).to.equal(5);
+      }
+    });
+
+    it('should have an error for a username with special characters', async () => {
+      const newUser = {
+        username: 'BobSagat!',
+        email: 'newemail@cavs.com',
+        firstName: 'LeBron',
+        lastName: 'James'
+      };
+
+      try {
+        const userCreated = await userService.createUser(newUser, 'plaintext1');
+        expect(userCreated).to.be('undefined');
+      } catch (error) {
+        expect(error.errors).to.not.be.an('undefined');
+        expect(error.errors.length).to.equal(1);
+        expect(error.errors[0].field).to.equal('username');
+        expect(error.errors[0].message).to.equal('Usernames should only contain letters, numbers, and underscores.');
+
+        // check that the user was not created
+        const users = await userService.getAllUsers();
+        expect(users.length).to.equal(5);
+      }
+    });
+
+    it('should have an error for a username with special characters', async () => {
+      const newUser = {
+        username: 'Bob Sagat',
+        email: 'newemail@cavs.com',
+        firstName: 'LeBron',
+        lastName: 'James'
+      };
+
+      try {
+        const userCreated = await userService.createUser(newUser, 'plaintext1');
+        expect(userCreated).to.be('undefined');
+      } catch (error) {
+        expect(error.errors).to.not.be.an('undefined');
+        expect(error.errors.length).to.equal(1);
+        expect(error.errors[0].field).to.equal('username');
+        expect(error.errors[0].message).to.equal('Usernames should only contain letters, numbers, and underscores.');
+
+        // check that the user was not created
+        const users = await userService.getAllUsers();
+        expect(users.length).to.equal(5);
+      }
+    });
+
+    it('should have an error for a username with special characters', async () => {
+      const newUser = {
+        username: '*BobSagat',
+        email: 'newemail@cavs.com',
+        firstName: 'LeBron',
+        lastName: 'James'
+      };
+
+      try {
+        const userCreated = await userService.createUser(newUser, 'plaintext1');
+        expect(userCreated).to.be('undefined');
+      } catch (error) {
+        expect(error.errors).to.not.be.an('undefined');
+        expect(error.errors.length).to.equal(1);
+        expect(error.errors[0].field).to.equal('username');
+        expect(error.errors[0].message).to.equal('Usernames should only contain letters, numbers, and underscores.');
+
+        // check that the user was not created
+        const users = await userService.getAllUsers();
+        expect(users.length).to.equal(5);
+      }
+    });
+
+    it('should have an error for a username with 256 characters or more', async () => {
+      // username of 256 characters
+      const newUser = {
+        username: 'B123456789B123456789B123456789B123456789B123456789B123456789B123456789' +
+        'B123456789B123456789B123456789B123456789B123456789B123456789B123456789B123456789' +
+        'B123456789B123456789B123456789B123456789B123456789B123456789B123456789B123456789' +
+        'B123456789B123456789B123456789B123456789B123456789B123456789B123456789B123456789' +
+        'B123456789B123456789B123456789B123456789123456',
+        email: 'newemail@cavs.com',
+        firstName: 'LeBron',
+        lastName: 'James'
+      };
+
+      try {
+        const userCreated = await userService.createUser(newUser, 'plaintext1');
+        expect(userCreated).to.be('undefined');
+      } catch (error) {
+        expect(error.errors).to.not.be.an('undefined');
+        expect(error.errors.length).to.equal(1);
+        expect(error.errors[0].field).to.equal('username');
+        expect(error.errors[0].message).to.equal('Usernames should be less than 255 characters.');
+
+        // check that the user was not created
+        const users = await userService.getAllUsers();
+        expect(users.length).to.equal(5);
+      }
+    });
+
+    it('should have an error for a password with less than eight characters', async () => {
+      const newUser = {
+        username: 'BobSagat45',
+        email: 'newemail@cavs.com',
+        firstName: 'LeBron',
+        lastName: 'James'
+      };
+
+      try {
+        const userCreated = await userService.createUser(newUser, 'pass1');
+        expect(userCreated).to.be('undefined');
+      } catch (error) {
+        expect(error.errors).to.not.be.an('undefined');
+        expect(error.errors.length).to.equal(1);
+        expect(error.errors[0].field).to.equal('password');
+        expect(error.errors[0].message).to.equal('Must contain at least one digit, one letter and have at least eight characters.');
+
+        // check that the user was not created
+        const users = await userService.getAllUsers();
+        expect(users.length).to.equal(5);
+      }
+    });
+
+    it('should have an error for a password with all letters', async () => {
+      const newUser = {
+        username: 'BobSagat45',
+        email: 'newemail@cavs.com',
+        firstName: 'LeBron',
+        lastName: 'James'
+      };
+
+      try {
+        const userCreated = await userService.createUser(newUser, 'passwordattempt');
+        expect(userCreated).to.be('undefined');
+      } catch (error) {
+        expect(error.errors).to.not.be.an('undefined');
+        expect(error.errors.length).to.equal(1);
+        expect(error.errors[0].field).to.equal('password');
+        expect(error.errors[0].message).to.equal('Must contain at least one digit, one letter and have at least eight characters.');
+
+        // check that the user was not created
+        const users = await userService.getAllUsers();
+        expect(users.length).to.equal(5);
+      }
+    });
+
+    it('should have an error for a password with all digits', async () => {
+      const newUser = {
+        username: 'BobSagat45',
+        email: 'newemail@cavs.com',
+        firstName: 'LeBron',
+        lastName: 'James'
+      };
+
+      try {
+        const userCreated = await userService.createUser(newUser, '0123456789');
+        expect(userCreated).to.be('undefined');
+      } catch (error) {
+        expect(error.errors).to.not.be.an('undefined');
+        expect(error.errors.length).to.equal(1);
+        expect(error.errors[0].field).to.equal('password');
+        expect(error.errors[0].message).to.equal('Must contain at least one digit, one letter and have at least eight characters.');
 
         // check that the user was not created
         const users = await userService.getAllUsers();
@@ -179,7 +360,7 @@ describe('Testing User Service', () => {
       };
 
       try {
-        const userCreated = await userService.createUser(newUser);
+        const userCreated = await userService.createUser(newUser, 'plaintext1');
         expect(userCreated).to.be('undefined');
       } catch (error) {
         expect(error.errors).to.not.be.an('undefined');
@@ -197,7 +378,7 @@ describe('Testing User Service', () => {
       const newUser = {};
 
       try {
-        const userCreated = await userService.createUser(newUser);
+        const userCreated = await userService.createUser(newUser, 'plaintext1');
         expect(userCreated).to.be('undefined');
       } catch (error) {
         expect(error.errors).to.not.be.an('undefined');
@@ -474,8 +655,8 @@ describe('Testing User Service', () => {
         user = await userService.getCredentialsByUsername(username, password);
       } catch (err) {
         expect(err.type).to.equal('Invalid Credentials');
-        expect(err.status).to.equal(401);
-        expect(err.message).to.equal('Invalid credentials');
+        expect(err.status).to.equal(403);
+        expect(err.message).to.equal('Username and/or password are incorrect.');
       }
       expect(user).to.be.an('undefined');
     });
@@ -488,8 +669,8 @@ describe('Testing User Service', () => {
         user = await userService.getCredentialsByUsername(username, password);
       } catch (err) {
         expect(err.type).to.equal('Invalid Credentials');
-        expect(err.status).to.equal(401);
-        expect(err.message).to.equal('Invalid credentials');
+        expect(err.status).to.equal(403);
+        expect(err.message).to.equal('Username and/or password are incorrect.');
       }
       expect(user).to.be.an('undefined');
     });
@@ -502,8 +683,8 @@ describe('Testing User Service', () => {
         user = await userService.getCredentialsByUsername(username, password);
       } catch (err) {
         expect(err.type).to.equal('Invalid Credentials');
-        expect(err.status).to.equal(401);
-        expect(err.message).to.equal('Invalid credentials');
+        expect(err.status).to.equal(403);
+        expect(err.message).to.equal('Username and/or password are incorrect.');
       }
       expect(user).to.be.an('undefined');
     });

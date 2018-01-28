@@ -50,7 +50,7 @@ export async function getUserByIdOrUsername(req, res, next) {
  */
 export async function getAuthenticatedUser(req, res, next) {
   try {
-    const user = 1; // TODO get this from authenitcation
+    const user = req.user.id;
     const userFound = await userService.getUserByIdOrUsername(user);
     res.send(userFound);
   } catch (error) {

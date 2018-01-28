@@ -50,9 +50,6 @@ export default class ClientService {
     if (!id) {
       errors.push(new RequestParamError(`${type}Id`, `${type}Id is required.`));
     }
-    if (Number.isNaN(Number(id))) {
-      errors.push(new RequestParamError(`${type}Id`, `${type}Id must be a valid id.`));
-    }
 
     return errors;
   }
@@ -90,8 +87,14 @@ export default class ClientService {
       return Promise.reject(new InvalidRequestException(errors));
     }
 
+    const clientToBeCreated = {
+      clientId: client.clientId,
+      name: client.name,
+      secret: client.secret
+    };
+
     try {
-      const createdClient = await this.clientRepository.create(client);
+      const createdClient = await this.clientRepository.create(clientToBeCreated);
       return createdClient;
     } catch (err) {
       if (err instanceof sequelize.UniqueConstraintError) {

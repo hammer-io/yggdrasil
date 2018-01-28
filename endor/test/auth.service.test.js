@@ -8,6 +8,7 @@ import {
   populateAccessCodes,
   populateTokens
 } from '../src/db/import_test_data';
+import dbTestConfig from '../dbTestConfig.json';
 
 import AuthService from './../src/services/auth.service';
 import { getMockLogger } from './mockLogger';
@@ -15,12 +16,10 @@ import { getMockLogger } from './mockLogger';
 // Initialize Sequelize with sqlite for testing
 if (!sequelize.isInitialized()) {
   sequelize.initSequelize(
-    'database',
-    'root',
-    'root', {
-      dialect: 'sqlite',
-      logging: false
-    }
+    dbTestConfig.database,
+    dbTestConfig.username,
+    dbTestConfig.password,
+    dbTestConfig.options
   );
 }
 
@@ -51,7 +50,7 @@ describe('Testing Auth Service', () => {
         const accessCode = await authService.findOneCodeByValue('randomIncorrectValue');
         expect(accessCode).to.be.an('undefined');
       } catch (err) {
-        expect(err.type).to.equal('Not Found');
+        expect(err.type).to.equal('Forbidden');
       }
     });
   });
@@ -87,7 +86,7 @@ describe('Testing Auth Service', () => {
         const token = await authService.findOneTokenByValue('thisValueDoesNotExist');
         expect(token).to.be.an('undefined');
       } catch (err) {
-        expect(err.type).to.equal('Not Found');
+        expect(err.type).to.equal('Forbidden');
       }
     });
   });
@@ -129,7 +128,7 @@ describe('Testing Auth Service', () => {
         const code = await authService.deleteCode('incorrectRandomValue');
         expect(code).to.be.an('undefined');
       } catch (err) {
-        expect(err.type).to.equal('Not Found');
+        expect(err.type).to.equal('Forbidden');
       }
     });
   });
