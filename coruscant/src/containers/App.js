@@ -24,18 +24,18 @@ class App extends Component {
       getSession
     } = this.props
 
-    if (location.pathname === '/register' || location.pathname === '/login') {
-      return
+    let loggedIn = false
+    if (session.authToken !== null) {
+      const { result } = await getSession(session.authToken)
+      if (result) {
+        loggedIn = true
+      }
     }
 
-    if (session.authToken === null) {
+    if (loggedIn && (location.pathname === '/login' || location.pathname === '/register')) {
+      history.replace('/home')
+    } else if (!loggedIn && location.pathname !== '/login' && location.pathname !== '/register') {
       history.push('/login')
-    } else {
-      const { error } = await getSession(session.authToken)
-      if (error) {
-        setAccessToken(null)
-        history.push('/login')
-      }
     }
   }
 

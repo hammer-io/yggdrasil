@@ -126,7 +126,7 @@ router.post('/oauth2/authorize', [authController.isAuthenticated].concat(authVal
  *   "token_type": "Bearer"
  * }
  */
-router.post('/oauth2/token', [authController.isAuthenticated].concat(authValidator.checkToken()), authController.token());
+router.post('/oauth2/token', authValidator.checkToken(), authController.token());
 
 /**
  * @api { get } /oauth2/authorize/successRedirect Get access code redirect

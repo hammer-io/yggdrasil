@@ -15,7 +15,7 @@ endor/npm-debug.lo
 endor/node_modules
 endor/dist/
 
-dbConfig.json
+endor/dbConfig.json
 endorConfig.json
 emailConfig.json
 

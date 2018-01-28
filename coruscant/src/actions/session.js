@@ -15,10 +15,13 @@ export function getSession(token) {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
-      const { result, error } = await fetchClient.get('/api/user')
+      console.log(token)
+      const { result, error } = await fetchClient.get({
+        url: '/user'
+      })
       if (result) {
         dispatch(setAccessToken(token))
-        dispatch(setUser(result.user))
+        dispatch(setUser(result))
       } else {
         console.log(error)
       }
@@ -35,14 +38,25 @@ export function login(credentials) {
     try {
       const fetchClient = new FetchClient()
       console.log('In login')
-      const { result, error } = await fetchClient.get({
-        url: '/auth/login',
-        headers: credentials
+      const { result, error } = await fetchClient.post({
+        url: '/oauth2/token',
+        body: {
+          ...credentials,
+          grant_type: 'password'
+        }
       })
       if (result) {
-        dispatch(setAccessToken(result.token))
-        dispatch(setAccessToken(result.user))
-        return { result, error }
+        fetchClient.setAuthToken(result.access_token.value)
+        const response = await fetchClient.get({
+          url: '/user'
+        })
+        if (response.result) {
+          dispatch(setAccessToken(result.access_token.value))
+          dispatch(setUser(response.result))
+        } else {
+          console.log(response.error)
+        }
+        return response
       }
       console.log(error)
       return { result: null, error }
@@ -53,21 +67,12 @@ export function login(credentials) {
   }
 }
 
-export function logout(token) {
-  return async function (dispatch) {
+export function logout() {
+  return function (dispatch) {
     try {
-      const fetchClient = new FetchClient()
-      fetchClient.setAuthToken(token)
       console.log('In logout')
-      const { error } = await fetchClient.get({
-        url: '/auth/logout'
-      })
-      if (!error) {
-        dispatch(setAccessToken(''))
-        dispatch(setUser(null))
-        return null
-      }
-      return error
+      dispatch(setAccessToken(null))
+      dispatch(setUser(null))
     } catch (error) {
       console.log(error)
       return error
@@ -85,8 +90,8 @@ export function register(credentials) {
         body: credentials
       })
       if (result) {
-        dispatch(setAccessToken(result.token))
-        dispatch(setAccessToken(result.user))
+        dispatch(setAccessToken(result.token.value))
+        dispatch(setUser(result.user))
         return { result, error }
       }
       console.log(error)

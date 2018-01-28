@@ -8,7 +8,7 @@ class FetchResponse {
 
 class FetchClient {
   constructor(baseURL) {
-    this.baseURL = baseURL || 'http://localhost:8080/'
+    this.baseURL = baseURL || 'http://localhost:3000/api/v1'
   }
 
   setAuthToken(authToken) {
@@ -47,17 +47,21 @@ class FetchClient {
     const url = this.baseURL + opts.url
     const o = {
       method,
-      body: opts.body,
+      body: JSON.stringify(opts.body),
       headers: {
         ...opts.headers,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
         Authorization: `Bearer ${this.authToken}`
       }
     }
 
     try {
+      console.log(o)
+      console.log(url)
       const res = await fetch(url, o)
 
-      if (this.isErrorCode(res.status)) {
+      if (FetchClient.isErrorCode(res.status)) {
         const err = await res.json()
         return new FetchResponse(null, err, res)
       }
