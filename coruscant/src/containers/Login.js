@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { withRouter, NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { TextField, RaisedButton, Paper } from 'material-ui'
+import PropTypes from 'prop-types'
 import Theme from '../../style/theme'
 import { login } from '../actions/session'
 import * as validator from './../utils/validator'
@@ -123,6 +124,11 @@ class Login extends Component {
       </div>
     )
   }
+}
+
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired
 }
 
 export default withRouter(Login)
