@@ -15,7 +15,6 @@ export function getSession(token) {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
-      console.log(token)
       const { result, error } = await fetchClient.get({
         url: '/user'
       })
@@ -37,7 +36,6 @@ export function login(credentials) {
   return async function (dispatch) {
     try {
       const fetchClient = new FetchClient()
-      console.log('In login')
       const { result, error } = await fetchClient.post({
         url: '/oauth2/token',
         body: {
@@ -70,7 +68,6 @@ export function login(credentials) {
 export function logout() {
   return function (dispatch) {
     try {
-      console.log('In logout')
       dispatch(setAccessToken(null))
       dispatch(setUser(null))
     } catch (error) {
@@ -84,7 +81,6 @@ export function register(credentials) {
   return async function (dispatch) {
     try {
       const fetchClient = new FetchClient()
-      console.log('In register')
       const { result, error } = await fetchClient.post({
         url: '/auth/register',
         body: credentials

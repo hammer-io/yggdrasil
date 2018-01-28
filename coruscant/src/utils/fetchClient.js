@@ -57,8 +57,6 @@ class FetchClient {
     }
 
     try {
-      console.log(o)
-      console.log(url)
       const res = await fetch(url, o)
 
       if (FetchClient.isErrorCode(res.status)) {
