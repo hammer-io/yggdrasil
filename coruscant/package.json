@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "babel-preset-stage-1": "^6.1.18",
+    "email-validator": "^1.1.1",
     "lodash": "^3.10.1",
     "material-ui": "^0.20.0",
     "prop-types": "^15.6.0",

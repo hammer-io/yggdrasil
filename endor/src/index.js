@@ -1,6 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import logger from 'morgan';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import session from 'express-session'
@@ -52,6 +53,7 @@ const app = express();
 
 // middleware //
 app.use(helmet());
+app.use(cors({ origin: 'http://localhost:8080' }));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

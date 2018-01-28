@@ -1,8 +1,16 @@
 import React, { Component } from 'react'
-
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import { logout } from './../actions/session'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 
+const mapDispatchToProps = {
+  logout
+}
+
+@connect(null, mapDispatchToProps)
 class Menu extends Component {
   constructor(props) {
     super(props)
@@ -17,8 +25,12 @@ class Menu extends Component {
     this.updateDrawerState = this.updateDrawerState.bind(this)
   }
 
-  clickNavbarItem(event, item) { // eslint-disable-line class-methods-use-this
-    console.log(item.props.primaryText)
+  clickNavbarItem(event, item) {
+    const { history, logout } = this.props
+    if (item.props.primaryText === 'Sign out') {
+      logout()
+      history.push('/login')
+    }
   }
 
   clickToggleDrawer() {
@@ -50,4 +62,9 @@ class Menu extends Component {
   }
 }
 
-export default Menu
+Menu.propTypes = {
+  history: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired
+}
+
+export default withRouter(Menu)

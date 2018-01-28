@@ -12,8 +12,6 @@ endor/.grunt
 endor/.lock-wscript
 endor/build/Release
 endor/npm-debug.lo
-endor/node_modules
-endor/dist/
 
 dbConfig.json
 endorConfig.json
