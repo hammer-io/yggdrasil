@@ -53,7 +53,6 @@ class Menu extends Component {
   }
 
   render() {
-    console.log(this.props.location.pathname)
     return (
       <div>
         <Navbar
