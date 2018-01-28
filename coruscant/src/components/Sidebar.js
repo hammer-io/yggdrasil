@@ -1,5 +1,5 @@
 import React from 'react'
-import { Drawer, MenuItem, Menu, CardMedia } from 'material-ui'
+import { Drawer, MenuItem, Menu } from 'material-ui'
 import PropTypes from 'prop-types'
 import Home from 'material-ui/svg-icons/action/home'
 import Settings from 'material-ui/svg-icons/action/settings'
@@ -64,9 +64,9 @@ const Sidebar = ({
     open={drawerOpen}
     onRequestChange={updateDrawerState}
   >
-    <CardMedia style={styles.cardMedia}>
+    <div style={styles.cardMedia}>
       <img src="src/assets/icons/Viking_Hammer_Logo_1.png" style={styles.image} alt="" />
-    </CardMedia>
+    </div>
     <Menu onItemClick={clickSidebarItem}>
       <MenuItem
         style={getMenuStyle('/home', currentRoute)}
