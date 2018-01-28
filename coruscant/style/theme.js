@@ -19,6 +19,7 @@ const theme = {
       light: 300,
       regular: 400,
       medium: 500,
+      heavy: 600
     },
 
     small: {

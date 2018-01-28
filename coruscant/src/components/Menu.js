@@ -37,8 +37,15 @@ class Menu extends Component {
     this.setState({ drawerOpen: !this.state.drawerOpen })
   }
 
-  clickSidebarItem(event, item) { // eslint-disable-line class-methods-use-this
-    console.log(item)
+  clickSidebarItem(event, item) {
+    const { history, location } = this.props
+    if (item.props.primaryText === 'Home' && location.pathname !== '/home') {
+      history.push('/home')
+    } else if (item.props.primaryText === 'Settings' && location.pathname !== '/settings') {
+      history.push('/settings')
+    } else {
+      this.clickToggleDrawer()
+    }
   }
 
   updateDrawerState(open) {
@@ -46,6 +53,7 @@ class Menu extends Component {
   }
 
   render() {
+    console.log(this.props.location.pathname)
     return (
       <div>
         <Navbar
@@ -56,6 +64,7 @@ class Menu extends Component {
           clickSidebarItem={this.clickSidebarItem}
           updateDrawerState={this.updateDrawerState}
           drawerOpen={this.state.drawerOpen}
+          currentRoute={this.props.location.pathname}
         />
       </div>
     )
@@ -64,6 +73,7 @@ class Menu extends Component {
 
 Menu.propTypes = {
   history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired
 }
 
