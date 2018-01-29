@@ -15,7 +15,7 @@ import NotFound from './components/NotFound'
 const store = getStore()
 store.subscribe(throttle(() => {
   saveState({
-    session: store.getStats().session
+    session: store.getState().session
   })
 }), 1000)
 

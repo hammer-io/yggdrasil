@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import Theme from '../../style/theme'
-import Sidebar from '../components/Sidebar'
 
 const styles = {
   header: {
@@ -24,6 +23,10 @@ const mapStateToProps = state => ({
 
 @connect(mapStateToProps)
 class Home extends Component {
+  componenDidMount() {
+    console.log(this.props.session)
+  }
+
   render() {
     return (
       <div style={styles.container}>
@@ -33,7 +36,7 @@ class Home extends Component {
   }
 }
 
-Sidebar.propTypes = {
+Home.propTypes = {
   session: PropTypes.func.isRequired
 }
 

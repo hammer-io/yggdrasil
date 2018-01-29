@@ -21,21 +21,24 @@ class App extends Component {
       session,
       history,
       location,
-      getSession
+      getSession,
+      setAccessToken
     } = this.props
 
-    if (location.pathname === '/register' || location.pathname === '/login') {
-      return
+    let loggedIn = false
+    if (session.authToken !== null) {
+      const { result } = await getSession(session.authToken)
+      if (result) {
+        loggedIn = true
+      } else {
+        setAccessToken(null)
+      }
     }
 
-    if (session.authToken === null) {
+    if (loggedIn && (location.pathname === '/login' || location.pathname === '/register')) {
+      history.replace('/home')
+    } else if (!loggedIn && location.pathname !== '/login' && location.pathname !== '/register') {
       history.push('/login')
-    } else {
-      const { error } = await getSession(session.authToken)
-      if (error) {
-        setAccessToken(null)
-        history.push('/login')
-      }
     }
   }
 
@@ -51,7 +54,12 @@ class App extends Component {
 }
 
 App.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  session: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  getSession: PropTypes.func.isRequired,
+  setAccessToken: PropTypes.func.isRequired,
 }
 
 export default withRouter(App)

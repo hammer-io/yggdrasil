@@ -48,7 +48,7 @@ async function getProjectsForUser(user, res, next) {
  */
 export async function getProjectByAuthenticatedUser(req, res, next) {
   const userId = req.user.id;
-  await getProjectsForUser(userId)
+  await getProjectsForUser(userId, res, next);
 }
 
 /**

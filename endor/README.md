@@ -9,7 +9,7 @@ A web API to generate node.js applications in an opinionated way.
 1. Fork this repository
 2. Open your favorite terminal and go to the directory you want to install.
 3. git clone https://github.com/username/yggdrasil
-4 `cd yggdrasil/endor && npm install`
+4. `cd yggdrasil/endor && npm install`
 5. Follow the steps below to [set up the database](#setting-up-the-database)
 6. Create an endorConfig.json in the endor folder with the following inside:
 ```javascript
@@ -20,7 +20,9 @@ A web API to generate node.js applications in an opinionated way.
 }
 ```
 
-7. You're all set!
+7. Run the tests using `npm test` from the endor folder. This will generate
+  the `emailConfig.json` file that is needed to run the application locally.
+8. You're all set!
 
 ### Usage
 `npm start`: starts the API server on `localhost:3000`
@@ -127,3 +129,22 @@ A token is used to authenticate the user.
     - If the token has been lost, post a new token as described above
 
 **Note:** All steps must be authenticated, posting a token requires Client-Basic
+
+## Email Setup
+
+To generate the `emailConfig.json` file, just run `npm test` from the endor folder.
+For more information on using the email templates, view the
+[zurb-email-templates README](https://github.com/hammer-io/yggdrasil/tree/master/endor/zurb-email-templates).
+
+Endor uses the [Nodemailer](https://nodemailer.com/about/) module for sending emails.
+For development and testing, we're using [Ethereal](https://ethereal.email/) to mock
+sending emails. From their website:
+
+> Ethereal is a fake SMTP service, mostly aimed at Nodemailer users (but not limited
+> to). It's a completely free anti-transactional email service where messages never
+> get delivered.
+
+Any time you run the tests, the output will include a link to preview the email that
+was just sent. Scroll up to the email service test, and you'll see an email preview
+URL. Copy/paste that into your browser to see the email as it would have been delivered
+to a real user.

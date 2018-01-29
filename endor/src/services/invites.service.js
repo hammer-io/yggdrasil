@@ -5,6 +5,14 @@ import InvalidRequestException from '../error/InvalidRequestException';
 import RequestParamError from '../error/RequestParamError';
 import { isValidInviteStatus, getInvalidStatusMessage, isNonNegativeInteger } from '../middlewares/invites.middleware';
 
+const MONTHS = [
+  'January', 'February', 'March',
+  'April', 'May', 'June',
+  'July', 'August', 'September',
+  'October', 'November', 'December'
+];
+const MILLIS_PER_DAY = (1000 * 60 * 60 * 24);
+
 export default class InviteService {
   /**
    * Invite Service constructor
@@ -14,6 +22,19 @@ export default class InviteService {
   constructor(inviteRepository, log) {
     this.inviteRepository = inviteRepository;
     this.log = log;
+  }
+
+  /**
+   * @param invite the invite object
+   * @returns {string} a date string in the format "day month year" (e.g. 27 February 2018) for
+   *   the expiration of the invite.
+   */
+  static getInviteExpirationDateString(invite) {
+    const dateCreatedMillis = Date.parse(invite.createdAt);
+    const expirationDateMillis =
+      dateCreatedMillis + (MILLIS_PER_DAY * invite.daysFromCreationUntilExpiration);
+    const expDate = new Date(expirationDateMillis);
+    return `${expDate.getDate()} ${MONTHS[expDate.getMonth()]} ${expDate.getFullYear()}`;
   }
 
   /**
