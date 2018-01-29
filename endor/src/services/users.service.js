@@ -82,7 +82,13 @@ export default class UserService {
 
     // check duplicate username
     if (user.username) {
-      if (await this.isDuplicateUsername(user.username)) {
+      if (user.username.length > 255) {
+        errors.push(new RequestParamError('username', 'Usernames should be less than 255 characters.'));
+      }
+
+      if (user.username.match(/[^a-zA-Z_0-9]/)) {
+        errors.push(new RequestParamError('username', 'Usernames should only contain letters, numbers, and underscores.'));
+      } else if (await this.isDuplicateUsername(user.username)) {
         errors.push(new RequestParamError('username', `User with username ${user.username} already exists.`));
       }
     }
@@ -109,8 +115,8 @@ export default class UserService {
     this.log.info('UserService: Validating credentials');
     const errors = [];
 
-    if (password === null || password === undefined || password.length < 8 || !password.match(/\d+/g)) {
-      errors.push(new RequestParamError('password', 'Must contain at least one digit and have at least eight characters.'))
+    if (password === null || password === undefined || password.length < 8 || !password.match(/\d/g) || !password.match(/[a-zA-Z]/)) {
+      errors.push(new RequestParamError('password', 'Must contain at least one digit, one letter and have at least eight characters.'))
     }
 
     return errors;
@@ -177,7 +183,7 @@ export default class UserService {
       }
     });
     if (userFound === null) {
-      return Promise.reject(new InvalidCredentialsException('Invalid credentials'));
+      return Promise.reject(new InvalidCredentialsException('Username and/or password are incorrect.'));
     }
 
     const cred = await this.credentialsRepository.findOne({
@@ -188,7 +194,7 @@ export default class UserService {
     const match = bcrypt.compareSync(password, cred.password);
 
     if (!match) {
-      return Promise.reject(new InvalidCredentialsException('Invalid credentials'))
+      return Promise.reject(new InvalidCredentialsException('Username and/or password are incorrect.'))
     }
 
     return userFound;
@@ -204,14 +210,24 @@ export default class UserService {
   async createUser(user, password, validateName = true) {
     this.log.info(`UserService: creating user ${user}`);
 
-    const userErrors = await this.validateUser(user, true, validateName);
-    if (userErrors.length !== 0) {
-      return Promise.reject(new InvalidRequestException(userErrors));
+    let errors = await this.validateUser(user, true, validateName);
+    errors = errors.concat(await this.validateCredentials(password));
+    if (errors.length !== 0) {
+      return Promise.reject(new InvalidRequestException(errors));
     }
 
-    const credentialErrors = await this.validateCredentials(password);
-    if (credentialErrors.length !== 0) {
-      return Promise.reject(new InvalidRequestException(credentialErrors));
+    // This is so the user cannot specify it's own id
+    const userToBeCreated = {
+      username: user.username,
+      email: user.email
+    };
+
+    if (user.firstName) {
+      userToBeCreated.firstName = user.firstName;
+    }
+
+    if (user.lastName) {
+      userToBeCreated.lastName = user.lastName;
     }
 
     const salt = bcrypt.genSaltSync(SALT_ROUNDS);
@@ -220,7 +236,7 @@ export default class UserService {
       password: await bcrypt.hashSync(password, salt)
     };
 
-    const userCreated = await this.userRepository.create(user);
+    const userCreated = await this.userRepository.create(userToBeCreated);
     const cred = await this.credentialsRepository.create(credentials);
     await cred.setUser(userCreated);
     return userCreated;

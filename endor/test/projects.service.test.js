@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 // Using Expect style
 const sequelize = require('../src/db/sequelize');
+import dbTestConfig from '../dbTestConfig.json';
 
 import UserService from './../src/services/users.service';
 import { getMockLogger } from './mockLogger';
@@ -11,12 +12,10 @@ import { populateUsers, populateProjects } from '../src/db/import_test_data';
 // Initialize Sequelize with sqlite for testing
 if (!sequelize.isInitialized()) {
   sequelize.initSequelize(
-    'database',
-    'root',
-    'root', {
-      dialect: 'sqlite',
-      logging: false
-    }
+    dbTestConfig.database,
+    dbTestConfig.username,
+    dbTestConfig.password,
+    dbTestConfig.options
   );
 }
 
@@ -146,7 +145,6 @@ describe('Testing Project Service', async () => {
       };
 
       const project = await projectService.createProject(newProject, 1);
-      expect(project.id).to.equal(4);
       expect(project.projectName).to.equal('hello world');
       expect(project.description).to.equal('good bye world');
       expect(project.version).to.equal('1.2.3');
@@ -166,12 +164,17 @@ describe('Testing Project Service', async () => {
 
       // // double check to make sure that the project was created
       const project = await projectService.createProject(newProject, 1);
-      expect(project.id).to.equal(4);
+      expect(project.projectName).to.equal(newProject.projectName);
+      expect(project.description).to.equal(newProject.description);
+      expect(project.version).to.equal(newProject.version);
+      expect(project.license).to.equal(newProject.license);
+
+      const newId = project.id;
 
       // filter projects by the id to make sure it can be retrieved via mass retrieve
       const projects = await projectService.getAllProjects();
       const filteredProjects = projects.filter((p) => {
-        return (p.id === 4);
+        return (p.id === newId);
       });
 
       expect(filteredProjects.length).to.equal(1);
@@ -188,7 +191,12 @@ describe('Testing Project Service', async () => {
 
       // double check to make sure that the project was created
       const project = await projectService.createProject(newProject, 1);
-      expect(project.id).to.equal(4);
+      expect(project.projectName).to.equal(newProject.projectName);
+      expect(project.description).to.equal(newProject.description);
+      expect(project.version).to.equal(newProject.version);
+      expect(project.license).to.equal(newProject.license);
+
+      const newId = project.id;
 
       const owners = await project.getOwners();
       expect(owners.length).to.equal(1);
@@ -198,7 +206,7 @@ describe('Testing Project Service', async () => {
       const owned = await projectService.getProjectsByUser(1);
 
       const filteredOwned = owned.owned.filter((p) => {
-        return p.id === 4;
+        return p.id === newId;
       });
 
       expect(filteredOwned.length).to.equal(1);

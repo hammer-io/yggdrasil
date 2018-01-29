@@ -47,7 +47,7 @@ async function getProjectsForUser(user, res, next) {
  * @param next the next middleware
  */
 export async function getProjectByAuthenticatedUser(req, res, next) {
-  const userId = 1;
+  const userId = req.user.id;
   await getProjectsForUser(userId, res, next);
 }
 
@@ -107,7 +107,7 @@ async function createProject(user, project, req, res, next) {
  * @param next the next middleware
  */
 export async function createProjectForAuthenticatedUser(req, res, next) {
-  const user = 1; // TODO authenticate user
+  const user = req.user.id;
   await createProject(user, req.body, req, res, next);
 }
 
@@ -118,7 +118,7 @@ export async function createProjectForAuthenticatedUser(req, res, next) {
  * @param next the next middleware
  */
 export async function createProjectForUser(req, res, next) {
-  const user = req.param.user; // TODO authenticate user
+  const user = req.user.id;
   await createProject(user, req.body, res, next);
 }
 

@@ -114,7 +114,8 @@ A token is used to authenticate the user.
 **To exchange a user name and password for auth-token:**
        
 * Post a new Token - post /oauth2/token
-    - returns authentication token
+    - Use a request body similar to the JSON below to retrieve a token for the user with the given username and password 
+    - Returns authentication token
 ```javascript
 {
     "username": "<username>",
@@ -122,6 +123,11 @@ A token is used to authenticate the user.
     "grant_type": "password"
 } 
 ```
+* To login with the user
+    - The token can be used as authentication for any endpoint, but GET /auth/token will verify the token is valid
+        - Simply set the Authorization header with the token and make the request.  If it returns 200, the token is valid.
+    - If the token has been lost, post a new token as described above
+
 **Note:** All steps must be authenticated, posting a token requires Client-Basic
 
 ## Email Setup

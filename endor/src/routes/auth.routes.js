@@ -96,7 +96,6 @@ router.post('/oauth2/authorize', [authController.isAuthenticated].concat(authVal
  * to in the response. The Authentication at this endpoint should be client authentication so as
  * to verify that this is the client's token
  *
- * @apiHeader Authorization Basic Auth-Token
  * @apiParam { STRING } code the access code if grant_type = authorization_code
  * @apiParam { STRING } username the username if grant_type = password
  * @apiParam { STRING } password the corresponding password if grant_type = password
@@ -155,9 +154,11 @@ router.get('/oauth2/authorize/successRedirect', authController.isAuthenticated, 
  *
  * @apiPermission None
  *
- * @apiHeader Authorization Basic Auth-Token
- * @apiParam { STRING } username the new user's desired username
- * @apiParam { STRING } password the new user's desired password
+ * @apiParam { STRING } username the new user's desired username. Must only
+ * contain letters, numbers and underscores.
+ * @apiParam { STRING } email the new user's desired email
+ * @apiParam { STRING } password the new user's desired password. Must have
+ * at least 8 characters, with one letter and one number.
  *
  * @apiSuccess { json } returns the new user and corresponding token
  * @apiSuccessExample { json } Success-Example:
@@ -179,7 +180,7 @@ router.get('/oauth2/authorize/successRedirect', authController.isAuthenticated, 
  * }
  *
  */
-router.post('/auth/register', authValidator.checkToken(), authController.register);
+router.post('/auth/register', authController.register);
 
 /**
  * @api { get } /auth/token Check Authentication Token

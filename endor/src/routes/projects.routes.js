@@ -9,6 +9,8 @@ import express from 'express';
 import * as authController from '../controllers/auth.controller';
 import * as projectController from '../controllers/projects.controller';
 import * as projectValidator from '../middlewares/projects.middleware';
+import * as projectAuthorization from './../authorization/projects.authorization';
+
 
 export const router = express.Router();
 
@@ -367,5 +369,6 @@ router.delete('/projects/:id', authController.isAuthenticated, projectController
  */
 export function setProjectService(newProjectService) {
   projectService = newProjectService;
-  projectController.setProjectService(projectService)
+  projectController.setProjectService(projectService);
+  projectAuthorization.setDependencies(projectService);
 }

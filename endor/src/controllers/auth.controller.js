@@ -17,7 +17,8 @@ const TOKEN_LENGTH = 256;
  */
 passport.use('basic', new BasicStrategy('basic', (username, password, next) => {
   userService.getCredentialsByUsername(username, password)
-    .then(user => next(null, user)).catch((err) => {
+    .then(user => next(null, user))
+    .catch((err) => {
       if (err.status === 404) {
         return next(null, false);
       }
@@ -118,7 +119,7 @@ server.exchange(oauth2orize.exchange.code((client, code, redirectUri, next) => {
  * The username must first be converted into a userId for the function to operate.
  */
 server.exchange(oauth2orize.exchange.password((client, username, password, scope, next) => {
-  userService.getUserByIdOrUsername(username)
+  userService.getCredentialsByUsername(username, password)
     .then((user) => {
       authService.createToken(user.id)
         .then(newToken => next(null, newToken))
@@ -136,10 +137,13 @@ server.exchange(oauth2orize.exchange.password((client, username, password, scope
  * @returns {Promise.<void>}
  */
 export async function register(req, res, next) {
-  const user = {
-    username: req.body.username,
-    email: req.body.email
-  };
+  const user = {};
+  if (req.body.username) {
+    user.username = req.body.username;
+  }
+  if (req.body.email) {
+    user.email = req.body.email;
+  }
   try {
     const newUser = await userService.createUser(user, req.body.password, false);
     const newToken = await authService.createToken(newUser.id);
@@ -223,6 +227,7 @@ export function setDependencies(newUserService, newClientService, newAuthService
 }
 
 /** Registering the authentication strategies with Passport */
+exports.isBasicAuthenticated = passport.authenticate('basic', { session: false });
 exports.isClientAuthenticated = passport.authenticate('client-basic', { session: false });
 exports.isBearerAuthenticated = passport.authenticate('bearer', { session: false });
 exports.isAuthenticated = passport.authenticate(['bearer', 'basic'], { session: false });

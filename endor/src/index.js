@@ -26,6 +26,7 @@ import EmailService from './services/email.service';
 import config from '../endorConfig.json';
 // eslint-disable-next-line import/no-unresolved
 import dbConfig from '../dbConfig.json';
+import dbTestConfig from '../dbTestConfig.json';
 // eslint-disable-next-line import/no-unresolved
 import emailConfig from '../emailConfig.json';
 
@@ -41,13 +42,20 @@ const emailTransportOptions = {
   }
 };
 
-// Initialize the data model
-sequelize.initSequelize(
-  dbConfig.database,
-  dbConfig.username,
-  dbConfig.password,
-  dbConfig.options
-);
+let db = dbConfig;
+if (process.env.NODE_ENV === 'test') {
+  db = dbTestConfig;
+}
+
+if (!sequelize.isInitialized()) {
+  // Initialize the data model
+  sequelize.initSequelize(
+    db.database,
+    db.username,
+    db.password,
+    db.options
+  );
+}
 
 const app = express();
 

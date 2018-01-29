@@ -65,6 +65,20 @@ export default class ProjectService {
   }
 
   /**
+   * Gets the contributors and owners for a project
+   *
+   * @param projectId the project id to get contributors for
+   * @returns {object} the project contributors, and the project owners
+   */
+  async getContributorsAndOwners(projectId) {
+    this.log.info(`ProjectService: get contributors for project with id ${projectId}`);
+    const project = await this.getProjectById(projectId);
+    const contributors = await project.getContributors();
+    const owners = await project.getOwners();
+    return { contributors, owners };
+  }
+
+  /**
    * Finds projects for a user
    * @param user the userId to find by
    * @returns the projects for the user separated by owned and contributed
@@ -125,8 +139,16 @@ export default class ProjectService {
     this.log.info(`ProjectService: create project for user ${user}`);
     const userFound = await this.userService.getUserByIdOrUsername(user);
 
+    const projectToBeCreated = {
+      projectName: project.projectName,
+      description: project.description,
+      version: project.version,
+      license: project.license,
+      authors: project.authors
+    };
+
     // create
-    const projectCreated = await this.projectRepository.create(project);
+    const projectCreated = await this.projectRepository.create(projectToBeCreated);
     await projectCreated.addOwners(userFound);
 
     return projectCreated;
