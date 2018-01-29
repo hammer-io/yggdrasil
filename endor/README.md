@@ -129,3 +129,16 @@ A token is used to authenticate the user.
 To generate the `emailConfig.json` file, just run `npm test` from the endor folder.
 For more information on using the email templates, view the
 [zurb-email-templates README](https://github.com/hammer-io/yggdrasil/tree/master/endor/zurb-email-templates).
+
+Endor uses the [Nodemailer](https://nodemailer.com/about/) module for sending emails.
+For development and testing, we're using [Ethereal](https://ethereal.email/) to mock
+sending emails. From their website:
+
+> Ethereal is a fake SMTP service, mostly aimed at Nodemailer users (but not limited
+> to). It's a completely free anti-transactional email service where messages never
+> get delivered.
+
+Any time you run the tests, the output will include a link to preview the email that
+was just sent. Scroll up to the email service test, and you'll see an email preview
+URL. Copy/paste that into your browser to see the email as it would have been delivered
+to a real user.
