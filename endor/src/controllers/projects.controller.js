@@ -47,8 +47,8 @@ async function getProjectsForUser(user, res, next) {
  * @param next the next middleware
  */
 export async function getProjectByAuthenticatedUser(req, res, next) {
-  const userId = 1; // TODO get userId from authenticated request
-  await getProjectsForUser(userId)
+  const userId = 1;
+  await getProjectsForUser(userId, res, next);
 }
 
 /**
