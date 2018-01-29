@@ -9,17 +9,30 @@ module.exports = {
     filename: 'bundle.js'
   },
   module: {
-    loaders: [{
-      exclude: /node_modules/,
-      loader: 'babel',
-      query: {
-        plugins: ['transform-decorators-legacy'],
-        presets: ['react', 'es2015', 'stage-1']
+    rules: [
+      {
+        test: /\.(png|jpg|gif)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192
+            }
+          }
+        ]
+      },
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['react', 'es2015', 'stage-1'],
+            plugins: ['transform-decorators-legacy']
+          }
+        }
       }
-    }]
-  },
-  resolve: {
-    extensions: ['', '.js', '.jsx']
+    ]
   },
   devServer: {
     historyApiFallback: true,

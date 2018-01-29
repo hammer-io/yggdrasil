@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import Home from 'material-ui/svg-icons/action/home'
 import Settings from 'material-ui/svg-icons/action/settings'
 import Theme from '../../style/theme'
+import HammerLogo from './../assets/icons/Viking_Hammer_Logo_1.png'
 
 const styles = {
   cardMedia: {
@@ -65,7 +66,7 @@ const Sidebar = ({
     onRequestChange={updateDrawerState}
   >
     <div style={styles.cardMedia}>
-      <img src="src/assets/icons/Viking_Hammer_Logo_1.png" style={styles.image} alt="" />
+      <img src={HammerLogo} style={styles.image} alt="" />
     </div>
     <Menu onItemClick={clickSidebarItem}>
       <MenuItem
