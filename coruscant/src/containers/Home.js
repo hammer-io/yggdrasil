@@ -7,6 +7,7 @@ import Theme from '../../style/theme'
 import Spinner from './../components/Spinner'
 import ProjectList from './../components/ProjectList'
 import ProjectsNotFound from './../components/ProjectsNotFound'
+import NewFloatingActionButton from '../components/NewFloatingActionButton'
 
 const styles = {
   header: {
@@ -45,6 +46,7 @@ class Home extends Component {
     super(props)
 
     this.viewProject = this.viewProject.bind(this)
+    this.newProject = this.newProject.bind(this)
   }
 
   async componentDidMount() {
@@ -55,6 +57,10 @@ class Home extends Component {
 
   viewProject(projectId) {
     this.props.history.push(`/projects/${projectId}`)
+  }
+
+  newProject() {
+    this.props.history.push('/projects/new')
   }
 
   renderProjects() {
@@ -83,6 +89,8 @@ class Home extends Component {
         {
           this.renderProjects()
         }
+
+        <NewFloatingActionButton onClick={this.newProject} />
       </div>
     )
   }
