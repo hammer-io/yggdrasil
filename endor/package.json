@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "npm run build && node dist/index.js",
-    "test": "npm run build && mocha --compilers js:babel-register --require babel-polyfill",
+    "test": "export NODE_ENV=test && npm run build && mocha --compilers js:babel-register --require babel-polyfill",
     "lint": "eslint src/. --ext .js",
     "build": "babel src --out-dir dist",
     "prepublishOnly": "npm run build",

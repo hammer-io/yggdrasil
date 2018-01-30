@@ -2,7 +2,12 @@ import Sequelize from 'sequelize';
 import { getActiveLogger } from '../utils/winston';
 
 // Added for convenience
-const { STRING, BOOLEAN } = Sequelize.DataTypes;
+const {
+  STRING,
+  BOOLEAN,
+  UUID,
+  UUIDV4
+} = Sequelize.DataTypes;
 
 const ToolType = {
   CONTAINERIZATION: 'containerization',
@@ -45,6 +50,11 @@ module.exports.initSequelize = (database, username, password, options) => {
   // --------------------------- MODEL DEFINITION START ---------------------------
 
   const User = model.define('user', {
+    id: {
+      primaryKey: true,
+      type: UUID,
+      defaultValue: UUIDV4,
+    },
     username: { type: STRING, unique: true },
     email: STRING,
     firstName: STRING,
@@ -52,29 +62,54 @@ module.exports.initSequelize = (database, username, password, options) => {
   });
 
   const Credentials = model.define('credentials', {
+    id: {
+      primaryKey: true,
+      type: UUID,
+      defaultValue: UUIDV4,
+    },
     password: { type: STRING, allowNull: false }
   });
   Credentials.belongsTo(User, { as: 'user', through: 'username' });
 
   const Client = model.define('client', {
+    id: {
+      primaryKey: true,
+      type: UUID,
+      defaultValue: UUIDV4,
+    },
     clientId: { type: STRING, unique: true, allowNull: false },
     name: { type: STRING, allowNull: false },
     secret: { type: STRING, allowNull: false }
   });
 
   const AccessCode = model.define('accessCode', {
+    id: {
+      primaryKey: true,
+      type: UUID,
+      defaultValue: UUIDV4,
+    },
     value: { type: STRING, allowNull: false },
     redirectURI: { type: STRING, allowNull: false }
   });
   AccessCode.belongsTo(User, { as: 'user', through: 'username' });
 
   const Token = model.define('Token', {
+    id: {
+      primaryKey: true,
+      type: UUID,
+      defaultValue: UUIDV4,
+    },
     value: { type: STRING(2048), allowNull: false },
     expired: { type: BOOLEAN, defaultValue: false }
   });
   Token.belongsTo(User, { as: 'user', through: 'username' });
 
   const Tool = model.define('tool', {
+    id: {
+      primaryKey: true,
+      type: UUID,
+      defaultValue: UUIDV4,
+    },
     name: { type: STRING, unique: true },
     toolType: {
       type: Sequelize.DataTypes.ENUM,
@@ -98,6 +133,11 @@ module.exports.initSequelize = (database, username, password, options) => {
 
   const Project = model.define('project', {
     // owners, contributors, invites, and various tools defined below
+    id: {
+      primaryKey: true,
+      type: UUID,
+      defaultValue: UUIDV4,
+    },
     projectName: STRING,
     description: STRING(1024),
     version: STRING,
@@ -114,6 +154,11 @@ module.exports.initSequelize = (database, username, password, options) => {
 
   const ProjectOwner = model.define('projectOwner', {
     // ASSOCIATIONS DEFINED BELOW
+    id: {
+      primaryKey: true,
+      type: UUID,
+      defaultValue: UUIDV4,
+    }
   });
   Project.belongsToMany(User, { as: 'owners', through: 'projectOwner' });
   User.belongsToMany(Project, { as: 'projectsOwned', through: 'projectOwner' });
@@ -121,6 +166,11 @@ module.exports.initSequelize = (database, username, password, options) => {
 
   const ProjectContributor = model.define('projectContributor', {
     // ASSOCIATIONS DEFINED BELOW
+    id: {
+      primaryKey: true,
+      type: UUID,
+      defaultValue: UUIDV4,
+    }
   });
   Project.belongsToMany(User, { as: 'contributors', through: 'projectContributor' });
   User.belongsToMany(Project, { as: 'projectsContributed', through: 'projectContributor' });
@@ -128,6 +178,11 @@ module.exports.initSequelize = (database, username, password, options) => {
 
   const Invite = model.define('invite', {
     // userInvited and projectInvitedTo defined below
+    id: {
+      primaryKey: true,
+      type: UUID,
+      defaultValue: UUIDV4,
+    },
     status: {
       type: Sequelize.DataTypes.ENUM,
       values: [

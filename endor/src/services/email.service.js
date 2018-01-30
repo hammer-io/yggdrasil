@@ -1,4 +1,6 @@
 import nodemailer from 'nodemailer';
+import * as emailInvite from './emails/invite.email';
+import InviteService from '../services/invites.service';
 
 
 export default class EmailService {
@@ -10,12 +12,24 @@ export default class EmailService {
 
   async emailInvite(user, project, invite) {
     return new Promise((resolve, reject) => {
+      const expirationDate = InviteService.getInviteExpirationDateString(invite);
+      const manageInvitesUrl = `https://hammer-io.github.io/api/v1/invites/${invite.id}`;
       const mailOptions = {
         from: this.from,
         to: user.email,
         subject: `Invitation to contribute to project ${project.projectName}`,
-        text: `Hello ${user.firstName}! You've been invited to contribute to project ${project.projectName}. Please visit the following link to accept or decline this invitation: https://hammer-io.github.io/api/v1/invites/${invite.id}`, // plain text body
-        html: `<h2>Hello ${user.firstName}!</h2><p>You've been invited to contribute to project ${project.projectName}. Please visit the following link to accept or decline this invitation: <a href="https://hammer-io.github.io/api/v1/invites/${invite.id}" target="_blank">https://hammer-io.github.io/api/v1/invites/${invite.id}</a></p>` // html body
+        text: emailInvite.getPlaintext(
+          project.projectName,
+          user.firstName,
+          expirationDate,
+          manageInvitesUrl
+        ),
+        html: emailInvite.getHtml(
+          project.projectName,
+          user.firstName,
+          expirationDate,
+          manageInvitesUrl
+        )
       };
 
       // send mail with defined transport object

@@ -2,6 +2,7 @@ import express from 'express';
 import * as authController from './../controllers/auth.controller';
 import * as usersController from './../controllers/users.controller';
 import * as userValidator from './../middlewares/users.middleware';
+import * as userAuthorization from './../authorization/users.authorization';
 
 export const router = express.Router();
 let userService = {};
@@ -176,4 +177,5 @@ router.delete('/users/:user', authController.isAuthenticated, usersController.de
 export function setDependencies(newUserService) {
   userService = newUserService;
   usersController.setDependencies(userService);
+  userAuthorization.setDependencies(userService);
 }

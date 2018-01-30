@@ -10,7 +10,6 @@ let clientService = {};
  * @returns {Promise.<void>}
  */
 export async function createClient(req, res, next) {
-  console.log(req.body.client);
   clientService.createClient(req.body.client).then((createdClient) => {
     res.json(createdClient);
   }).catch((err) => {
