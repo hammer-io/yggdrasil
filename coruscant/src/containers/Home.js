@@ -9,9 +9,6 @@ import ProjectList from './../components/ProjectList'
 import ProjectsNotFound from './../components/ProjectsNotFound'
 
 const styles = {
-  header: {
-    fontFamily: Theme.font.family.regular
-  },
   container: {
     display: 'flex',
     flexDirection: 'row',

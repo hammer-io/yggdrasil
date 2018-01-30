@@ -1,3 +1,70 @@
+// ----------------------------- BEGIN BRANDING COLORS -----------------------------
+
+// The main colors have no modifier. Lighter shades
+// and darker shades have _u1, _u2, _u3, _u4, and
+// _d1, _d2, _d3, _d4 postfixes to the name. (E.g. Think
+// "up two shades from the main shade" for _u2 or
+// "down three shades from main" for _d3.
+//
+// Colors were generated at the following link:
+// https://coolors.co/eaebed-006989-a3bac3-343330-fbab18
+// Click on the "Toggle Alternative Shades" button
+// to see all of them.
+
+export const neutlight_u4 = '#f9f9fa'
+export const neutlight_u3 = '#f5f5f6'
+export const neutlight_u2 = '#f1f2f3'
+export const neutlight_u1 = '#edeef0'
+export const neutlight = '#eaebed' // Isabelline
+export const neutlight_d1 = '#c0c1c2'
+export const neutlight_d2 = '#959697'
+export const neutlight_d3 = '#6b6b6c'
+export const neutlight_d4 = '#404141'
+
+export const primary_u4 = '#b9d6de'
+export const primary_u3 = '#8bbac9'
+export const primary_u2 = '#5c9fb3'
+export const primary_u1 = '#2e849e'
+export const primary = '#006989' // Sea Blue
+export const primary_d1 = '#005671'
+export const primary_d2 = '#004358'
+export const primary_d3 = '#00303f'
+export const primary_d4 = '#001d26'
+
+export const secondary_u4 = '#e5ecee'
+export const secondary_u3 = '#d5dfe3'
+export const secondary_u2 = '#c4d3d8'
+export const secondary_u1 = '#b3c6cd'
+export const secondary = '#a3bac3' // Wild Blue Yonder
+export const secondary_d1 = '#8699a0'
+export const secondary_d2 = '#68777d'
+export const secondary_d3 = '#4b5559'
+export const secondary_d4 = '#2d3336'
+
+export const neutdark_u4 = '#c7c7c6'
+export const neutdark_u3 = '#a2a2a0'
+export const neutdark_u2 = '#7d7d7b'
+export const neutdark_u1 = '#585855'
+export const neutdark = '#343330' // Jet
+export const neutdark_d1 = '#2b2a28'
+export const neutdark_d2 = '#22211f'
+export const neutdark_d3 = '#181816'
+export const neutdark_d4 = '#0f0e0e'
+
+export const accent_u4 = '#fde8c0'
+export const accent_u3 = '#fdd896'
+export const accent_u2 = '#fcc96c'
+export const accent_u1 = '#fbba42'
+export const accent = '#fbab18' // Bright Yellow (Crayola)
+export const accent_d1 = '#ce8c14'
+export const accent_d2 = '#a06d10'
+export const accent_d3 = '#734e0b'
+export const accent_d4 = '#452f07'
+
+// ----------------------------- END BRANDING COLORS -----------------------------
+
+// ------------------------- BEGIN MATERIAL DESIGN COLORS ------------------------
+
 export const red50 = '#ffebee'
 export const red100 = '#ffcdd2'
 export const red200 = '#ef9a9a'
@@ -284,3 +351,5 @@ export const faintBlack = 'rgba(0, 0, 0, 0.12)'
 export const fullWhite = 'rgba(255, 255, 255, 1)'
 export const darkWhite = 'rgba(255, 255, 255, 0.87)'
 export const lightWhite = 'rgba(255, 255, 255, 0.54)'
+
+// ------------------------- END MATERIAL DESIGN COLORS ------------------------

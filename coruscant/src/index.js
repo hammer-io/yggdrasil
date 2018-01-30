@@ -3,6 +3,8 @@ import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import throttle from 'lodash/throttle'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import theme from '../style/theme'
 import getStore from './store'
 import { saveState } from './utils/localStorage'
 import App from './containers/App'
@@ -20,7 +22,7 @@ store.subscribe(throttle(() => {
 }), 1000)
 
 const Root = () => (
-  <MuiThemeProvider>
+  <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
     <Provider store={store}>
       <Router>
         <App>

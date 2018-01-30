@@ -8,9 +8,6 @@ import { login } from '../actions/session'
 import * as validator from './../utils/validator'
 
 const styles = {
-  header: {
-    fontFamily: Theme.font.family.regular
-  },
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -99,7 +96,7 @@ class Login extends Component {
     return (
       <div style={styles.container}>
         <Paper style={styles.form}>
-          <h4 style={styles.header}>Sign in to Hammer-io</h4>
+          <h4>Sign in to Hammer-io</h4>
           <TextField
             hintText="Username"
             floatingLabelText="Username"

@@ -35,7 +35,7 @@ const getIconStyle = (itemName, currentRoute) => {
   if (itemName === currentRoute) {
     return {
       ...styles.icon,
-      fill: Theme.colors.cyan500
+      fill: Theme.colors.accent
     }
   }
   return styles.icon
@@ -45,8 +45,8 @@ const getMenuStyle = (itemName, currentRoute) => {
   if (itemName === currentRoute) {
     return {
       ...styles.menuItem,
-      color: Theme.colors.cyan500,
-      backgroundColor: Theme.colors.grey200
+      color: Theme.colors.accent,
+      backgroundColor: Theme.colors.neutlight_u4
     }
   }
   return styles.menuItem
