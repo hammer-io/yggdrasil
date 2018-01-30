@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
-
+import { getProjects, getUserProjects } from '../actions/project'
 import Theme from '../../style/theme'
+import Spinner from './../components/Spinner'
+import ProjectList from './../components/ProjectList'
+import ProjectsNotFound from './../components/ProjectsNotFound'
 
 const styles = {
   header: {
@@ -10,34 +14,86 @@ const styles = {
   },
   container: {
     display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    paddingTop: Theme.padding.regular
+  },
+  spinnerContainer: {
+    display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: Theme.padding.regular
+    paddingTop: Theme.padding.large
   }
 }
 
 const mapStateToProps = state => ({
-  session: state.session
+  session: state.session,
+  projects: state.projects
 })
 
-@connect(mapStateToProps)
+const mapDispatchToProps = {
+  getProjects,
+  getUserProjects
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
 class Home extends Component {
-  componenDidMount() {
-    console.log(this.props.session)
+  constructor(props) {
+    super(props)
+
+    this.viewProject = this.viewProject.bind(this)
+  }
+
+  async componentDidMount() {
+    const { session, getProjects, getUserProjects } = this.props
+    await getProjects(session.authToken)
+    await getUserProjects(session.authToken)
+  }
+
+  viewProject(projectId) {
+    this.props.history.push(`/projects/${projectId}`)
+  }
+
+  renderProjects() {
+    const { projects } = this.props
+    if (projects) {
+      const userProjects = [...projects.owned, ...projects.contributed]
+      if (userProjects.length > 0) {
+        return (
+          <div style={styles.container}>
+            <ProjectList projects={userProjects} viewProject={this.viewProject} />
+          </div>
+        )
+      }
+      return <ProjectsNotFound />
+    }
+    return (
+      <div style={styles.spinnerContainer}>
+        <Spinner />
+      </div>
+    )
   }
 
   render() {
     return (
-      <div style={styles.container}>
-        <h4 style={styles.header}>Welcome</h4>
+      <div>
+        {
+          this.renderProjects()
+        }
       </div>
     )
   }
 }
 
 Home.propTypes = {
-  session: PropTypes.func.isRequired
+  history: PropTypes.object.isRequired,
+  session: PropTypes.object.isRequired,
+  projects: PropTypes.object.isRequired,
+  getProjects: PropTypes.func.isRequired,
+  getUserProjects: PropTypes.func.isRequired
 }
 
-export default Home
+export default withRouter(Home)
