@@ -130,7 +130,7 @@ export async function createProjectForUser(req, res, next) {
  */
 export async function updateProjectById(req, res, next) {
   const projectToUpdate = req.body;
-  const projectId = req.params.id;
+  const projectId = req.params.projectId;
 
   try {
     const projectUpdated = await projectService.updateProject(projectToUpdate, projectId);
@@ -147,7 +147,7 @@ export async function updateProjectById(req, res, next) {
  * @param next the next middleware
  */
 export async function deleteProjectById(req, res, next) {
-  const projectId = req.params.id;
+  const projectId = req.params.projectId;
   try {
     await projectService.deleteProjectById(projectId, false);
     responseHelper.noContent(res);

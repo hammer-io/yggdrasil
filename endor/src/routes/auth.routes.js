@@ -154,10 +154,10 @@ router.get('/oauth2/authorize/successRedirect', authController.isAuthenticated, 
  *
  * @apiPermission None
  *
- * @apiParam { STRING } username the new user's desired username. Must only
+ * @apiParam { STRING } username The new user's desired username. Must only
  * contain letters, numbers and underscores.
- * @apiParam { STRING } email the new user's desired email
- * @apiParam { STRING } password the new user's desired password. Must have
+ * @apiParam { STRING } email The new user's desired email
+ * @apiParam { STRING } password The new user's desired password. Must have
  * at least 8 characters, with one letter and one number.
  *
  * @apiSuccess { json } returns the new user and corresponding token

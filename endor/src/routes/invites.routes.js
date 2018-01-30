@@ -4,6 +4,7 @@ import * as invitesController from './../controllers/invites.controller';
 import * as inviteValidator from './../middlewares/invites.middleware';
 
 import * as authController from './../controllers/auth.controller';
+import * as projectAuth from './../authorization/projects.authorization';
 
 export const router = express.Router();
 
@@ -19,6 +20,7 @@ export function setDependencies(inviteService, userService, projectService, emai
   invitesController.setUserService(userService);
   invitesController.setProjectService(projectService);
   invitesController.setEmailService(emailService);
+  projectAuth.setDependencies(projectService);
 }
 
 /**
@@ -47,7 +49,12 @@ export function setDependencies(inviteService, userService, projectService, emai
  }
  ]
  */
-router.get('/projects/:id/invites', authController.isAuthenticated, invitesController.getInvitesByProjectId);
+router.get(
+  '/projects/:projectId/invites',
+  authController.isAuthenticated,
+  projectAuth.ownerLevelAuthorization,
+  invitesController.getInvitesByProjectId
+);
 
 /**
  * @api {get} /user/invites Get invites for an authenticated user
@@ -105,6 +112,7 @@ router.get('/user/invites', authController.isAuthenticated, invitesController.ge
 router.post(
   '/projects/:projectId/invites/:user',
   authController.isAuthenticated,
+  projectAuth.ownerLevelAuthorization,
   inviteValidator.checkForNonNegativeInteger,
   invitesController.addInviteToProject
 );
@@ -182,4 +190,9 @@ router.put('/invites/:id/decline', authController.isAuthenticated, invitesContro
   "updatedAt": "2017-11-27T10:22:12.000Z"
  }
  */
-router.put('/invites/:id/rescind', authController.isAuthenticated, invitesController.rescindInvite);
+router.put(
+  '/invites/:projectId/rescind',
+  authController.isAuthenticated,
+  projectAuth.ownerLevelAuthorization,
+  invitesController.rescindInvite
+);

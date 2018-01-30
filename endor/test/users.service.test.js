@@ -145,7 +145,6 @@ describe('Testing User Service', () => {
     });
 
     it('should not use the given id if an id is given', async () => {
-      // username of 256 characters
       const newUser = {
         id: '10',
         username: 'LeroyJenkins',
@@ -423,6 +422,23 @@ describe('Testing User Service', () => {
 
     it('should update the user by username', async () => {
       const user =  {
+        username: 'Updatejreach',
+        email: 'Updatejreach@gmail.com',
+        firstName: 'UpdateJack',
+        lastName: 'UpdateReacher'
+      };
+
+      const updatedUser = await userService.updateUser('jreach', user);
+      expect(updatedUser.id).to.equal(3);
+      expect(updatedUser.username).to.equal('Updatejreach');
+      expect(updatedUser.email).to.equal('Updatejreach@gmail.com');
+      expect(updatedUser.firstName).to.equal('UpdateJack');
+      expect(updatedUser.lastName).to.equal('UpdateReacher');
+    });
+
+    it('should update the user by username, but should not change the id', async () => {
+      const user =  {
+        id: 11,
         username: 'Updatejreach',
         email: 'Updatejreach@gmail.com',
         firstName: 'UpdateJack',

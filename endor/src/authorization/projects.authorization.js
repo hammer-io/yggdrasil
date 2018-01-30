@@ -15,12 +15,15 @@ export async function ownerLevelAuthorization(req, res, next) {
   const authenticatedUser = req.user.id;
   const { projectId } = req.params;
 
-  const owners = await projectService.getOwnersByProjectId(projectId);
-  if (!owners.filter(owner => owner === authenticatedUser)) {
+  try {
+    const owners = await projectService.getOwnersByProjectId(projectId);
+    if (owners.filter(owner => owner.id === authenticatedUser).length !== 1) {
+      res.status(401).send(new UnauthorizedException('The user is unauthorized to perform this action'));
+    }
+    next();
+  } catch (err) {
     res.status(401).send(new UnauthorizedException('The user is unauthorized to perform this action'));
   }
-
-  next();
 }
 
 /**
@@ -36,13 +39,16 @@ export async function contributorLevelAuthorization(req, res, next) {
   const authenticatedUser = req.user.id;
   const { projectId } = req.params;
 
-  const { contributors, owners } = await projectService.getContributorsAndOwners(projectId);
-  if (!owners.filter(owner => owner.id === authenticatedUser)
-    || !contributors.filter(contributor => contributor.id === authenticatedUser)) {
+  try {
+    const { contributors, owners } = await projectService.getContributorsAndOwners(projectId);
+    if (owners.filter(owner => owner.id === authenticatedUser).length !== 1
+      || contributors.filter(contributor => contributor.id === authenticatedUser).length !== 1) {
+      res.status(401).send(new UnauthorizedException('The user is unauthorized to perform this action'));
+    }
+    next();
+  } catch (err) {
     res.status(401).send(new UnauthorizedException('The user is unauthorized to perform this action'));
   }
-
-  next();
 }
 
 

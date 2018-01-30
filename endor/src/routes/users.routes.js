@@ -17,7 +17,7 @@ let userService = {};
  *
  * @apiHeader Authorization Basic Auth-Token
  *
- * @apiSuccess {Object[]} users List of all of the public users
+ * @apiSuccess {Object[]} users Returns a list of all public users.
  * @apiSuccessExample {json} Success-Response:
  * [
     {
@@ -43,7 +43,7 @@ router.get('/users', authController.isAuthenticated, usersController.getAllUsers
  *
  * @apiHeader Authorization Basic Auth-Token
  *
- * @apiSuccess {Object} users List of all of the public users
+ * @apiSuccess {Object} user Returns the user that was specified in the parameters.
  * @apiSuccessExample {json} Success-Response:
  * {
     "id": 1,
@@ -67,7 +67,7 @@ router.get('/users/:user', authController.isAuthenticated, usersController.getUs
  *
  * @apiHeader Authorization Basic Auth-Token
  *
- * @apiSuccess {Object} user Authenticated user information
+ * @apiSuccess {Object} user Returns the authenticated user information.
  * @apiSuccessExample {json} Success-Response:
  * {
       "id": 1,
@@ -87,12 +87,15 @@ router.get('/user', authController.isAuthenticated, usersController.getAuthentic
  * @apiName create user
  * @apiGroup Users
  *
- * @apiPermission authenticated user
+ * @apiPermission None
  *
- * @apiParam {String} username the username of the user
- * @apiParam {String} email the email of the user
- * @apiParam {String} firstName the first name of the user
- * @apiParam {String} lastName the last name of the user
+ * @apiParam {String} username The username of the user.  Must only
+ * contain letters, numbers and underscores.
+ * @apiParam {String} email The email of the user.
+ * @apiParam {String} firstName The first name of the user.
+ * @apiParam {String} lastName The last name of the user.
+ * @apiParam {String} password The password of the user. Must have
+ * at least 8 characters, with one letter and one number.
  *
  * @apiParamExample {json} Request-Example:
  * {
@@ -123,12 +126,14 @@ router.post('/users', usersController.createUser);
  * @apiName update user
  * @apiGroup Users
  *
+ * @apiPermission User
+ *
  * @apiHeader Authorization Basic Auth-Token
- * @apiParam {String} id the id of the user to update
- * @apiParam {String} username the username of the user
- * @apiParam {String} email the email of the user
- * @apiParam {String} firstName the first name of the user
- * @apiParam {String} lastName the last name of the user
+ * @apiParam {String} id The id of the user to update.
+ * @apiParam {String} username The username of the user.
+ * @apiParam {String} email The email of the user.
+ * @apiParam {String} firstName The first name of the user
+ * @apiParam {String} lastName The last name of the user.
  *
  * @apiParamExample {json} Request-Example:
  * {
@@ -152,7 +157,9 @@ router.post('/users', usersController.createUser);
  */
 router.patch(
   '/users/:user',
-  [authController.isAuthenticated].concat(userValidator.checkUpdateUser()),
+  authController.isAuthenticated,
+  userAuthorization.userAuthorization,
+  userValidator.checkUpdateUser(),
   usersController.updateUserByIdOrUsername
 );
 
@@ -162,13 +169,20 @@ router.patch(
  * @apiName delete user
  * @apiGroup Users
  *
+ * @apiPermission User
+ *
  * @apiHeader Authorization Basic Auth-Token
- * @apiParam {String} id the id of the user to delete
+ * @apiParam {String} id The id of the user to delete.
  *
  * @apiSuccessExample {json} Success-Response
  * Status: 204 No Content
  */
-router.delete('/users/:user', authController.isAuthenticated, usersController.deleteUserById);
+router.delete(
+  '/users/:user',
+  authController.isAuthenticated,
+  userAuthorization.userAuthorization,
+  usersController.deleteUserById
+);
 
 /**
  * Sets dependencies for the routes

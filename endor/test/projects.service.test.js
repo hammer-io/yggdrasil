@@ -368,7 +368,7 @@ describe('Testing Project Service', async () => {
         authors: 'Creator'
       };
 
-      const project = await projectService.updateProject(newProject, 1)
+      const project = await projectService.updateProject(newProject, 1);
       expect(project.projectName).to.equal('updated TMNT');
       expect(project.description).to.equal('updated You gotta know what a crumpet is to understand cricket!');
       expect(project.version).to.equal('1.2.3');

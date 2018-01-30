@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 const should = chai.should();
 const expect = chai.expect;
 
-describe('Testing Client Endpoints', () => {
+describe('Testing Client Routes', () => {
   beforeEach(async () => {
     await defineTables();
     await populateUsers();

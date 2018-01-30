@@ -148,3 +148,16 @@ Any time you run the tests, the output will include a link to preview the email 
 was just sent. Scroll up to the email service test, and you'll see an email preview
 URL. Copy/paste that into your browser to see the email as it would have been delivered
 to a real user.
+
+## Permissions
+The middleware for checking if a user is authorized to view certain data is contained in the 
+authorization folder. The authorization middleware requires specific naming of the parameters
+as detailed below and the endpoint must be authenticated to verify the identity of the user
+making the requests.
+
+- For project authorization, the projectId must be labeled as such in the request's params.
+There are two levels: Owner level (the user must be an owner of the project)
+or Contributor level (the user must be a contributor or an owner).
+- For user authorization, the username/id must be labeled as user and be located in the
+request's params.  There is only one level: User level (the user must be the one editing
+themselves.)

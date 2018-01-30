@@ -197,7 +197,11 @@ router.get('/users/:user/projects', authController.isAuthenticated, projectContr
  *    "webFrameworkId": null
  *  }
  */
-router.get('/projects/:projectId', authController.isAuthenticated, projectController.getProjectById);
+router.get(
+  '/projects/:projectId',
+  authController.isAuthenticated,
+  projectController.getProjectById
+);
 
 /**
  * @api {post} /user/projects Create a project for an authenticated user
@@ -315,12 +319,12 @@ router.post(
 );
 
 /**
- * @api {patch} /projects/:id Update a project
+ * @api {patch} /projects/:projectId Update a project
  * @apiVersion 1.0.0
  * @apiName patch project
  * @apiGroup Projects
  *
- * @apiPermission project owner
+ * @apiPermission Project owner
  *
  * @apiHeader Authorization Basic Auth-Token
  * @apiParam {String} id the id of the project to update
@@ -343,25 +347,32 @@ router.post(
  *  }
  */
 router.patch(
-  '/projects/:id',
-  [authController.isAuthenticated].concat(projectValidator.checkUpdateProject()),
+  '/projects/:projectId',
+  authController.isAuthenticated,
+  projectAuthorization.ownerLevelAuthorization,
+  projectValidator.checkUpdateProject(),
   projectController.updateProjectById
 );
 
 /**
- * @api {delete} /projects/:id Delete a project
+ * @api {delete} /projects/:projectId Delete a project
  * @apiVersion 1.0.0
  * @apiName delete project
  * @apiGroup Projects
  *
  * @apiHeader Authorization Basic Auth-Token
- * @apiPermission project owner
+ * @apiPermission Project owner
  *
  * @apiSuccess {Object} project the deleted project
  * @apiSuccessExample {json} Success-Response
  * Status: 204 No Content
  */
-router.delete('/projects/:id', authController.isAuthenticated, projectController.deleteProjectById);
+router.delete(
+  '/projects/:projectId',
+  authController.isAuthenticated,
+  projectAuthorization.ownerLevelAuthorization,
+  projectController.deleteProjectById
+);
 
 /**
  * Sets the project service dependency for the controller
