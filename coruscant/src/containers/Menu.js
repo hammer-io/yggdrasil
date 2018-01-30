@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { logout } from './../actions/session'
-import Navbar from './Navbar'
-import Sidebar from './Sidebar'
+import { logout } from '../actions/session'
+import Navbar from '../components/Navbar'
+import Sidebar from '../components/Sidebar'
 
 const mapDispatchToProps = {
   logout

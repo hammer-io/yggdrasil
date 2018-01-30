@@ -22,7 +22,6 @@ const styles = {
   },
   menuItem: {
     fontWeight: Theme.font.weight.heavy,
-    fontsize: Theme.font.regular.size,
     lineHeight: '58px',
     color: Theme.colors.grey600
   },

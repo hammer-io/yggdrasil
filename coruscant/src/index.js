@@ -6,11 +6,11 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getStore from './store'
 import { saveState } from './utils/localStorage'
 import App from './containers/App'
-import Menu from './components/Menu'
+import Menu from './containers/Menu'
 import Home from './containers/Home'
 import Login from './containers/Login'
 import Register from './containers/Register'
-import NotFound from './components/NotFound'
+import NotFound from './components/PageNotFound'
 
 const store = getStore()
 store.subscribe(throttle(() => {

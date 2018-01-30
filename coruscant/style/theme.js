@@ -12,7 +12,8 @@ const theme = {
 
   font: {
     family: {
-      regular: 'Roboto'
+      regular: 'Roboto',
+      slab: 'Roboto Slab'
     },
 
     weight: {
