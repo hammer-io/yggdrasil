@@ -145,6 +145,10 @@ describe('Testing User Service', () => {
     });
 
     it('should not use the given id if an id is given', async () => {
+<<<<<<< HEAD
+=======
+      // username of 256 characters
+>>>>>>> master
       const newUser = {
         id: '10',
         username: 'LeroyJenkins',

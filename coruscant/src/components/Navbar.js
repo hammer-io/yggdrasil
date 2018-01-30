@@ -12,8 +12,7 @@ class Navbar extends React.Component {
         targetOrigin={{ horizontal: 'right', vertical: 'top' }}
         onItemClick={this.props.clickNavbarItem}
       >
-        <MenuItem primaryText="Send feedback" />
-        <MenuItem primaryText="Settings" />
+        <MenuItem primaryText="New Project" />
         <MenuItem primaryText="Help" />
         <MenuItem primaryText="Sign out" />
       </IconMenu>

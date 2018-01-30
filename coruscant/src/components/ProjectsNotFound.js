@@ -1,5 +1,5 @@
 import React from 'react'
-import Error from 'material-ui/svg-icons/alert/error'
+import Icon from 'material-ui/svg-icons/social/sentiment-dissatisfied'
 import Theme from './../../style/theme'
 
 const styles = {
@@ -8,12 +8,12 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '50px'
+    padding: '100px'
   },
   icon: {
     color: Theme.colors.grey400,
-    height: '300px',
-    width: '300px'
+    height: '200px',
+    width: '200px'
   },
   text: {
     fontFamily: Theme.font.family.regular,
@@ -21,11 +21,11 @@ const styles = {
   }
 }
 
-const NotFound = () => (
+const ProjectsNotFound = () => (
   <div style={styles.container}>
-    <Error style={styles.icon} />
-    <h3 style={styles.text}>Page does not exist!</h3>
+    <Icon style={styles.icon} />
+    <h3 style={styles.text}>No projects found</h3>
   </div>
 )
 
-export default NotFound
+export default ProjectsNotFound
