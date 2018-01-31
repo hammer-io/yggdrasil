@@ -65,7 +65,7 @@ class Home extends Component {
 
   renderProjects() {
     const { projects } = this.props
-    if (projects) {
+    if (projects && projects.fetchedUserProjects) {
       const userProjects = [...projects.owned, ...projects.contributed]
       if (userProjects.length > 0) {
         return (
