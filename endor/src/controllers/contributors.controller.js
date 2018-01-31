@@ -51,7 +51,7 @@ export async function checkIfUserIsContributor(req, res, next) {
  */
 export async function addContributorToProject(req, res, next) {
   try {
-    const projectId = req.params.id;
+    const projectId = req.params.projectId;
     const user = req.params.user;
     const contributors = await projectService.addContributorToProject(projectId, user);
     res.status(201).send(contributors);
@@ -68,7 +68,7 @@ export async function addContributorToProject(req, res, next) {
  */
 export async function deleteContributorFromProject(req, res, next) {
   try {
-    const projectId = req.params.id;
+    const projectId = req.params.projectId;
     const user = req.params.user;
     await projectService.deleteContributorFromProject(projectId, user);
     responseHelper.noContent(res);

@@ -12,7 +12,7 @@ chai.use(chaiHttp);
 const should = chai.should();
 const expect = chai.expect;
 
-describe('Testing Auth Endpoints', () => {
+describe('Testing Auth Routes', () => {
   beforeEach(async () => {
     await defineTables();
     await populateUsers();

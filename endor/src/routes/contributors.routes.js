@@ -2,6 +2,7 @@ import express from 'express';
 
 import * as contributorsController from './../controllers/contributors.controller';
 import * as authController from '../controllers/auth.controller';
+import * as projectAuth from '../authorization/projects.authorization';
 
 export const router = express.Router();
 
@@ -70,8 +71,8 @@ router.get('/projects/:id/contributors/:user', authController.isAuthenticated, c
  * @apiPermission project owner
  *
  * @apiHeader Authorization Basic Auth-Token
- * @apiParam {String} id the id of the project
- * @apiParam {String} user user id or username of the user to add as a contributor
+ * @apiParam {String} projectId The id of the project.
+ * @apiParam {String} user User id or username of the user to add as a contributor.
  *
  * @apiSuccess {Object[]} contributors the contributors of the project which the user was added to
  * @apiSuccessExample {json} Success-Response
@@ -93,7 +94,12 @@ router.get('/projects/:id/contributors/:user', authController.isAuthenticated, c
     }
   ]
  */
-router.post('/projects/:id/contributors/:user', authController.isAuthenticated, contributorsController.addContributorToProject);
+router.post(
+  '/projects/:projectId/contributors/:user',
+  authController.isAuthenticated,
+  projectAuth.ownerLevelAuthorization,
+  contributorsController.addContributorToProject
+);
 
 /**
  * @api {delete} /projects/:id/contributors/:user Remove contributor from project
@@ -104,13 +110,18 @@ router.post('/projects/:id/contributors/:user', authController.isAuthenticated, 
  * @apiPermission project owner
  *
  * @apiHeader Authorization Basic Auth-Token
- * @apiParam {String} id the id of the project
- * @apiParam {String} user user id or username of the user to remove as a contributor
+ * @apiParam {String} projectId The id of the project.
+ * @apiParam {String} user User id or username of the user to remove as a contributor.
  *
  * @apiSuccessExample {json} Success-Response
  * Status: 204 No Content
  */
-router.delete('/projects/:id/contributors/:user', authController.isAuthenticated, contributorsController.deleteContributorFromProject);
+router.delete(
+  '/projects/:projectId/contributors/:user',
+  authController.isAuthenticated,
+  projectAuth.ownerLevelAuthorization,
+  contributorsController.deleteContributorFromProject
+);
 
 /**
  * Set dependencies for the contributors routes
@@ -119,5 +130,6 @@ router.delete('/projects/:id/contributors/:user', authController.isAuthenticated
 export function setDependencies(newProjectService) {
   projectService = newProjectService;
   contributorsController.setProjectService(projectService);
+  projectAuth.setDependencies(projectService);
 }
 

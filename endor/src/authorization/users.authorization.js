@@ -12,13 +12,17 @@ let userService = {};
  */
 export async function userAuthorization(req, res, next) {
   const authenticatedUser = req.user.id;
-  if (req.params.user !== authenticatedUser) {
-    const user = await userService.getUserByIdOrUsername(req.params.user);
-    if (user.id !== authenticatedUser) {
-      res.status(401).send(new UnauthorizedException('The user is unauthorized to perform this action'));
+  try {
+    if (req.params.user !== authenticatedUser) {
+      const user = await userService.getUserByIdOrUsername(req.params.user);
+      if (user.id !== authenticatedUser) {
+        res.status(401).send(new UnauthorizedException('The user is unauthorized to perform this action'));
+      }
     }
+    next();
+  } catch (err) {
+    res.status(401).send(new UnauthorizedException('The user is unauthorized to perform this action'));
   }
-  next();
 }
 
 export function setDependencies(newUserService) {

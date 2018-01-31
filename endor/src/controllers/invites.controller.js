@@ -46,7 +46,10 @@ export function setEmailService(newEmailService) {
  */
 export async function getInvitesByProjectId(req, res, next) {
   try {
-    const invites = await inviteService.getInvitesByProjectId(req.params.id, req.query.status);
+    const invites = await inviteService.getInvitesByProjectId(
+      req.params.projectId,
+      req.query.status
+    );
     res.send(invites);
   } catch (error) {
     next(error);
@@ -120,7 +123,7 @@ export async function addInviteToProject(req, res, next) {
  */
 async function updateInvite(req, res, next, status) {
   try {
-    const inviteId = req.params.id;
+    const inviteId = req.params.projectId;
     const updatedInvite = await inviteService.updateInvite(inviteId, status);
 
     res.status(201).send(updatedInvite);

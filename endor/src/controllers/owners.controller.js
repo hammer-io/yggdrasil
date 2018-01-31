@@ -52,7 +52,7 @@ export async function checkIfUserIsOwner(req, res, next) {
  */
 export async function addOwnerToProject(req, res, next) {
   try {
-    const projectId = req.params.id;
+    const projectId = req.params.projectId;
     const user = req.params.user;
     const owners = await projectService.addOwnerToProject(projectId, user);
     res.status(201).send(owners);
@@ -69,7 +69,7 @@ export async function addOwnerToProject(req, res, next) {
  */
 export async function deleteOwnerFromProject(req, res, next) {
   try {
-    const projectId = req.params.id;
+    const projectId = req.params.projectId;
     const user = req.params.user;
     await projectService.deleteOwnerFromProject(projectId, user);
     responseHelper.noContent(res);
