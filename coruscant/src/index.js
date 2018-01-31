@@ -26,7 +26,7 @@ const Root = () => (
       <Router>
         <App>
           <Switch>
-            <Route path={['/home','/projects']} component={Menu} />
+            <Route path={['/home', '/projects']} component={Menu} />
           </Switch>
           <Switch>
             <Route exact path="/" render={() => <Redirect to="/home" />} />

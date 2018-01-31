@@ -18,7 +18,7 @@ const mapDispatchToProps = {
 
 @connect(null, mapDispatchToProps)
 class ProjectIssues extends Component {
-  getIssueIcon(type) {
+  static getIssueIcon(type) {
     switch (type) {
       case 'Completed':
         return (<Completed />)
@@ -34,31 +34,31 @@ class ProjectIssues extends Component {
     }
   }
 
+  static renderIssue(info) {
+    return (
+      <ListItem
+        href={info.url}
+        primaryText={info.name}
+        secondaryText={info.date}
+        leftIcon={ProjectIssues.getIssueIcon(info.type)}
+      />
+    )
+  }
+
   renderIssues() {
     const ret = []
-    for (const i in this.props.issues) {
+    for (let i = 0; i < this.props.issues.length; i += 1) {
       if (i > 4) {
-        ret.push(this.renderIssue({
+        ret.push(ProjectIssues.renderIssue({
           name: 'See more...',
           type: 'SeeMore',
           url: this.props.moreIssues
         }))
         break
       }
-      ret.push(this.renderIssue(this.props.issues[i]))
+      ret.push(ProjectIssues.renderIssue(this.props.issues[i]))
     }
     return ret
-  }
-
-  renderIssue(info) {
-    return (
-      <ListItem
-        href={info.url}
-        primaryText={info.name}
-        secondaryText={info.date}
-        leftIcon={this.getIssueIcon(info.type)}
-      />
-    )
   }
 
   render() {
@@ -77,6 +77,7 @@ class ProjectIssues extends Component {
 }
 
 ProjectIssues.propTypes = {
+  issues: PropTypes.array.isRequired,
   moreIssues: PropTypes.string.isRequired
 }
 

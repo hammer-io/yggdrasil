@@ -19,9 +19,9 @@ class ProjectDescription extends Component {
         <Paper style={Theme.projectDetails.header}>
           <div style={Theme.projectDetails.headerText}>Project Description</div>
           <Divider />
-          <p>
+          <div>
             <ReactMarkdown source={this.props.content} />
-          </p>
+          </div>
         </Paper>
       </div>
     )
