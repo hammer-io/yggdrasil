@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import Flexbox from 'flexbox-react'
 import ProjectHeader from '../components/ProjectHeader'
 import ProjectDescription from '../components/ProjectDescription'
 import ProjectIssues from '../components/ProjectIssues'
 import ProjectLinks from '../components/ProjectLinks'
-
 import Theme from '../../style/theme'
 
 const styles = {
-  container: {
+  headingContainer: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -17,66 +17,50 @@ const styles = {
   }
 }
 
+
 const projectDetails = {
-    projectName: 'MyAwesomeProject',
-    projectStatus: 'Healthy',
-    projectOwner: 'Nathan De Graaf',
-    lastUpdated: '1/12/18',
+  projectName: 'MyAwesomeProject',
+  projectStatus: 'Healthy',
+  projectOwner: 'Nathan De Graaf',
+  lastUpdated: '1/12/18',
 }
 
-const mapStateToProps = state => ({
-  session: state.session
-})
-
-@connect(mapStateToProps)
-class ProjectOverview extends Component {
-  componentDidMount() {
-    console.log(this.props.session)
-  }
-
-  render() {
-    return (
-      <div style={styles.container}>
-          <ProjectHeader {...projectDetails}/>
-          <ProjectDescription content={readme}/>
-          <ProjectIssues issues={issues}/>
-          <ProjectLinks travisUrl={'https://travis-ci.org/hammer-io/tyr'}
-                        githubUrl={'https://github.com/hammer-io/yggdrasil'}
-                        herokuUrl={'https://travis-ci.org/hammer-io/tyr'}/>
-      </div>
-    )
-  }
-}
 const issues = [{
-    name: 'Make github issues component',
-    date: 'Jan 17, 2018',
-    type: 'Completed',
-    url: 'https://github.com/hammer-io/yggdrasil/issues/109'},
-    {
-        name: 'Fix 49 53 76 97',
-        date: 'Jan 25, 2018',
-        type: 'MergeRequest',
-        url: 'https://github.com/hammer-io/yggdrasil/issues/109'},
-    {
-        name: 'Normalize redux store for easy lookups',
-        date: 'Jan 25, 2018',
-        type: 'Uncompleted',
-        url: 'https://github.com/hammer-io/yggdrasil/issues/109'},
-    {
-        name: 'Feature 54',
-        date: 'Jan 24, 2018',
-        type: 'Merged',
-        url: 'https://github.com/hammer-io/yggdrasil/issues/109'},
-    {
-        name: 'Remove all dependencies from top level package.json',
-        date: 'Jan 23, 2018',
-        type: 'Completed',
-        url: 'https://github.com/hammer-io/yggdrasil/issues/109'},
-    {
-        name: 'This is an open issue',
-        date: 'Jan 17, 2018',
-        type: 'Uncompleted',
-        url: 'https://github.com/hammer-io/yggdrasil/issues/109'}
+  name: 'Make github issues component',
+  date: 'Jan 17, 2018',
+  type: 'Completed',
+  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
+},
+{
+  name: 'Fix 49 53 76 97',
+  date: 'Jan 25, 2018',
+  type: 'MergeRequest',
+  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
+},
+{
+  name: 'Normalize redux store for easy lookups',
+  date: 'Jan 25, 2018',
+  type: 'Uncompleted',
+  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
+},
+{
+  name: 'Feature 54',
+  date: 'Jan 24, 2018',
+  type: 'Merged',
+  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
+},
+{
+  name: 'Remove all dependencies from top level package.json',
+  date: 'Jan 23, 2018',
+  type: 'Completed',
+  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
+},
+{
+  name: 'This is an open issue',
+  date: 'Jan 17, 2018',
+  type: 'Uncompleted',
+  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
+}
 ]
 
 const readme = '[![Build Status](https://travis-ci.org/hammer-io/tyr.svg?branch=master)](https://travis-ci.org/hammer-io/tyr)\n' +
@@ -198,5 +182,66 @@ const readme = '[![Build Status](https://travis-ci.org/hammer-io/tyr.svg?branch=
     'these applications. To find out more about how we use these credentials\n' +
     'and what steps we are taking to keep your information safe, please read\n' +
     'the [Security Information Management Policy](https://github.com/hammer-io/tyr/blob/master/SECURITY_INFORMATION_MANAGEMENT_POLICY.md).'
+
+const mapStateToProps = state => ({
+  session: state.session
+})
+
+@connect(mapStateToProps)
+class ProjectOverview extends Component {
+  componentDidMount() {
+  }
+
+  render() {
+    return (
+      <div style={styles.headingContainer}>
+        <ProjectHeader {...projectDetails} />
+        <Flexbox
+          flexDirection="row"
+          flexWrap="wrap"
+          width="90%"
+          justifyContent="space-between"
+          alignItems="flex-start"
+        >
+          <Flexbox
+            flexDirection="column"
+            maxWidth="45%"
+            flexGrow={1}
+          >
+            <Flexbox>
+              <ProjectIssues issues={issues} moreIssues="https://github.com/hammer-io/yggdrasil/issues/" />
+            </Flexbox>
+          </Flexbox>
+
+          <Flexbox
+            flexDirection="column"
+            maxWidth="45%"
+            flexGrow={1}
+          >
+            <Flexbox>
+              <ProjectLinks
+                travisUrl="https://travis-ci.org/hammer-io/tyr"
+                githubUrl="https://github.com/hammer-io/yggdrasil"
+                herokuUrl="https://travis-ci.org/hammer-io/tyr"
+              />
+            </Flexbox>
+          </Flexbox>
+
+          <Flexbox
+            flexDirection="column"
+            maxWidth="45%"
+            flexGrow={1}
+          >
+            <Flexbox>
+              <ProjectDescription content={readme} />
+            </Flexbox>
+
+          </Flexbox>
+        </Flexbox>
+
+      </div>
+    )
+  }
+}
 
 export default ProjectOverview

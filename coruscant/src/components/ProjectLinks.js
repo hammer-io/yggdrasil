@@ -2,73 +2,49 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Paper } from 'material-ui'
+import Divider from 'material-ui/Divider'
+import { List, ListItem } from 'material-ui/List'
 import { register } from './../actions/session'
-import Divider from 'material-ui/Divider';
-
-const styles = {
-    header: {
-        width: '40%',
-        textAlign: 'left',
-        display: 'inline-block',
-        padding: 10,
-        margin: 20,
-        maxHeight: 500,
-        overflow: 'auto'
-    },
-    container: {
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    headerText: {
-        fontFamily: 'Arial',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        fontSize: 30,
-        display: 'inline-block',
-        marginRight: 5,
-        marginLeft: 5
-    },
-    bodyText: {
-        fontFamily: 'Arial',
-        fontWeight: 'normal',
-        fontSize: 16,
-        display: 'block',
-        marginRight: 5,
-        marginLeft: 5
-    },
-}
+import Theme from '../../style/theme'
 
 const mapDispatchToProps = {
-    register
+  register
 }
 
 @connect(null, mapDispatchToProps)
 class ProjectLinks extends Component {
-    constructor(props) {
-        super(props)
-    }
+  render() {
+    return (
+      <div style={Theme.projectDetails.container}>
+        <Paper style={Theme.projectDetails.header}>
+          <div style={Theme.projectDetails.headerText}>Connected Services</div>
+          <Divider />
 
-    render() {
-        return (
-            <div style={styles.container}>
-              <Paper style={styles.header}>
-                  <div style={styles.headerText}>Connected Services</div>
-                  <Divider />
-                  <div style={styles.bodyText}><b>Github:</b> <a href={this.props.githubUrl}>{this.props.githubUrl}</a>   </div>
-                  <div style={styles.bodyText}><b>Travis-ci:</b> <a href={this.props.travisUrl}>{this.props.travisUrl}</a>   </div>
-                  <div style={styles.bodyText}><b>Heroku:</b> <a href={this.props.herokuUrl}>{this.props.herokuUrl}</a>   </div>
+          <List>
+            <ListItem
+              href={this.props.githubUrl}
+              primaryText="Github"
+            />
+            <ListItem
+              href={this.props.travisUrl}
+              primaryText="Travis-ci"
+            />
+            <ListItem
+              href={this.props.herokuUrl}
+              primaryText="Heroku"
+            />
+          </List>
 
-              </Paper>
-            </div>
-        )
-    }
+        </Paper>
+      </div>
+    )
+  }
 }
 
 ProjectLinks.propTypes = {
-    content: PropTypes.string.isRequired
+  githubUrl: PropTypes.string.isRequired,
+  travisUrl: PropTypes.string.isRequired,
+  herokuUrl: PropTypes.string.isRequired
 }
 
 export default ProjectLinks
