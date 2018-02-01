@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import Theme from '../../style/theme'
 
 import { getSession, setAccessToken } from '../actions/session'
 
@@ -17,6 +18,8 @@ const mapDispatchToProps = {
 @connect(mapStateToProps, mapDispatchToProps)
 class App extends Component {
   async componentDidMount() {
+    document.body.style.backgroundColor = Theme.palette.bodyBackground
+
     const {
       session,
       history,

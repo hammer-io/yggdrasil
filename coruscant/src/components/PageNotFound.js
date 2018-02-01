@@ -10,11 +10,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     padding: '100px',
-    backgroundColor: Theme.colors.grey400
-  },
-  text: {
-    fontFamily: Theme.font.family.regular,
-    color: Theme.colors.grey400
+    backgroundColor: Theme.palette.bodyBackground
   }
 }
 

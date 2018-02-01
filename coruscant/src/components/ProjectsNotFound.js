@@ -11,13 +11,12 @@ const styles = {
     padding: '100px'
   },
   icon: {
-    color: Theme.colors.grey400,
+    color: Theme.colors.neutlight_d2,
     height: '200px',
     width: '200px'
   },
   text: {
-    fontFamily: Theme.font.family.regular,
-    color: Theme.colors.grey400
+    color: Theme.colors.neutlight_d2
   }
 }
 

@@ -9,9 +9,6 @@ import * as validator from './../utils/validator'
 import Theme from './../../style/theme'
 
 const styles = {
-  header: {
-    fontFamily: Theme.font.family.regular
-  },
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -110,7 +107,7 @@ class Register extends Component {
     return (
       <div style={styles.container}>
         <Paper style={styles.form}>
-          <h4 style={styles.header}>Create an account</h4>
+          <h4>Create an account</h4>
           <TextField
             hintText="Email"
             floatingLabelText="Email"

@@ -19,7 +19,7 @@ const styles = {
   },
   button: {
     fontWeight: Theme.font.weight.heavy,
-    color: Theme.colors.cyan500
+    color: Theme.palette.primary1Color
   }
 }
 

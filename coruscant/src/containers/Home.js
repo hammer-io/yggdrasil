@@ -10,9 +10,6 @@ import ProjectsNotFound from './../components/ProjectsNotFound'
 import NewFloatingActionButton from '../components/NewFloatingActionButton'
 
 const styles = {
-  header: {
-    fontFamily: Theme.font.family.regular
-  },
   container: {
     display: 'flex',
     flexDirection: 'row',
