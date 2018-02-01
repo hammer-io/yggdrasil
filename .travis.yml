@@ -3,9 +3,6 @@ node_js:
   - '6'
   - '8'
 
-env:
-  - TEST_DIR=endor
-script: cd $TEST_DIR && npm install && npm run lint && npm test
 script: cd coruscant && npm install && npm run lint
 
 notifications:

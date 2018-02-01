@@ -1,9 +1,0 @@
-{
-  "database": "database",
-  "username": "root",
-  "password": "root",
-  "options": {
-    "dialect": "sqlite",
-    "logging": false
-  }
-}
