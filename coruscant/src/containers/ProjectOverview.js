@@ -197,28 +197,25 @@ class ProjectOverview extends Component {
       <div style={styles.headingContainer}>
         <ProjectHeader {...projectDetails} />
         <Flexbox
-          flexDirection="row"
+          flexDirection="column"
           flexWrap="wrap"
           width="90%"
           justifyContent="space-between"
           alignItems="flex-start"
         >
           <Flexbox
-            flexDirection="column"
-            maxWidth="45%"
-            flexGrow={1}
+            flexDirection="row"
+            justifyContent="space-around"
+            width="100%"
           >
-            <Flexbox>
+            <Flexbox
+              maxWidth="45%"
+            >
               <ProjectIssues issues={issues} moreIssues="https://github.com/hammer-io/yggdrasil/issues/" />
             </Flexbox>
-          </Flexbox>
-
-          <Flexbox
-            flexDirection="column"
-            maxWidth="45%"
-            flexGrow={1}
-          >
-            <Flexbox>
+            <Flexbox
+              maxWidth="45%"
+            >
               <ProjectLinks
                 travisUrl="https://travis-ci.org/hammer-io/tyr"
                 githubUrl="https://github.com/hammer-io/yggdrasil"
@@ -228,14 +225,9 @@ class ProjectOverview extends Component {
           </Flexbox>
 
           <Flexbox
-            flexDirection="column"
-            maxWidth="45%"
-            flexGrow={1}
+            maxWidth="100%"
           >
-            <Flexbox>
-              <ProjectDescription content={readme} />
-            </Flexbox>
-
+            <ProjectDescription content={readme} />
           </Flexbox>
         </Flexbox>
 
