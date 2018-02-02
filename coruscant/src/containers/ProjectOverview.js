@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React from 'react'
 import Flexbox from 'flexbox-react'
 import ProjectHeader from '../components/ProjectHeader'
 import ProjectDescription from '../components/ProjectDescription'
@@ -183,41 +182,34 @@ const readme = '[![Build Status](https://travis-ci.org/hammer-io/tyr.svg?branch=
     'and what steps we are taking to keep your information safe, please read\n' +
     'the [Security Information Management Policy](https://github.com/hammer-io/tyr/blob/master/SECURITY_INFORMATION_MANAGEMENT_POLICY.md).'
 
-class ProjectOverview extends Component {
-  componentDidMount() {
-  }
-
-  render() {
-    return (
-      <div style={styles.headingContainer}>
-        <ProjectHeader {...projectDetails} />
-        <Flexbox
-          flexDirection="column"
-          flexWrap="wrap"
-          width="90%"
-          justifyContent="space-around"
-          alignItems="flex-start"
-        >
-          <Flexbox>
-            <ProjectIssues
-              issues={issues}
-              moreIssues="https://github.com/hammer-io/yggdrasil/issues/"
-            />
-          </Flexbox>
-          <Flexbox>
-            <ProjectLinks
-              travisUrl="https://travis-ci.org/hammer-io/tyr"
-              githubUrl="https://github.com/hammer-io/yggdrasil"
-              herokuUrl="https://travis-ci.org/hammer-io/tyr"
-            />
-          </Flexbox>
-          <Flexbox>
-            <ProjectDescription content={readme} />
-          </Flexbox>
-        </Flexbox>
-      </div>
-    )
-  }
-}
+const ProjectOverview = () => (
+  <div style={styles.headingContainer}>
+    <ProjectHeader {...projectDetails} />
+    <Flexbox
+      flexDirection="row"
+      flexWrap="wrap"
+      width="90%"
+      justifyContent="space-around"
+      alignItems="flex-start"
+    >
+      <Flexbox>
+        <ProjectIssues
+          issues={issues}
+          moreIssues="https://github.com/hammer-io/yggdrasil/issues/"
+        />
+      </Flexbox>
+      <Flexbox>
+        <ProjectLinks
+          travisUrl="https://travis-ci.org/hammer-io/tyr"
+          githubUrl="https://github.com/hammer-io/yggdrasil"
+          herokuUrl="https://travis-ci.org/hammer-io/tyr"
+        />
+      </Flexbox>
+      <Flexbox>
+        <ProjectDescription content={readme} />
+      </Flexbox>
+    </Flexbox>
+  </div>
+)
 
 export default ProjectOverview

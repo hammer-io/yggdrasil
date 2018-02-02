@@ -34,6 +34,7 @@ class App extends Component {
         setAccessToken(null)
       }
     }
+    loggedIn = true
 
     if (loggedIn && (location.pathname === '/login' || location.pathname === '/register')) {
       history.replace('/home')
