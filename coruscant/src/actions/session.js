@@ -10,6 +10,11 @@ export function setUser(user) {
   return actionCreator(Constants.SET_USER, { user })
 }
 
+export function setPreviousRoute(previousRoute) {
+  return actionCreator(Constants.SET_PREVIOUS_ROUTE, { previousRoute })
+}
+
+
 export function getSession(token) {
   return async function (dispatch) {
     try {
