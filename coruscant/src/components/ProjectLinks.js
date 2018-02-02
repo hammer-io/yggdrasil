@@ -1,21 +1,14 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Paper } from 'material-ui'
 import Divider from 'material-ui/Divider'
 import { List, ListItem } from 'material-ui/List'
-import { register } from './../actions/session'
 import Theme from '../../style/theme'
 
-const mapDispatchToProps = {
-  register
-}
-
-@connect(null, mapDispatchToProps)
-class ProjectLinks extends Component {
+class ProjectLinks extends React.PureComponent {
   render() {
     return (
-      <div style={Theme.projectDetails.container}>
+      <div>
         <Paper style={Theme.projectDetails.header}>
           <div style={Theme.projectDetails.headerText}>Connected Services</div>
           <Divider />

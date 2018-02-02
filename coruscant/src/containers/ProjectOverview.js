@@ -183,11 +183,6 @@ const readme = '[![Build Status](https://travis-ci.org/hammer-io/tyr.svg?branch=
     'and what steps we are taking to keep your information safe, please read\n' +
     'the [Security Information Management Policy](https://github.com/hammer-io/tyr/blob/master/SECURITY_INFORMATION_MANAGEMENT_POLICY.md).'
 
-const mapStateToProps = state => ({
-  session: state.session
-})
-
-@connect(mapStateToProps)
 class ProjectOverview extends Component {
   componentDidMount() {
   }
@@ -200,43 +195,26 @@ class ProjectOverview extends Component {
           flexDirection="row"
           flexWrap="wrap"
           width="90%"
-          justifyContent="space-between"
+          justifyContent="space-around"
           alignItems="flex-start"
         >
-          <Flexbox
-            flexDirection="column"
-            maxWidth="45%"
-            flexGrow={1}
-          >
-            <Flexbox>
-              <ProjectIssues issues={issues} moreIssues="https://github.com/hammer-io/yggdrasil/issues/" />
-            </Flexbox>
+          <Flexbox>
+            <ProjectIssues
+              issues={issues}
+              moreIssues="https://github.com/hammer-io/yggdrasil/issues/"
+            />
+          </Flexbox>
+          <Flexbox>
+            <ProjectLinks
+              travisUrl="https://travis-ci.org/hammer-io/tyr"
+              githubUrl="https://github.com/hammer-io/yggdrasil"
+              herokuUrl="https://travis-ci.org/hammer-io/tyr"
+            />
+          </Flexbox>
+          <Flexbox>
+            <ProjectDescription content={readme} />
           </Flexbox>
 
-          <Flexbox
-            flexDirection="column"
-            maxWidth="45%"
-            flexGrow={1}
-          >
-            <Flexbox>
-              <ProjectLinks
-                travisUrl="https://travis-ci.org/hammer-io/tyr"
-                githubUrl="https://github.com/hammer-io/yggdrasil"
-                herokuUrl="https://travis-ci.org/hammer-io/tyr"
-              />
-            </Flexbox>
-          </Flexbox>
-
-          <Flexbox
-            flexDirection="column"
-            maxWidth="45%"
-            flexGrow={1}
-          >
-            <Flexbox>
-              <ProjectDescription content={readme} />
-            </Flexbox>
-
-          </Flexbox>
         </Flexbox>
 
       </div>

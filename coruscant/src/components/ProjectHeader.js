@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Paper } from 'material-ui'
 import Healthy from 'material-ui/svg-icons/action/check-circle'
@@ -11,27 +10,24 @@ import MenuItem from 'material-ui/MenuItem'
 import IconButton from 'material-ui/IconButton'
 import MoreHorizIcon from 'material-ui/svg-icons/navigation/more-horiz'
 import { yellow500, red500, green500 } from 'material-ui/styles/colors'
-import Theme from '../../style/theme'
-import { register } from './../actions/session'
-
 
 const styles = {
+  bold: {
+    fontWeight: 'bold',
+    display: 'inline'
+  },
   header: {
     width: '90%',
     textAlign: 'center',
-    display: 'inline-block',
     padding: 10
   },
   headerContainer: {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
     alignItems: 'center'
   },
   ProjectNameFont: {
-    fontFamily: 'Arial',
-    fontWeight: 'normal',
     fontSize: 34,
     display: 'inline'
   },
@@ -40,36 +36,37 @@ const styles = {
     width: 24,
     marginLeft: 20,
     marginRight: 3
+  },
+  descriptionText: {
+    fontSize: 16,
+    display: 'inline',
+    marginRight: 5,
+    marginLeft: 5
   }
 }
 
-const mapDispatchToProps = {
-  register
-}
-
-@connect(null, mapDispatchToProps)
 class ProjectHeader extends Component {
   renderStatus() {
     switch (this.props.projectStatus) {
       case 'Healthy':
         return (
-          <div style={Theme.projectDetails.descriptionText}>
+          <div style={styles.descriptionText}>
             <Healthy style={styles.statusIcon} color={green500} />
-            <div style={Theme.projectDetails.descriptionText}>App is healthy</div>
+            <div style={styles.descriptionText}>App is healthy</div>
           </div>
         )
       case 'Warning':
         return (
-          <div style={Theme.projectDetails.descriptionText}>
+          <div style={styles.descriptionText}>
             <Warning style={styles.statusIcon} color={yellow500} />
-            <div style={Theme.projectDetails.descriptionText}>Tests failing or something</div>
+            <div style={styles.descriptionText}>Tests failing or something</div>
           </div>
         )
       case 'Failing':
         return (
-          <div style={Theme.projectDetails.descriptionText}>
+          <div style={styles.descriptionText}>
             <Failing style={styles.statusIcon} color={red500} />
-            <div style={Theme.projectDetails.descriptionText}>Something is broken</div>
+            <div style={styles.descriptionText}>Something is broken</div>
           </div>
         )
       default:
@@ -91,11 +88,11 @@ class ProjectHeader extends Component {
               <MenuItem value="3" primaryText="Delete" />
             </IconMenu>
           </div>
-          <div style={Theme.projectDetails.descriptionText}>
-            <b>Owner:</b> {this.props.projectOwner}
+          <div style={styles.descriptionText}>
+            <div style={styles.bold}>Owner:</div> {this.props.projectOwner}
           </div>
-          <div style={Theme.projectDetails.descriptionText}>
-            <b>Last Updated:</b> {this.props.lastUpdated}
+          <div style={styles.descriptionText}>
+            <div style={styles.bold}>Last Updated:</div>{this.props.lastUpdated}
           </div>
 
 

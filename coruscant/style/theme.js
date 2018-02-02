@@ -10,44 +10,11 @@ const theme = {
 
   projectDetails: {
     header: {
-      textAlign: 'left',
-      display: 'inline-block',
-      padding: 10,
-      margin: 20,
-      maxHeight: 500,
-      overflow: 'auto'
-    },
-    descriptionText: {
-      fontFamily: 'Arial',
-      fontWeight: 'normal',
-      fontSize: 16,
-      display: 'inline',
-      marginRight: 5,
-      marginLeft: 5
-    },
-    container: {
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center'
+      padding: 20,
+      margin: 20
     },
     headerText: {
-      fontFamily: 'Arial',
-      fontWeight: 'bold',
-      textAlign: 'center',
-      fontSize: 30,
-      display: 'inline-block',
-      marginRight: 5,
-      marginLeft: 5
-    },
-    bodyText: {
-      fontFamily: 'Arial',
-      fontWeight: 'normal',
-      fontSize: 16,
-      display: 'block',
-      marginRight: 5,
-      marginLeft: 5
+      fontSize: 30
     }
   },
 
