@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import _ from 'lodash'
 import { getProjects, getUserProjects } from '../actions/project'
 import Theme from '../../style/theme'
 import Spinner from './../components/Spinner'
@@ -63,7 +64,9 @@ class Home extends Component {
   renderProjects() {
     const { projects } = this.props
     if (projects && projects.fetchedUserProjects) {
-      const userProjects = [...projects.owned, ...projects.contributed]
+      const ownedProjects = _.values(projects.owned.byId)
+      const contributedProjects = _.values(projects.contributed.byId)
+      const userProjects = [...ownedProjects, ...contributedProjects]
       if (userProjects.length > 0) {
         return (
           <div style={styles.container}>
@@ -86,7 +89,6 @@ class Home extends Component {
         {
           this.renderProjects()
         }
-
         <NewFloatingActionButton onClick={this.newProject} />
       </div>
     )
