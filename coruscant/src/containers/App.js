@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Theme from '../../style/theme'
 
-import { getSession, setAccessToken } from '../actions/session'
+import { getSession, setAccessToken, setPreviousRoute } from '../actions/session'
 
 const mapStateToProps = state => ({
   session: state.session
@@ -12,7 +12,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   getSession,
-  setAccessToken
+  setAccessToken,
+  setPreviousRoute
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -25,7 +26,8 @@ class App extends Component {
       history,
       location,
       getSession,
-      setAccessToken
+      setAccessToken,
+      setPreviousRoute
     } = this.props
 
     let loggedIn = false
@@ -41,6 +43,7 @@ class App extends Component {
     if (loggedIn && (location.pathname === '/login' || location.pathname === '/register')) {
       history.replace('/home')
     } else if (!loggedIn && location.pathname !== '/login' && location.pathname !== '/register') {
+      setPreviousRoute(location.pathname)
       history.push('/login')
     }
   }
@@ -63,6 +66,7 @@ App.propTypes = {
   location: PropTypes.object.isRequired,
   getSession: PropTypes.func.isRequired,
   setAccessToken: PropTypes.func.isRequired,
+  setPreviousRoute: PropTypes.func.isRequired
 }
 
 export default withRouter(App)

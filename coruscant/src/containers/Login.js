@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { TextField, RaisedButton, Paper } from 'material-ui'
 import PropTypes from 'prop-types'
 import Theme from '../../style/theme'
-import { login } from '../actions/session'
+import { login, setPreviousRoute } from '../actions/session'
 import * as validator from './../utils/validator'
 
 const styles = {
@@ -28,11 +28,16 @@ const styles = {
   }
 }
 
+const mapStateToProps = state => ({
+  session: state.session
+})
+
 const mapDispatchToProps = {
-  login
+  login,
+  setPreviousRoute
 }
 
-@connect(null, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 class Login extends Component {
   constructor(props) {
     super(props)
@@ -51,7 +56,12 @@ class Login extends Component {
 
   async submitForm() {
     const { username, password } = this.state
-    const { history, login } = this.props
+    const {
+      session,
+      history,
+      login,
+      setPreviousRoute
+    } = this.props
 
     const validUsername = validator.validateUsername(username)
     if (typeof validUsername === 'string') {
@@ -75,7 +85,8 @@ class Login extends Component {
       return
     }
 
-    if (history.action === 'PUSH') {
+    if (history.action === 'PUSH' && (session.previousRoute !== null)) {
+      setPreviousRoute(null)
       history.goBack()
     } else {
       history.push('/home')
@@ -124,8 +135,10 @@ class Login extends Component {
 }
 
 Login.propTypes = {
+  session: PropTypes.object.isRequired,
   login: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  setPreviousRoute: PropTypes.func.isRequired
 }
 
 export default withRouter(Login)
