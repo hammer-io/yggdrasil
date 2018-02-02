@@ -1,32 +1,52 @@
+import { normalize } from 'normalizr'
 import * as Constants from './../constants'
+import projectList from './../models/projectList'
 
 function makeInitialState() {
   return {
-    all: [],
-    owned: [],
-    contributed: [],
+    all: {},
+    owned: {},
+    contributed: {},
     fetchedUserProjects: false
   }
 }
 
 function setProjects(state, action) {
+  const normalizedProjects = normalize(action.payload.projects, projectList)
   return {
     ...state,
-    all: [
-      ...action.payload.projects
-    ]
+    all: {
+      byId: {
+        ...normalizedProjects.entities.projects
+      },
+      allIds: {
+        ...normalizedProjects.result
+      }
+    }
   }
 }
 
 function setUserProjects(state, action) {
+  const normalizedOwnedProjects = normalize(action.payload.projects.owned, projectList)
+  const normalizedContributedProjects = normalize(action.payload.projects.contributed, projectList)
   return {
     ...state,
-    owned: [
-      ...action.payload.projects.owned
-    ],
-    contributed: [
-      ...action.payload.projects.contributed
-    ],
+    owned: {
+      byId: {
+        ...normalizedOwnedProjects.entities.projects
+      },
+      allIds: {
+        ...normalizedOwnedProjects.result
+      }
+    },
+    contributed: {
+      byId: {
+        ...normalizedContributedProjects.entities.projects
+      },
+      alIds: {
+        ...normalizedContributedProjects.result
+      }
+    },
     fetchedUserProjects: true
   }
 }
