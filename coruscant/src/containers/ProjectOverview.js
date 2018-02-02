@@ -192,7 +192,7 @@ class ProjectOverview extends Component {
       <div style={styles.headingContainer}>
         <ProjectHeader {...projectDetails} />
         <Flexbox
-          flexDirection="row"
+          flexDirection="column"
           flexWrap="wrap"
           width="90%"
           justifyContent="space-around"
@@ -214,9 +214,7 @@ class ProjectOverview extends Component {
           <Flexbox>
             <ProjectDescription content={readme} />
           </Flexbox>
-
         </Flexbox>
-
       </div>
     )
   }
