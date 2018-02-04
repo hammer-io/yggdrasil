@@ -25,11 +25,11 @@ export function validateUsername(username) {
   }
 
   if (username.length > 255) {
-    return 'Username cannot be longer than 255 characters'
+    return 'Username cannot be longer than 255 characters.'
   }
 
   if (!username.match(letterNumber)) {
-    return 'Username can contain only alphanumeric values and underscores'
+    return 'Username can contain only alphanumeric values and underscores.'
   }
 
   return true
@@ -63,15 +63,15 @@ export function validatePassword(password) {
   }
 
   if (password.length < 8) {
-    return 'Password must be at least 8 characters long'
+    return 'Password must be at least 8 characters long.'
   }
 
   if (!password.match(letter)) {
-    return 'Password must contain at least one alphabet'
+    return 'Password must contain at least one letter.'
   }
 
   if (!password.match(number)) {
-    return 'Password must contain at least one digit'
+    return 'Password must contain at least one digit.'
   }
 
   return true

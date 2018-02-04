@@ -84,6 +84,15 @@ class Register extends Component {
     if (result) {
       history.push('/home')
     } else {
+      error.error.errors.forEach((err) => {
+        if (err.field === 'username') {
+          this.setState({ usernameErrorText: err.message })
+        } else if (err.field === 'password') {
+          this.setState({ passwordErrorText: err.message })
+        } else if (err.field === 'email') {
+          this.setState({ emailErrorText: err.message })
+        }
+      })
       console.log(error)
     }
   }
