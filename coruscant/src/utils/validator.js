@@ -17,7 +17,7 @@ function isBlank(value) {
  * Validates a username
  *
  * @param username The username to validate
- * @returns {*} if not valid, returns the error message otherwise, returns true
+ * @returns {*} if not valid, returns the error message. Otherwise, returns true
  */
 export function validateUsername(username) {
   if (isBlank(username)) {
@@ -25,11 +25,11 @@ export function validateUsername(username) {
   }
 
   if (username.length > 255) {
-    return 'Username cannot be longer than 255 characters.'
+    return 'Username cannot be longer than 255 characters'
   }
 
   if (!username.match(letterNumber)) {
-    return 'Username can contain only alphanumeric values and underscores.'
+    return 'Username can contain only alphanumeric values and underscores'
   }
 
   return true
@@ -40,7 +40,7 @@ export function validateUsername(username) {
  * email validator.
  *
  * @param email the email to validate
- * @returns {*} if not valid, returns the error message otherwise, returns true
+ * @returns {*} if not valid, returns the error message. Otherwise, returns true
  */
 export function validateEmail(email) {
   if (isBlank(email)) {
@@ -55,7 +55,7 @@ export function validateEmail(email) {
 /**
  * Validates a password
  * @param password the password to validate
- * @returns {*} if not valid, returns the error message otherwise, returns true
+ * @returns {*} if not valid, returns the error message. Otherwise, returns true
  */
 export function validatePassword(password) {
   if (isBlank(password)) {
@@ -63,15 +63,15 @@ export function validatePassword(password) {
   }
 
   if (password.length < 8) {
-    return 'Password must be at least 8 characters long.'
+    return 'Password must be at least 8 characters long'
   }
 
   if (!password.match(letter)) {
-    return 'Password must contain at least one letter.'
+    return 'Password must contain at least one letter'
   }
 
   if (!password.match(number)) {
-    return 'Password must contain at least one digit.'
+    return 'Password must contain at least one digit'
   }
 
   return true
