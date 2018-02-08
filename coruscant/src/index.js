@@ -13,6 +13,7 @@ import Home from './containers/Home'
 import Login from './containers/Login'
 import ProjectOverview from './containers/ProjectOverview'
 import Register from './containers/Register'
+import UserSettings from './containers/UserSettings'
 import NotFound from './components/PageNotFound'
 import TyrInfo from './components/TyrInfo'
 
@@ -29,7 +30,7 @@ const Root = () => (
       <Router>
         <App>
           <Switch>
-            <Route path={['/home', '/projects/:id', '/tyr']} component={Menu} />
+            <Route path={['/home', '/projects/:id', '/settings', '/tyr']} component={Menu} />
           </Switch>
           <Switch>
             <Route exact path="/" render={() => <Redirect to="/home" />} />
@@ -37,6 +38,7 @@ const Root = () => (
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/projects/:id" component={ProjectOverview} />
+            <Route exact path="/settings" component={UserSettings} />
             <Route exact path="/tyr" component={TyrInfo} />
             <Route component={NotFound} />
           </Switch>
