@@ -45,6 +45,8 @@ class Menu extends Component {
       history.push('/home')
     } else if (item.props.primaryText === 'Settings' && location.pathname !== '/settings') {
       history.push('/settings')
+    } else if (item.props.primaryText === 'Tyr' && location.pathname !== '/tyr') {
+      history.push('/tyr')
     } else {
       this.clickToggleDrawer()
     }
