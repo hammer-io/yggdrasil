@@ -81,8 +81,12 @@ class Login extends Component {
     }
     const { error } = await login(credentials)
     if (error) {
-      if (error.error.status === 403 && error.error.type === 'Invalid Credentials') {
-        this.setState({ passwordErrorText: error.message })
+      if (error.error.type === 'Invalid Credentials') {
+        if (error.error.field === 'username') {
+          this.setState({ usernameErrorText: error.error.message })
+        } else if (error.error.field === 'password') {
+          this.setState({ passwordErrorText: error.error.message })
+        }
       }
       console.log(error)
       return
