@@ -160,17 +160,15 @@ export function addOwner(token, info) {
 }
 
 export function removeContributor(token, info) {
-  return async function () {
+  return async function (dispatch) {
     try {
-      console.log('removing contributor ')
-      console.log(info)
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
       const { result, error } = await fetchClient.delete({
         url: `/projects/${info.projectId}/contributors/${info.user}`
       })
-      console.log('got here')
       if (result) {
+        dispatch(setProjectContributors(result))
         return { result, error }
       }
       console.log(error)
@@ -183,17 +181,15 @@ export function removeContributor(token, info) {
 }
 
 export function removeOwner(token, info) {
-  return async function () {
+  return async function (dispatch) {
     try {
-      console.log('removing owner ')
-      console.log(info)
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
       const { result, error } = await fetchClient.delete({
         url: `/projects/${info.projectId}/owners/${info.user}`
       })
-      console.log('got here')
       if (result) {
+        dispatch(setProjectOwners(result))
         return { result, error }
       }
       console.log(error)

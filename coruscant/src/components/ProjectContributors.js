@@ -72,14 +72,13 @@ class ProjectContributors extends Component {
     if (result !== null) {
       return result.id
     }
-    console.log('Could not find specified user')
     return -1
   }
 
   async addMemberByName(user, owner) {
     const userId = await this.getUser(user)
     if (userId === -1) {
-      // TODO show errors to user
+      // TODO let the user know what happened
       return
     }
     await this.addMember(userId, owner)
@@ -109,27 +108,10 @@ class ProjectContributors extends Component {
     if (owner) {
       const { removeOwner } = this.props
       await removeOwner(this.props.session.authToken, ids)
-      await getProjectOwners(this.props.session.authToken, this.props.projectId)
     } else {
       const { removeContributor } = this.props
       await removeContributor(this.props.session.authToken, ids)
-      await getProjectContributors(this.props.session.authToken, this.props.projectId)
     }
-  }
-
-  removeOwner(id) {
-    console.log(`removing owner ${id}`)
-    this.removeMember(id, true)
-  }
-
-  removeContributor(id) {
-    console.log(`removing contributor ${id}`)
-    this.removeMember(id, false)
-  }
-
-  makeOwner(id) {
-    console.log(`making owner ${id}`)
-    this.addMember(id, true)
   }
 
   async submitForm() {
@@ -179,14 +161,14 @@ class ProjectContributors extends Component {
     if (isAnOwner) {
       return (
         <IconMenu iconButtonElement={iconButtonElement}>
-          <MenuItem onClick={() => this.removeOwner(id)}>Remove</MenuItem>
+          <MenuItem onClick={() => this.removeMember(id, true)}>Remove</MenuItem>
         </IconMenu>
       )
     }
     return (
       <IconMenu iconButtonElement={iconButtonElement}>
-        <MenuItem onClick={() => this.makeOwner(id)}>Make Owner</MenuItem>
-        <MenuItem onClick={() => this.removeContributor(id)}>Remove</MenuItem>
+        <MenuItem onClick={() => this.addMember(id, true)}>Make Owner</MenuItem>
+        <MenuItem onClick={() => this.removeMember(id, false)}>Remove</MenuItem>
       </IconMenu>
     )
   }
@@ -198,7 +180,7 @@ class ProjectContributors extends Component {
       <div>
         <Paper style={Theme.projectDetails.header}>
           <div style={{ fontWeight: 'bold' }}>
-            Current Contributors
+            Members
           </div>
           <Divider />
           <List>
@@ -210,7 +192,7 @@ class ProjectContributors extends Component {
         </Paper>
         <Paper style={Theme.projectDetails.header}>
           <div style={{ fontWeight: 'bold' }}>
-            Invite new Contributor
+            Add New Member
           </div>
           <Flexbox
             flexDirection="row"
@@ -240,7 +222,7 @@ class ProjectContributors extends Component {
             <Flexbox
               flexGrow={1}
             >
-              <RaisedButton label="Invite" primary onClick={this.submitForm} />
+              <RaisedButton label="Add Member" primary onClick={this.submitForm} />
             </Flexbox>
           </Flexbox>
         </Paper>
