@@ -18,13 +18,6 @@ const styles = {
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingTop: Theme.padding.regular
-  },
-  spinnerContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: Theme.padding.large
   }
 }
 
@@ -77,7 +70,7 @@ class Home extends Component {
       return <ProjectsNotFound />
     }
     return (
-      <div style={styles.spinnerContainer}>
+      <div style={Theme.spinnerContainer}>
         <Spinner />
       </div>
     )

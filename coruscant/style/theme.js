@@ -18,6 +18,14 @@ const theme = {
     }
   },
 
+  spinnerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 48
+  },
+
   colors: Colors,
 
   palette: {
@@ -29,8 +37,8 @@ const theme = {
     accent3Color: Colors.neutdark_d2,
     textColor: Colors.darkBlack,
     alternateTextColor: Colors.white,
-    canvasColor: Colors.neutlight_u2,
-    borderColor: Colors.neutlight_u1,
+    canvasColor: Colors.neutlight_u4,
+    borderColor: Colors.neutlight_u3,
     disabledColor: Colors.darkBlack,
     pickerHeaderColor: Colors.primary_u1,
     clockCircleColor: Colors.darkBlack,
