@@ -120,6 +120,18 @@ class ProjectContributors extends Component {
     this.setState({ username: '', makeOwner: false })
   }
 
+  showOwnerSettings() {
+    let isOwner = false
+    // TODO
+    // There's an endpoint for Check if a user is an owner
+    // If this ever gives a bug use that instead
+    if (this.props.projectMembers.fetchedOwners
+      && (typeof this.props.projectMembers.owners.byId[this.props.session.user.id] !== 'undefined')) {
+      isOwner = true
+    }
+    return isOwner
+  }
+
   usernameOnChange(event, newValue) {
     this.setState({ username: newValue })
   }
@@ -149,13 +161,7 @@ class ProjectContributors extends Component {
   }
 
   renderRightIconMenu(isAnOwner, id) {
-    let isOwner = false
-    if (this.props.projectMembers.fetchedOwners
-      && this.props.projectMembers.owners.alIds[this.props.session.user.id] !== null) {
-      isOwner = true
-    }
-
-    if (!isOwner) {
+    if (!this.showOwnerSettings()) {
       return
     }
     if (isAnOwner) {
@@ -173,6 +179,50 @@ class ProjectContributors extends Component {
     )
   }
 
+  renderAddMember() {
+    if (!this.showOwnerSettings()) {
+      return
+    }
+    return (
+      <Paper style={Theme.projectDetails.header}>
+        <div style={{ fontWeight: 'bold' }}>
+          Add New Member
+        </div>
+        <Flexbox
+          flexDirection="row"
+          flexWrap="wrap"
+          width="100%"
+          justifyContent="flex-start"
+          alignItems="center"
+        >
+          <Flexbox
+            flexGrow={1}
+          >
+            <TextField
+              hintText="Username"
+              value={this.state.username}
+              onChange={this.usernameOnChange}
+            />
+          </Flexbox>
+          <Flexbox
+            flexGrow={1}
+          >
+            <Checkbox
+              label="Make Owner"
+              checked={this.state.makeOwner}
+              onCheck={this.makeOwnerOnChange}
+            />
+          </Flexbox>
+          <Flexbox
+            flexGrow={1}
+          >
+            <RaisedButton label="Add Member" primary onClick={this.submitForm} />
+          </Flexbox>
+        </Flexbox>
+      </Paper>
+    )
+  }
+
   render() {
     const owners = _.values(this.props.projectMembers.owners.byId)
     const contributors = _.values(this.props.projectMembers.contributors.byId)
@@ -180,52 +230,21 @@ class ProjectContributors extends Component {
       <div>
         <Paper style={Theme.projectDetails.header}>
           <div style={{ fontWeight: 'bold' }}>
-            Members
+            Owners
           </div>
-          <Divider />
           <List>
-            <Subheader inset>Owners</Subheader>
             {this.renderMembers(owners, true)}
-            <Subheader inset>Contributors</Subheader>
-            {this.renderMembers(contributors, false)}
           </List>
         </Paper>
         <Paper style={Theme.projectDetails.header}>
           <div style={{ fontWeight: 'bold' }}>
-            Add New Member
+            Contributors
           </div>
-          <Flexbox
-            flexDirection="row"
-            flexWrap="wrap"
-            width="100%"
-            justifyContent="flex-start"
-            alignItems="center"
-          >
-            <Flexbox
-              flexGrow={1}
-            >
-              <TextField
-                hintText="Username"
-                value={this.state.username}
-                onChange={this.usernameOnChange}
-              />
-            </Flexbox>
-            <Flexbox
-              flexGrow={1}
-            >
-              <Checkbox
-                label="Make Owner"
-                checked={this.state.makeOwner}
-                onCheck={this.makeOwnerOnChange}
-              />
-            </Flexbox>
-            <Flexbox
-              flexGrow={1}
-            >
-              <RaisedButton label="Add Member" primary onClick={this.submitForm} />
-            </Flexbox>
-          </Flexbox>
+          <List>
+            {this.renderMembers(contributors, false)}
+          </List>
         </Paper>
+        {this.renderAddMember()}
       </div>
     )
   }

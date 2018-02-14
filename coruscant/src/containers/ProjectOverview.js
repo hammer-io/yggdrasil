@@ -252,7 +252,7 @@ class ProjectOverview extends React.Component {
               </Flexbox>
             </div>
           </Tab>
-          <Tab label="Contributors" >
+          <Tab label="Members" >
             <div>
               <ProjectContributors projectId={params.id} />
             </div>
