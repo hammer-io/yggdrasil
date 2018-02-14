@@ -90,7 +90,7 @@ class ProjectHeader extends Component {
           {this.descriptionTag('Authors: ', this.props.authors)}
           {this.descriptionTag('License: ', this.props.license)}
           {this.descriptionTag('Version: ', this.props.version)}
-          {this.descriptionTag('Last Updated:', updatedAtString)}
+          {this.descriptionTag('Last Updated: ', updatedAtString)}
 
 
         </Paper>

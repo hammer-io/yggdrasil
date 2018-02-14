@@ -8,6 +8,7 @@ import { getProject } from '../actions/project'
 import ProjectHeader from '../components/ProjectHeader'
 import ProjectDescription from '../components/ProjectDescription'
 import ProjectIssues from '../components/ProjectIssues'
+import ProjectBuilds from '../components/ProjectBuilds'
 import ProjectLinks from '../components/ProjectLinks'
 import ProjectContributors from '../components/ProjectContributors'
 import Theme from '../../style/theme'
@@ -22,44 +23,6 @@ const styles = {
     paddingTop: Theme.padding.regular
   }
 }
-
-const issues = [{
-  name: 'Make github issues component',
-  date: 'Jan 17, 2018',
-  type: 'Completed',
-  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
-},
-{
-  name: 'Fix 49 53 76 97',
-  date: 'Jan 25, 2018',
-  type: 'MergeRequest',
-  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
-},
-{
-  name: 'Normalize redux store for easy lookups',
-  date: 'Jan 25, 2018',
-  type: 'Uncompleted',
-  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
-},
-{
-  name: 'Feature 54',
-  date: 'Jan 24, 2018',
-  type: 'Merged',
-  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
-},
-{
-  name: 'Remove all dependencies from top level package.json',
-  date: 'Jan 23, 2018',
-  type: 'Completed',
-  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
-},
-{
-  name: 'This is an open issue',
-  date: 'Jan 17, 2018',
-  type: 'Uncompleted',
-  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
-}
-]
 
 const readme = '[![Build Status](https://travis-ci.org/hammer-io/tyr.svg?branch=master)](https://travis-ci.org/hammer-io/tyr)\n' +
     '[![codecov](https://codecov.io/gh/hammer-io/tyr/branch/master/graph/badge.svg)](https://codecov.io/gh/hammer-io/tyr)\n' +
@@ -235,15 +198,21 @@ class ProjectOverview extends React.Component {
               >
                 <Flexbox>
                   <ProjectIssues
-                    issues={issues}
-                    moreIssues="https://github.com/hammer-io/yggdrasil/issues/"
+                    githubUrl={project.githubRepositoryName}
+                    projectId={params.id}
+                  />
+                </Flexbox>
+                <Flexbox>
+                  <ProjectBuilds
+                    travisUrl={project.travisRepositoryName}
+                    projectId={params.id}
                   />
                 </Flexbox>
                 <Flexbox>
                   <ProjectLinks
-                    travisUrl="https://travis-ci.org/hammer-io/tyr"
-                    githubUrl="https://github.com/hammer-io/yggdrasil"
-                    herokuUrl="https://travis-ci.org/hammer-io/tyr"
+                    travisUrl={project.travisRepositoryName}
+                    githubUrl={project.githubRepositoryName}
+                    herokuUrl={project.herokuApplicationName}
                   />
                 </Flexbox>
                 <Flexbox>

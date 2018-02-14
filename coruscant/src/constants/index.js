@@ -8,6 +8,8 @@ export const SET_PREVIOUS_ROUTE = createConstant('SET_PREVIOUS_ROUTE')
 // Project
 export const SET_PROJECTS = createConstant('SET_PROJECTS')
 export const SET_USER_PROJECTS = createConstant('SET_USER_PROJECTS')
+export const SET_ISSUES = createConstant('SET_ISSUES')
+export const SET_BUILD_STATUSES = createConstant('SET_BUILD_STATUSES')
 
 // User
 export const SET_PROJECT_CONTRIBUTORS = createConstant('SET_PROJECT_CONTRIBUTORS')

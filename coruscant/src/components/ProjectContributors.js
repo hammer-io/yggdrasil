@@ -13,7 +13,6 @@ import RaisedButton from 'material-ui/RaisedButton'
 import Checkbox from 'material-ui/Checkbox'
 import { connect } from 'react-redux'
 import { getProject, getProjectContributors, getProjectOwners, addContributor, getUser, removeContributor, addOwner, removeOwner } from '../actions/project'
-
 import Theme from '../../style/theme'
 
 const iconButtonElement = (
