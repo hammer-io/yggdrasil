@@ -95,25 +95,37 @@ class ProjectIssues extends Component {
       )
     }
 
-    const seeMoreItem = {
-      title: 'See more...',
-      state: 'SeeMore',
-      url: `https://github.com/${this.props.githubUrl}/issues`
-    }
+    const seeMoreItem = (
+      <ListItem
+        href={`https://github.com/${this.props.githubUrl}/issues`}
+        primaryText="See more..."
+        leftIcon={ProjectIssues.getIssueIcon('SeeMore')}
+      />)
+
+    const noIssues = (
+      <ListItem
+        href={`https://github.com/${this.props.githubUrl}/issues`}
+        primaryText="No issues in this repository"
+        secondaryText="Click here to create your first issue"
+        leftIcon={ProjectIssues.getIssueIcon('SeeMore')}
+      />)
 
     issues = issues.map(issue => ({
       ...issue,
       url: `https://github.com/${this.props.githubUrl}/issues/${issue.number}`
     }))
 
-    const displayedIssues = issues.slice(0, numDisplayed)
+    let displayedIssues = issues.slice(0, numDisplayed)
+    displayedIssues = displayedIssues.map(issue => ProjectIssues.renderIssue(issue))
     if (issues.length > numDisplayed) {
       displayedIssues.push(seeMoreItem)
     }
-    issues = displayedIssues.map(issue => ProjectIssues.renderIssue(issue))
+    if (displayedIssues.length === 0) {
+      displayedIssues.push(noIssues)
+    }
     return (
       <List>
-        {issues}
+        {displayedIssues}
       </List>
     )
   }

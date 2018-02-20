@@ -27,7 +27,7 @@ const mapDispatchToProps = {
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-class ProjectIssues extends Component {
+class ProjectBuilds extends Component {
   static getIssueIcon(type) {
     switch (type) {
       case 'passed':
@@ -80,7 +80,7 @@ class ProjectIssues extends Component {
           </div>
         }
         secondaryTextLines={2}
-        leftIcon={ProjectIssues.getIssueIcon(info.state)}
+        leftIcon={ProjectBuilds.getIssueIcon(info.state)}
       />
     )
   }
@@ -101,7 +101,7 @@ class ProjectIssues extends Component {
   renderBuildStatuses() {
     const numDisplayed = 2
     let statuses = _.values(this.props.projectBuilds.all.byId)
-    if (!this.props.projectBuilds.all) {
+    if (!this.props.projectBuilds.fetchedBuildStatuses) {
       return (
         <BasicSpinner />
       )
@@ -111,7 +111,14 @@ class ProjectIssues extends Component {
       <ListItem
         href={`https://travis-ci.org/${this.props.travisUrl}/builds`}
         primaryText="See more..."
-        leftIcon={ProjectIssues.getIssueIcon('SeeMore')}
+        leftIcon={ProjectBuilds.getIssueIcon('SeeMore')}
+      />)
+
+    const noBuilds = (
+      <ListItem
+        href={`https://travis-ci.org/${this.props.travisUrl}/builds`}
+        primaryText="No builds for this repository"
+        leftIcon={ProjectBuilds.getIssueIcon('SeeMore')}
       />)
 
     statuses = statuses.reverse()
@@ -121,10 +128,13 @@ class ProjectIssues extends Component {
     }))
 
     let displayedStatuses = statuses.slice(0, numDisplayed)
-    displayedStatuses = displayedStatuses.map(status => ProjectIssues.renderBuildStatus(status))
+    displayedStatuses = displayedStatuses.map(status => ProjectBuilds.renderBuildStatus(status))
 
     if (statuses.length > numDisplayed) {
       displayedStatuses.push(seeMoreItem)
+    }
+    if (displayedStatuses.length === 0) {
+      displayedStatuses.push(noBuilds)
     }
     return (
       <List>
@@ -149,11 +159,11 @@ class ProjectIssues extends Component {
   }
 }
 
-ProjectIssues.propTypes = {
+ProjectBuilds.propTypes = {
   projectBuilds: PropTypes.object.isRequired,
   travisUrl: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
 }
 
 
-export default ProjectIssues
+export default ProjectBuilds
