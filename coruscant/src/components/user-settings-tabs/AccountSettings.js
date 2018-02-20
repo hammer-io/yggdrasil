@@ -24,21 +24,58 @@ function onConnectToGithub() {
   console.log('TODO: Connecting to GitHub...')
 }
 
+function onConnectToHeroku() {
+  console.log('TODO: Connecting to Heroku...')
+}
+
 function onAddAccount() {
   console.log('TODO: Adding account...')
+}
+
+const accounts = [
+  {
+    name: 'GitHub',
+    linked: false,
+    onConnectHandler: onConnectToGithub
+  },
+  {
+    name: 'Heroku',
+    linked: true,
+    onConnectHandler: onConnectToHeroku
+  }
+]
+
+function renderAccountInfo(account) {
+  const label = `Connect to ${account.name}`
+  const info = (account.linked)
+    ? (
+      <div>
+        <p>
+          Display something useful about the linked account, such as... username?
+        </p>
+      </div>
+    )
+    : (
+      <div>
+        <p>
+          This account has not been connected yet. Please click the &quot;Connect&quot; button
+          below to link your GitHub account to Yggdrasil.
+        </p>
+        <RaisedButton label={label} primary onClick={account.onConnectHandler} />
+      </div>
+    )
+  return (
+    <div>
+      <h3>{account.name}</h3>
+      {info}
+    </div>
+  )
 }
 
 const AccountSettings = () => (
   <div style={styles.container}>
     <h2>Linked Accounts</h2>
-    <div>
-      <h3>GitHub</h3>
-      <p>
-        This account has not been connected yet. Please click the &quot;Connect&quot; button
-        below to link your GitHub account to Yggdrasil.
-      </p>
-      <RaisedButton label="Connect to Github" primary onClick={onConnectToGithub} />
-    </div>
+    {accounts.map(renderAccountInfo)}
     <hr style={styles.hr} />
     <div style={styles.bottomActionSpacer}>
       <NewFloatingActionButton onClick={onAddAccount} />

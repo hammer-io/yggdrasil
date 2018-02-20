@@ -11,7 +11,10 @@ const styles = {
 const NotificationSettings = () => (
   <div style={styles.container}>
     <h2>Notification Settings</h2>
-    <p>TODO</p>
+    <p>
+      TODO: Here the user will be able to enable/disable
+      email notifications for different events.
+    </p>
   </div>
 )
 

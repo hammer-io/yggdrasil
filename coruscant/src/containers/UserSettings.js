@@ -20,7 +20,7 @@ function renderTabs() {
       <Tab label="Accounts">
         <AccountSettings />
       </Tab>
-      <Tab label="Nofication" >
+      <Tab label="Notification" >
         <NotificationSettings />
       </Tab>
     </Tabs>
