@@ -31,7 +31,7 @@ class Menu extends Component {
       logout()
       history.push('/login')
     } else if (item.props.primaryText === 'New Project') {
-      history.push('/projects/new')
+      history.push('/new')
     }
   }
 

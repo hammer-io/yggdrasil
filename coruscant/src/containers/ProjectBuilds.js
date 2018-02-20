@@ -13,12 +13,13 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import Theme from '../../style/theme'
-import { getBuildStatuses, addTravisToken } from '../actions/project'
-import Spinner from './../components/Spinner'
+import { getBuildStatuses } from '../actions/project'
+import { addTravisToken } from '../actions/session'
+import Spinner from '../components/Spinner'
 
 const mapStateToProps = state => ({
   session: state.session,
-  projects: state.projects
+  projectBuilds: state.projectBuilds
 })
 
 const mapDispatchToProps = {
@@ -92,15 +93,15 @@ class ProjectIssues extends Component {
     } = this.props
 
     const id = this.props.projectId
-    // This token is for the travis repo: NathanDeGraafTest/naaathan9
-    // await addTravisToken(session.authToken, { travisToken: 'JZiyq_IlvMGkuj3bx24ASw' })
+    // Use this to set your travis token for now
+    // await addTravisToken(session.authToken, { travisToken: '' })
     await getBuildStatuses(session.authToken, id, 5)
   }
 
   renderBuildStatuses() {
     const numDisplayed = 2
-    let statuses = _.values(this.props.projects.buildStatuses.byId)
-    if (!this.props.projects.fetchedBuildStatuses) {
+    let statuses = _.values(this.props.projectBuilds.all.byId)
+    if (!this.props.projectBuilds.all) {
       return (
         <div style={Theme.spinnerContainer}>
           <Spinner />
@@ -148,7 +149,7 @@ class ProjectIssues extends Component {
 }
 
 ProjectIssues.propTypes = {
-  projects: PropTypes.object.isRequired,
+  projectBuilds: PropTypes.object.isRequired,
   travisUrl: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
 }

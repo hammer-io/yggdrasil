@@ -137,11 +137,11 @@ class ProjectContributors extends Component {
     this.setState({ makeOwner: newValue })
   }
 
-  renderMembers(members, isAnOwner) {
-    return members.map(member => this.renderMember(member, isAnOwner))
+  renderMembers(members, owner) {
+    return members.map(member => this.renderMember(member, owner))
   }
 
-  renderMember(info, isAnOwner) {
+  renderMember(info, owner) {
     let name
     if (info.firstName === null || info.astName === null) {
       name = info.email
@@ -152,16 +152,16 @@ class ProjectContributors extends Component {
       <ListItem
         primaryText={name}
         secondaryText={info.email}
-        rightIconButton={this.renderRightIconMenu(isAnOwner, info.id)}
+        rightIconButton={this.renderRightIconMenu(owner, info.id)}
       />
     )
   }
 
-  renderRightIconMenu(isAnOwner, id) {
+  renderRightIconMenu(owner, id) {
     if (!this.showOwnerSettings()) {
       return
     }
-    if (isAnOwner) {
+    if (owner) {
       return (
         <IconMenu iconButtonElement={iconButtonElement}>
           <MenuItem onClick={() => this.removeMember(id, true)}>Remove</MenuItem>

@@ -11,12 +11,13 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import Theme from '../../style/theme'
-import { getIssues, addGithubToken } from '../actions/project'
-import Spinner from './../components/Spinner'
+import { getIssues } from '../actions/project'
+import { addGithubToken } from '../actions/session'
+import Spinner from '../components/Spinner'
 
 const mapStateToProps = state => ({
   session: state.session,
-  projects: state.projects
+  projectIssues: state.projectIssues
 })
 
 const mapDispatchToProps = {
@@ -71,9 +72,12 @@ class ProjectIssues extends Component {
     } = this.props
 
     const id = this.props.projectId
-    // This token is for the git repo: NathanDeGraafTest/asdf23
-    // await addGithubToken(session.authToken,
-    // {githubToken: 'abc005faf06264216e3aedf60389a7fc7d5fb83a'})
+
+    // Use this to set your github Token for now
+    // await addGithubToken(
+    //   session.authToken,
+    //   { githubToken: 'mytoken' }
+    // )
 
     await getIssues(session.authToken, id, {
       projectId: id,
@@ -84,8 +88,8 @@ class ProjectIssues extends Component {
 
   renderIssues() {
     const numDisplayed = 2
-    let issues = _.values(this.props.projects.issues.byId)
-    if (!this.props.projects.fetchedIssues) {
+    let issues = _.values(this.props.projectIssues.all.byId)
+    if (!this.props.projectIssues.fetchedIssues) {
       return (
         <div style={Theme.spinnerContainer}>
           <Spinner />
@@ -130,7 +134,7 @@ class ProjectIssues extends Component {
 }
 
 ProjectIssues.propTypes = {
-  projects: PropTypes.object.isRequired,
+  projectIssues: PropTypes.object.isRequired,
   githubUrl: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
 }
