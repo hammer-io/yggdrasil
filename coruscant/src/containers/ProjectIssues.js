@@ -13,7 +13,7 @@ import _ from 'lodash'
 import Theme from '../../style/theme'
 import { getIssues } from '../actions/project'
 import { addGithubToken } from '../actions/session'
-import Spinner from '../components/Spinner'
+import BasicSpinner from '../components/BasicSpinner'
 
 const mapStateToProps = state => ({
   session: state.session,
@@ -91,9 +91,7 @@ class ProjectIssues extends Component {
     let issues = _.values(this.props.projectIssues.all.byId)
     if (!this.props.projectIssues.fetchedIssues) {
       return (
-        <div style={Theme.spinnerContainer}>
-          <Spinner />
-        </div>
+        <BasicSpinner />
       )
     }
 
@@ -121,6 +119,9 @@ class ProjectIssues extends Component {
   }
 
   render() {
+    if (this.props.githubUrl === null) {
+      return null
+    }
     return (
       <div>
         <Paper style={Theme.projectDetails.header}>

@@ -12,7 +12,7 @@ import ProjectBuilds from './ProjectBuilds'
 import ProjectLinks from '../components/ProjectLinks'
 import ProjectContributors from './ProjectContributors'
 import Theme from '../../style/theme'
-import Spinner from './../components/Spinner'
+import BasicSpinner from './../components/BasicSpinner'
 
 const styles = {
   headingContainer: {
@@ -172,9 +172,7 @@ class ProjectOverview extends React.Component {
       [project] = projectList
     } else {
       return (
-        <div style={Theme.spinnerContainer}>
-          <Spinner />
-        </div>
+        <BasicSpinner />
       )
     }
     const { match: { params } } = this.props

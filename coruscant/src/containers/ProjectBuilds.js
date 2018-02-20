@@ -15,7 +15,7 @@ import _ from 'lodash'
 import Theme from '../../style/theme'
 import { getBuildStatuses } from '../actions/project'
 import { addTravisToken } from '../actions/session'
-import Spinner from '../components/Spinner'
+import BasicSpinner from '../components/BasicSpinner'
 
 const mapStateToProps = state => ({
   session: state.session,
@@ -103,9 +103,7 @@ class ProjectIssues extends Component {
     let statuses = _.values(this.props.projectBuilds.all.byId)
     if (!this.props.projectBuilds.all) {
       return (
-        <div style={Theme.spinnerContainer}>
-          <Spinner />
-        </div>
+        <BasicSpinner />
       )
     }
 
@@ -136,6 +134,9 @@ class ProjectIssues extends Component {
   }
 
   render() {
+    if (this.props.travisUrl === null) {
+      return null
+    }
     return (
       <div>
         <Paper style={Theme.projectDetails.header}>

@@ -66,19 +66,16 @@ class ProjectContributors extends Component {
   async getUser(username) {
     const { getUser } = this.props
     const { result } = await getUser(this.props.session.authToken, username)
-    if (result !== null) {
-      return result.id
-    }
-    return -1
+    return result
   }
 
-  async addMemberByName(user, owner) {
-    const userId = await this.getUser(user)
-    if (userId === -1) {
+  async addMemberByName(username, owner) {
+    const user = await this.getUser(username)
+    if (user === null) {
       // TODO let the user know what happened
       return
     }
-    await this.addMember(userId, owner)
+    await this.addMember(user.id, owner)
   }
 
   async addMember(id, owner) {

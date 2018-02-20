@@ -18,14 +18,6 @@ const theme = {
     }
   },
 
-  spinnerContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 48
-  },
-
   colors: Colors,
 
   palette: {

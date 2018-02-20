@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import { getProjects, getUserProjects } from '../actions/project'
 import Theme from '../../style/theme'
-import Spinner from './../components/Spinner'
+import BasicSpinner from './../components/BasicSpinner'
 import ProjectList from './../components/ProjectList'
 import ProjectsNotFound from './../components/ProjectsNotFound'
 import NewFloatingActionButton from '../components/NewFloatingActionButton'
@@ -70,9 +70,7 @@ class Home extends Component {
       return <ProjectsNotFound />
     }
     return (
-      <div style={Theme.spinnerContainer}>
-        <Spinner />
-      </div>
+      <BasicSpinner />
     )
   }
 

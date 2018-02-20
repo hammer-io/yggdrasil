@@ -1,7 +1,5 @@
 import { normalize } from 'normalizr'
 import * as Constants from './../constants'
-import projectList from './../models/projectList'
-import issueList from './../models/issueList'
 import buildStatusList from './../models/buildStatusList'
 
 function makeInitialState() {
