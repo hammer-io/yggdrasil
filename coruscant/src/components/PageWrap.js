@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Card, CardActions, CardMedia } from 'material-ui/Card'
 import PropTypes from 'prop-types'
 import Theme from './../../style/theme'
@@ -18,28 +18,38 @@ const styles = {
   }
 }
 
-function getActions(renderActions) {
-  if (renderActions) {
-    return (<CardActions style={styles.noPadding}>{ renderActions() }</CardActions>)
+
+class PageWrap extends Component {
+  static getActions(renderActions) {
+    if (renderActions) {
+      return (<CardActions style={styles.noPadding}>{ renderActions() }</CardActions>)
+    }
+    return ''
   }
-  return ''
+
+  render() {
+    return (
+      <div style={styles.container}>
+        <h2 style={styles.contained}>{this.props.title}</h2>
+        <Card style={styles.contained}>
+          <CardMedia>
+            {
+              this.props.children
+            }
+          </CardMedia>
+          {
+            PageWrap.getActions(this.props.renderActions)
+          }
+        </Card>
+      </div>
+    )
+  }
 }
 
-const PageWrap = ({ title, renderContents, renderActions }) => (
-  <div style={styles.container}>
-    <h2 style={styles.contained}>{title}</h2>
-    <Card style={styles.contained}>
-      <CardMedia>{ renderContents() }</CardMedia>
-      {
-        getActions(renderActions)
-      }
-    </Card>
-  </div>
-)
-
 PageWrap.propTypes = {
+  children: PropTypes.node.isRequired,
   title: PropTypes.string.isRequired,
-  renderContents: PropTypes.func.isRequired,
+  // renderContents: PropTypes.func.isRequired,
   renderActions: PropTypes.func
 }
 

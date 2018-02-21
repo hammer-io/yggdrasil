@@ -38,7 +38,8 @@ const Root = () => (
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/projects/:id" component={ProjectOverview} />
-            <Route exact path="/settings" component={UserSettings} />
+            <Route exact path="/settings/:tabValue" component={UserSettings} />
+            <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
             <Route exact path="/tyr" component={TyrInfo} />
             <Route component={NotFound} />
           </Switch>
