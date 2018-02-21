@@ -20,13 +20,12 @@ const styles = {
 
 function getActions(renderActions) {
   if (renderActions) {
-    return ( <CardActions style={styles.noPadding}>{ renderActions() }</CardActions> )
-  } else {
-    return ''
+    return (<CardActions style={styles.noPadding}>{ renderActions() }</CardActions>)
   }
+  return ''
 }
 
-const PageWrap = ({title, renderContents, renderActions}) => (
+const PageWrap = ({ title, renderContents, renderActions }) => (
   <div style={styles.container}>
     <h2 style={styles.contained}>{title}</h2>
     <Card style={styles.contained}>
@@ -42,6 +41,10 @@ PageWrap.propTypes = {
   title: PropTypes.string.isRequired,
   renderContents: PropTypes.func.isRequired,
   renderActions: PropTypes.func
+}
+
+PageWrap.defaultProps = {
+  renderActions: () => ''
 }
 
 export default PageWrap

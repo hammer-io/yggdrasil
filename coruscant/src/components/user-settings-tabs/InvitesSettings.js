@@ -1,4 +1,6 @@
 import React from 'react'
+import { RaisedButton } from 'material-ui'
+
 import {
   Table,
   TableBody,
@@ -22,6 +24,9 @@ const styles = {
   },
   rowClosed: {
     color: Theme.colors.neutlight_d2
+  },
+  acceptButton: {
+    marginRight: Theme.padding.small
   }
 }
 
@@ -46,13 +51,26 @@ const tableData = [
   }
 ]
 
+
 function getTableRow(data) {
+  function acceptInvite() {
+    console.log(`TODO: Accepting invite ${data.id}...`)
+  }
+
+  function declineInvite() {
+    console.log(`TODO: Declining invite ${data.id}...`)
+  }
   const statusOpen = (data.status.toLowerCase() === 'open')
   const rowStyles = (statusOpen)
     ? {}
     : styles.rowClosed
   const inviteActions = (statusOpen)
-    ? (<span><a href="#">Accept</a> | <a href="#">Decline</a></span>)
+    ? (
+      <span>
+        <RaisedButton label="Accept" primary style={styles.acceptButton} onClick={acceptInvite} />
+        <RaisedButton label="Decline" secondary onClick={declineInvite} />
+      </span>
+    )
     : (<span />)
   return (
     <TableRow key={data.id}>
@@ -79,9 +97,7 @@ const InvitesSettings = () => (
           <TableHeaderColumn style={styles.tableHeaderColumn} tooltip="Invite Status">
             Status
           </TableHeaderColumn>
-          <TableHeaderColumn style={styles.tableHeaderColumn} tooltip="Actions you can take on the invite">
-            Actions
-          </TableHeaderColumn>
+          <TableHeaderColumn style={styles.tableHeaderColumn} tooltip="Actions you can take on the invite" />
         </TableRow>
       </TableHeader>
       <TableBody displayRowCheckbox={false} showRowHover>
