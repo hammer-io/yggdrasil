@@ -71,7 +71,7 @@ function getTableRow(data) {
         <RaisedButton label="Decline" secondary onClick={declineInvite} />
       </span>
     )
-    : (<span />)
+    : <span />
   return (
     <TableRow key={data.id}>
       <TableRowColumn style={rowStyles}>{data.projectName}</TableRowColumn>

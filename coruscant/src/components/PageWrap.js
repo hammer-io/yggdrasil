@@ -20,9 +20,9 @@ const styles = {
 
 
 class PageWrap extends Component {
-  static getActions(renderActions) {
-    if (renderActions) {
-      return (<CardActions style={styles.noPadding}>{ renderActions() }</CardActions>)
+  getActions() {
+    if (this.props.renderActions) {
+      return (<CardActions style={styles.noPadding}>{ this.props.renderActions() }</CardActions>)
     }
     return ''
   }
@@ -38,7 +38,7 @@ class PageWrap extends Component {
             }
           </CardMedia>
           {
-            PageWrap.getActions(this.props.renderActions)
+            this.getActions()
           }
         </Card>
       </div>
@@ -49,7 +49,6 @@ class PageWrap extends Component {
 PageWrap.propTypes = {
   children: PropTypes.node.isRequired,
   title: PropTypes.string.isRequired,
-  // renderContents: PropTypes.func.isRequired,
   renderActions: PropTypes.func
 }
 

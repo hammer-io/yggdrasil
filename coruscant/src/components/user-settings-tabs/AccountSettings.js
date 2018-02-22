@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { RaisedButton } from 'material-ui'
+import PropTypes from 'prop-types'
 
 import NewFloatingActionButton from '../../components/NewFloatingActionButton'
 import Theme from '../../../style/theme'
@@ -20,67 +21,52 @@ const styles = {
   }
 }
 
-function onConnectToGithub() {
-  console.log('TODO: Connecting to GitHub...')
-}
-
-function onConnectToHeroku() {
-  console.log('TODO: Connecting to Heroku...')
-}
-
-function onAddAccount() {
-  console.log('TODO: Adding account...')
-}
-
-const accounts = [
-  {
-    name: 'GitHub',
-    linked: false,
-    onConnectHandler: onConnectToGithub
-  },
-  {
-    name: 'Heroku',
-    linked: true,
-    onConnectHandler: onConnectToHeroku
-  }
-]
-
-function renderAccountInfo(account) {
-  const label = `Connect to ${account.name}`
-  const info = (account.linked)
-    ? (
-      <div>
-        <p>
+class AccountSettings extends Component {
+  // eslint-disable-next-line class-methods-use-this
+  renderAccountInfo(account) {
+    const label = `Connect to ${account.name}`
+    const info = (account.linked)
+      ? (
+        <div>
+          <p>
           Display something useful about the linked account, such as... username?
-        </p>
-      </div>
-    )
-    : (
-      <div>
-        <p>
+          </p>
+        </div>
+      )
+      : (
+        <div>
+          <p>
           This account has not been connected yet. Please click the &quot;Connect&quot; button
           below to link your GitHub account to Yggdrasil.
-        </p>
-        <RaisedButton label={label} primary onClick={account.onConnectHandler} />
+          </p>
+          <RaisedButton label={label} primary onClick={account.onConnectHandler} />
+        </div>
+      )
+    return (
+      <div>
+        <h3>{account.name}</h3>
+        {info}
       </div>
     )
-  return (
-    <div>
-      <h3>{account.name}</h3>
-      {info}
-    </div>
-  )
+  }
+
+  render() {
+    return (
+      <div style={styles.container}>
+        <h2>Linked Accounts</h2>
+        {this.props.accounts.map(this.renderAccountInfo)}
+        <hr style={styles.hr} />
+        <div style={styles.bottomActionSpacer}>
+          <NewFloatingActionButton onClick={this.props.onAddAccount} />
+        </div>
+      </div>
+    )
+  }
 }
 
-const AccountSettings = () => (
-  <div style={styles.container}>
-    <h2>Linked Accounts</h2>
-    {accounts.map(renderAccountInfo)}
-    <hr style={styles.hr} />
-    <div style={styles.bottomActionSpacer}>
-      <NewFloatingActionButton onClick={onAddAccount} />
-    </div>
-  </div>
-)
+AccountSettings.propTypes = {
+  accounts: PropTypes.array.isRequired,
+  onAddAccount: PropTypes.func.isRequired
+}
 
 export default AccountSettings

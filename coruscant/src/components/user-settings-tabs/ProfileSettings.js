@@ -1,5 +1,7 @@
-import React from 'react'
+/* eslint-disable react/prefer-stateless-function */
+import React, { Component } from 'react'
 import { RaisedButton, TextField, } from 'material-ui'
+import PropTypes from 'prop-types'
 
 import Theme from '../../../style/theme'
 
@@ -9,33 +11,37 @@ const styles = {
   }
 }
 
-function onSaveProfileSettings() {
-  console.log('TODO: Saving profile settings...')
+class ProfileSettings extends Component {
+  render() {
+    return (
+      <div style={styles.container}>
+        <h2>Profile Settings</h2>
+        <TextField
+          floatingLabelText="Username"
+          defaultValue="Bob"
+          disabled
+        /><br />
+        <TextField
+          floatingLabelText="Email"
+          defaultValue="bob@afv.com"
+        /><br />
+        <TextField
+          floatingLabelText="First Name"
+          defaultValue="Bob"
+        />
+        <TextField
+          floatingLabelText="Last Name"
+          defaultValue="Sagat"
+        /><br />
+        <br />
+        <RaisedButton label="Save Changes" primary onClick={this.props.onSaveProfileSettings} />
+      </div>
+    )
+  }
 }
 
-const ProfileSettings = () => (
-  <div style={styles.container}>
-    <h2>Profile Settings</h2>
-    <TextField
-      floatingLabelText="Username"
-      defaultValue="Bob"
-      disabled
-    /><br />
-    <TextField
-      floatingLabelText="Email"
-      defaultValue="bob@afv.com"
-    /><br />
-    <TextField
-      floatingLabelText="First Name"
-      defaultValue="Bob"
-    />
-    <TextField
-      floatingLabelText="Last Name"
-      defaultValue="Sagat"
-    /><br />
-    <br />
-    <RaisedButton label="Save Changes" primary onClick={onSaveProfileSettings} />
-  </div>
-)
+ProfileSettings.propTypes = {
+  onSaveProfileSettings: PropTypes.func.isRequired
+}
 
 export default ProfileSettings
