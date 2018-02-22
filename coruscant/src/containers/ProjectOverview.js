@@ -1,10 +1,18 @@
 import React from 'react'
 import Flexbox from 'flexbox-react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { Tabs, Tab } from 'material-ui/Tabs'
+import _ from 'lodash'
+import { getProject } from '../actions/project'
 import ProjectHeader from '../components/ProjectHeader'
 import ProjectDescription from '../components/ProjectDescription'
-import ProjectIssues from '../components/ProjectIssues'
+import ProjectIssues from './ProjectIssues'
+import ProjectBuilds from './ProjectBuilds'
 import ProjectLinks from '../components/ProjectLinks'
+import ProjectContributors from './ProjectContributors'
 import Theme from '../../style/theme'
+import BasicSpinner from './../components/BasicSpinner'
 
 const styles = {
   headingContainer: {
@@ -15,52 +23,6 @@ const styles = {
     paddingTop: Theme.padding.regular
   }
 }
-
-
-const projectDetails = {
-  projectName: 'MyAwesomeProject',
-  projectStatus: 'Healthy',
-  projectOwner: 'Nathan De Graaf',
-  lastUpdated: '1/12/18',
-}
-
-const issues = [{
-  name: 'Make github issues component',
-  date: 'Jan 17, 2018',
-  type: 'Completed',
-  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
-},
-{
-  name: 'Fix 49 53 76 97',
-  date: 'Jan 25, 2018',
-  type: 'MergeRequest',
-  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
-},
-{
-  name: 'Normalize redux store for easy lookups',
-  date: 'Jan 25, 2018',
-  type: 'Uncompleted',
-  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
-},
-{
-  name: 'Feature 54',
-  date: 'Jan 24, 2018',
-  type: 'Merged',
-  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
-},
-{
-  name: 'Remove all dependencies from top level package.json',
-  date: 'Jan 23, 2018',
-  type: 'Completed',
-  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
-},
-{
-  name: 'This is an open issue',
-  date: 'Jan 17, 2018',
-  type: 'Uncompleted',
-  url: 'https://github.com/hammer-io/yggdrasil/issues/109'
-}
-]
 
 const readme = '[![Build Status](https://travis-ci.org/hammer-io/tyr.svg?branch=master)](https://travis-ci.org/hammer-io/tyr)\n' +
     '[![codecov](https://codecov.io/gh/hammer-io/tyr/branch/master/graph/badge.svg)](https://codecov.io/gh/hammer-io/tyr)\n' +
@@ -182,34 +144,96 @@ const readme = '[![Build Status](https://travis-ci.org/hammer-io/tyr.svg?branch=
     'and what steps we are taking to keep your information safe, please read\n' +
     'the [Security Information Management Policy](https://github.com/hammer-io/tyr/blob/master/SECURITY_INFORMATION_MANAGEMENT_POLICY.md).'
 
-const ProjectOverview = () => (
-  <div style={styles.headingContainer}>
-    <ProjectHeader {...projectDetails} />
-    <Flexbox
-      flexDirection="row"
-      flexWrap="wrap"
-      width="90%"
-      justifyContent="space-around"
-      alignItems="flex-start"
-    >
-      <Flexbox>
-        <ProjectIssues
-          issues={issues}
-          moreIssues="https://github.com/hammer-io/yggdrasil/issues/"
-        />
-      </Flexbox>
-      <Flexbox>
-        <ProjectLinks
-          travisUrl="https://travis-ci.org/hammer-io/tyr"
-          githubUrl="https://github.com/hammer-io/yggdrasil"
-          herokuUrl="https://travis-ci.org/hammer-io/tyr"
-        />
-      </Flexbox>
-      <Flexbox>
-        <ProjectDescription content={readme} />
-      </Flexbox>
-    </Flexbox>
-  </div>
-)
+
+const mapStateToProps = state => ({
+  session: state.session,
+  projects: state.projects,
+  projectMembers: state.projectMembers
+})
+
+const mapDispatchToProps = {
+  getProject
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
+class ProjectOverview extends React.Component {
+  async componentDidMount() {
+    const {
+      session, getProject
+    } = this.props
+    const { match: { params } } = this.props
+    await getProject(session.authToken, params.id)
+  }
+
+  render() {
+    const projectList = _.values(this.props.projects.all.byId)
+    let project
+    if (projectList && projectList.length > 0) {
+      [project] = projectList
+    } else {
+      return (
+        <BasicSpinner />
+      )
+    }
+    const { match: { params } } = this.props
+
+    const projectDetails = {
+      projectStatus: 'Healthy',
+      ...project
+    }
+    return (
+      <div style={styles.headingContainer}>
+        <ProjectHeader {...projectDetails} />
+        <Tabs style={{ width: '90%' }}>
+          <Tab label="Overview" >
+            <div>
+              <Flexbox
+                flexDirection="row"
+                flexWrap="wrap"
+                width="90%"
+                justifyContent="space-around"
+                alignItems="flex-start"
+              >
+                <Flexbox>
+                  <ProjectIssues
+                    githubUrl={project.githubRepositoryName}
+                    projectId={params.id}
+                  />
+                </Flexbox>
+                <Flexbox>
+                  <ProjectBuilds
+                    travisUrl={project.travisRepositoryName}
+                    projectId={params.id}
+                  />
+                </Flexbox>
+                <Flexbox>
+                  <ProjectLinks
+                    travisUrl={project.travisRepositoryName}
+                    githubUrl={project.githubRepositoryName}
+                    herokuUrl={project.herokuApplicationName}
+                  />
+                </Flexbox>
+                <Flexbox>
+                  <ProjectDescription content={readme} />
+                </Flexbox>
+              </Flexbox>
+            </div>
+          </Tab>
+          <Tab label="Members" >
+            <div>
+              <ProjectContributors projectId={params.id} />
+            </div>
+          </Tab>
+        </Tabs>
+      </div>
+    )
+  }
+}
+
+ProjectOverview.propTypes = {
+  session: PropTypes.object.isRequired,
+  projects: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired
+}
 
 export default ProjectOverview

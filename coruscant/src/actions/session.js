@@ -103,3 +103,45 @@ export function register(credentials) {
     }
   }
 }
+
+export function addGithubToken(token, body) {
+  return async function () {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.post({
+        url: '/auth/github',
+        body
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
+export function addTravisToken(token, body) {
+  return async function () {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.post({
+        url: '/auth/travis',
+        body
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}

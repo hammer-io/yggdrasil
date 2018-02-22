@@ -29,14 +29,14 @@ const Root = () => (
       <Router>
         <App>
           <Switch>
-            <Route path={['/home', '/projects', '/tyr']} component={Menu} />
+            <Route path={['/home', '/projects/:id', '/tyr']} component={Menu} />
           </Switch>
           <Switch>
             <Route exact path="/" render={() => <Redirect to="/home" />} />
             <Route exact path="/home" component={Home} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
-            <Route exact path="/projects" component={ProjectOverview} />
+            <Route exact path="/projects/:id" component={ProjectOverview} />
             <Route exact path="/tyr" component={TyrInfo} />
             <Route component={NotFound} />
           </Switch>

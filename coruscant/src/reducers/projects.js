@@ -11,6 +11,7 @@ function makeInitialState() {
   }
 }
 
+
 function setProjects(state, action) {
   const normalizedProjects = normalize(action.payload.projects, projectList)
   return {

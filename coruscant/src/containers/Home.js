@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import { getProjects, getUserProjects } from '../actions/project'
 import Theme from '../../style/theme'
-import Spinner from './../components/Spinner'
+import BasicSpinner from './../components/BasicSpinner'
 import ProjectList from './../components/ProjectList'
 import ProjectsNotFound from './../components/ProjectsNotFound'
 import NewFloatingActionButton from '../components/NewFloatingActionButton'
@@ -18,13 +18,6 @@ const styles = {
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingTop: Theme.padding.regular
-  },
-  spinnerContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: Theme.padding.large
   }
 }
 
@@ -77,9 +70,7 @@ class Home extends Component {
       return <ProjectsNotFound />
     }
     return (
-      <div style={styles.spinnerContainer}>
-        <Spinner />
-      </div>
+      <BasicSpinner />
     )
   }
 
