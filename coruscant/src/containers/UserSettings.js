@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 import { Tab, Tabs } from 'material-ui'
 import PropTypes from 'prop-types'
@@ -36,6 +37,12 @@ function onSaveProfileSettings() {
   console.log('TODO: Saving profile settings...')
 }
 
+const mapStateToProps = state => ({
+  session: state.session,
+  user: state.user
+})
+
+@connect(mapStateToProps)
 class UserSettings extends Component {
   constructor(props) {
     super(props)
@@ -68,7 +75,7 @@ class UserSettings extends Component {
           onChange={this.handleChange}
         >
           <Tab label="Profile" value="profile" containerElement={<Link to="/settings/profile" />}>
-            <ProfileSettings onSaveProfileSettings={onSaveProfileSettings} />
+            <ProfileSettings user={this.props.session.user} onSaveProfileSettings={onSaveProfileSettings} />
           </Tab>
           <Tab label="Invites" value="invites" containerElement={<Link to="/settings/invites" />}>
             <InvitesSettings />
@@ -87,7 +94,9 @@ class UserSettings extends Component {
 
 UserSettings.propTypes = {
   history: PropTypes.any.isRequired,
-  match: PropTypes.any.isRequired
+  session: PropTypes.object.isRequired,
+  match: PropTypes.any.isRequired,
+  getAuthenticatedUser: PropTypes.func.isRequired
 }
 
 export default withRouter(UserSettings)
