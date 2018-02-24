@@ -41,8 +41,7 @@ function onSaveProfileSettings() {
 const mapStateToProps = state => ({
   session: state.session,
   user: state.user,
-  invites: state.invites,
-  state: state
+  invites: state.invites
 })
 
 const mapDispatchToProps = {

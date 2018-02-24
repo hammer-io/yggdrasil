@@ -7,7 +7,7 @@ export function setUserInvites(invites) {
 }
 
 export function getUserInvites(token) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
