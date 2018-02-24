@@ -1,3 +1,4 @@
+import * as firebase from 'firebase'
 import FetchClient from './../utils/fetchClient'
 import actionCreator from './../utils/actionCreator'
 import * as Constants from './../constants'
@@ -56,6 +57,10 @@ export function login(credentials) {
         if (response.result) {
           dispatch(setAccessToken(result.access_token.value))
           dispatch(setUser(response.result))
+          await firebase.auth().signInWithEmailAndPassword(
+            response.result.email,
+            credentials.password
+          )
         } else {
           console.log(response.error)
         }
@@ -71,8 +76,9 @@ export function login(credentials) {
 }
 
 export function logout() {
-  return function (dispatch) {
+  return async function (dispatch) {
     try {
+      await firebase.auth().signOut()
       dispatch(setAccessToken(null))
       dispatch(setUser(null))
     } catch (error) {
@@ -91,6 +97,11 @@ export function register(credentials) {
         body: credentials
       })
       if (result) {
+        await firebase.auth().createUserWithEmailAndPassword(
+          credentials.email,
+          credentials.password
+        )
+        await firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
         dispatch(setAccessToken(result.token.value))
         dispatch(setUser(result.user))
         return { result, error }
