@@ -1,6 +1,10 @@
 .idea/
 node_modules/
 
+# Ignore all configuration files except default.json
+**/config/*
+!config/default.json
+
 .DS_Store
 */.DS_Store
 
