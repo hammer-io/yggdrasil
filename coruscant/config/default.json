@@ -1,10 +1,10 @@
 {
   "firebase": {
-    "apiKey": "AIzaSyB3dGxrRZ0Z0RAn-peDdZFEPTIpKN_wSAQ",
-    "authDomain": "koma-79bf2.firebaseapp.com",
-    "databaseURL": "https://koma-79bf2.firebaseio.com",
-    "projectId": "koma-79bf2",
-    "storageBucket": "koma-79bf2.appspot.com"
+    "apiKey": "",
+    "authDomain": "",
+    "databaseURL": "",
+    "projectId": "",
+    "storageBucket": ""
   }
 }
 
