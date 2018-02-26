@@ -15,6 +15,8 @@ import Login from './containers/Login'
 import ProjectOverview from './containers/ProjectOverview'
 import Register from './containers/Register'
 import UserSettings from './containers/UserSettings'
+import GithubRedirect from './containers/GithubRedirect'
+import HerokuRedirect from './containers/HerokuRedirect'
 import NotFound from './components/PageNotFound'
 import TyrInfo from './components/TyrInfo'
 import config from '../config/default.json'
@@ -44,6 +46,8 @@ const Root = () => (
             <Route exact path="/register" component={Register} />
             <Route exact path="/projects/:id" component={ProjectOverview} />
             <Route exact path="/settings/:tabValue" component={UserSettings} />
+            <Route exact path="/githubAuth" component={GithubRedirect} />
+            <Route exact path="/herokuAuth" component={HerokuRedirect} />
             <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
             <Route exact path="/tyr" component={TyrInfo} />
             <Route component={NotFound} />

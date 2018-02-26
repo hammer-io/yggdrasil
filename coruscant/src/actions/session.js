@@ -136,6 +136,155 @@ export function addGithubToken(token, body) {
   }
 }
 
+export function addHerokuToken(token, body) {
+  return async function () {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.post({
+        url: '/auth/heroku',
+        body
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
+export function checkHerokuToken(token) {
+  return async function () {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.get({
+        url: '/auth/heroku'
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
+export function deleteHerokuToken(token) {
+  return async function () {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.delete({
+        url: '/auth/heroku'
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
+export function exchangeForGithubToken(token, code, state) {
+  return async function () {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.post({
+        url: '/auth/github2',
+        body: {
+          state,
+          code
+        }
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
+export function exchangeForHerokuToken(token, code, state) {
+  return async function () {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.post({
+        url: '/auth/heroku2',
+        body: {
+          state,
+          code
+        }
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
+export function checkGithubToken(token) {
+  return async function () {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.get({
+        url: '/auth/github'
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
+export function deleteGithubToken(token) {
+  return async function () {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.delete({
+        url: '/auth/github'
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
 export function addTravisToken(token, body) {
   return async function () {
     try {
