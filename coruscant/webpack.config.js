@@ -31,6 +31,12 @@ module.exports = {
             plugins: ['transform-decorators-legacy']
           }
         }
+      },
+      {
+        test: /\.svg$/,
+        use: {
+          loader: 'svg-react-loader'
+        }
       }
     ]
   },

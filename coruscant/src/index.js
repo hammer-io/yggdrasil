@@ -14,6 +14,7 @@ import Login from './containers/Login'
 import ProjectOverview from './containers/ProjectOverview'
 import Register from './containers/Register'
 import NotFound from './components/PageNotFound'
+import NewProject from './containers/NewProject'
 
 const store = getStore()
 store.subscribe(throttle(() => {
@@ -28,7 +29,7 @@ const Root = () => (
       <Router>
         <App>
           <Switch>
-            <Route path={['/home', '/projects']} component={Menu} />
+            <Route path={['/home', '/projects', '/projects/new']} component={Menu} />
           </Switch>
           <Switch>
             <Route exact path="/" render={() => <Redirect to="/home" />} />
@@ -36,6 +37,7 @@ const Root = () => (
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/projects" component={ProjectOverview} />
+            <Route exact path="/projects/new" component={NewProject} />
             <Route component={NotFound} />
           </Switch>
         </App>
