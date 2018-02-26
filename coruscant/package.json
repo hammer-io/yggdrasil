@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "lint": "eslint src/.",
-    "lint:fix": "eslint src/components/svg/DockerLogo.js --fix",
+    "lint:fix": "eslint src/. --fix",
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
     "test:watch": "npm run test -- --watch"
   },
