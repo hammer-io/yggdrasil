@@ -203,7 +203,7 @@ export function exchangeForGithubToken(token, code, state) {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
       const { result, error } = await fetchClient.post({
-        url: '/auth/github2',
+        url: '/auth/github/code',
         body: {
           state,
           code
@@ -227,7 +227,7 @@ export function exchangeForHerokuToken(token, code, state) {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
       const { result, error } = await fetchClient.post({
-        url: '/auth/heroku2',
+        url: '/auth/heroku/code',
         body: {
           state,
           code
