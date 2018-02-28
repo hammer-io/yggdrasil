@@ -32,14 +32,14 @@ const styles = {
   }
 }
 
-function getExpirationDate(invite) {
+const getExpirationDate = (invite) => {
   const daysUntilExpiration = parseInt(invite.daysFromCreationUntilExpiration, 10)
   const millisPerDay = 24 * 60 * 60 * 1000
   const dateCreatedMillis = Date.parse(invite.createdAt)
   return new Date(dateCreatedMillis + (millisPerDay * daysUntilExpiration))
 }
 
-function getInviteActions(statusOpen, onAcceptInvite, onDeclineInvite) {
+const getInviteActions = (statusOpen, onAcceptInvite, onDeclineInvite) => {
   if (statusOpen) {
     return (
       <span>
@@ -51,7 +51,7 @@ function getInviteActions(statusOpen, onAcceptInvite, onDeclineInvite) {
   return <span />
 }
 
-function getTableRow(invite) {
+const getTableRow = (invite) => {
   function acceptInvite() {
     // TODO
     console.log(`TODO: Accepting invite ${invite.id}...`)
