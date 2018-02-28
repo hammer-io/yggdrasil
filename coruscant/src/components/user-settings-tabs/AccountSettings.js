@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { RaisedButton } from 'material-ui'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { saveState } from '../../utils/localStorage'
 import Theme from '../../../style/theme'
