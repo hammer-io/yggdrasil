@@ -58,7 +58,7 @@ export function addProject(token, project) {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
       const { result, error } = await fetchClient.post({
-        url: '/projects',
+        url: '/user/projects',
         body: project
       })
       if (result) {

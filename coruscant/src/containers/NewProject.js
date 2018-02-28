@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import _ from 'lodash'
 import PropTypes from 'prop-types'
 import {
   Step,
@@ -15,6 +16,8 @@ import ProjectCreationOption1 from './../components/ProjectCreationOption1'
 import ProjectCreationOption2 from './../components/ProjectCreationOption2'
 import ProjectCreationOption3 from './../components/ProjectCreationOption3'
 import { checkGithubToken, checkTravisToken, checkHerokuToken } from '../actions/session'
+import { getTools } from '../actions/tools'
+import { addProject } from '../actions/project'
 
 const styles = {
   container: {
@@ -49,13 +52,16 @@ const styles = {
 }
 
 const mapStateToProps = state => ({
-  session: state.session
+  session: state.session,
+  tools: state.tools
 })
 
 const mapDispatchToProps = {
   checkGithubToken,
   checkTravisToken,
-  checkHerokuToken
+  checkHerokuToken,
+  getTools,
+  addProject
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -68,6 +74,7 @@ class NewProject extends Component {
 
       // Project Creation Form
       dropDownValue: 1,
+      dropDownText: 'MIT',
       name: '',
       nameErrorText: '',
       description: '',
@@ -106,6 +113,9 @@ class NewProject extends Component {
     }
 
     this.handleDropDownChange = this.handleDropDownChange.bind(this)
+    this.nameOnChange = this.nameOnChange.bind(this)
+    this.descriptionOnChange = this.descriptionOnChange.bind(this)
+    this.authorOnChange = this.authorOnChange.bind(this)
     this.clickBack = this.clickBack.bind(this)
     this.clickNext = this.clickNext.bind(this)
     this.clickCreate = this.clickCreate.bind(this)
@@ -130,11 +140,14 @@ class NewProject extends Component {
       session,
       checkGithubToken,
       checkTravisToken,
-      checkHerokuToken
+      checkHerokuToken,
+      getTools
     } = this.props
     const isGithubAuthenticated = await checkGithubToken(session.authToken)
     const isTravisAuthenticated = await checkTravisToken(session.authToken)
     const isHerokuAuthenticated = await checkHerokuToken(session.authToken)
+    await getTools(session.authToken)
+
     // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({
       isGithubAuthenticated,
@@ -212,8 +225,29 @@ class NewProject extends Component {
     }
   }
 
-  clickCreate() {
-    // validate options
+  async clickCreate() {
+    const { tools, addProject, session } = this.props
+    const sourceControlId = _.findKey(tools.all.allIds, (tool => this.state.githubSelected && tool.name === 'GitHub'))
+    const ciId = _.findKey(tools.all.byId, (tool => this.state.travisSelected && tool.name === 'Travis'))
+    const containerId = _.findKey(tools.all.byId, (tool => this.state.dockerSelected && tool.name === 'Docker'))
+    const deployId = _.findKey(tools.all.byId, (tool => this.state.herokuSelected && tool.name === 'Heroku'))
+    const backendId = _.findKey(tools.all.byId, (tool => this.state.expressSelected && tool.name === 'Express'))
+    const testId = _.findKey(tools.all.byId, (tool => this.state.mochaSelected && tool.name === 'Mocha'))
+    const ormId = _.findKey(tools.all.byId, (tool => this.state.sequelizeSelected && tool.name === 'Sequelize'))
+    const newProject = {
+      projectName: this.state.name,
+      description: this.state.description,
+      license: this.state.dropDownText,
+      authors: this.state.author,
+      sourceControl: sourceControlId,
+      ci: ciId,
+      containerization: containerId,
+      deployment: deployId,
+      web: backendId,
+      test: testId,
+      database: ormId
+    }
+    await addProject(session.authToken, newProject)
   }
 
   clickNext() {
@@ -264,7 +298,10 @@ class NewProject extends Component {
   }
 
   handleDropDownChange(event, index, value) {
-    this.setState({ dropDownValue: value })
+    this.setState({
+      dropDownValue: value,
+      dropDownText: value === 1 ? 'MIT' : 'ISC'
+    })
   }
 
   clickGithub() {
@@ -463,7 +500,6 @@ class NewProject extends Component {
                   primary
                   style={{ margin: '5px' }}
                   onClick={this.clickNext}
-                  disabled={this.state.nextDisabled}
                 />
             }
           </div>
