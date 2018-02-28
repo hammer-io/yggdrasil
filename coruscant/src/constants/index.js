@@ -14,3 +14,6 @@ export const SET_BUILD_STATUSES = createConstant('SET_BUILD_STATUSES')
 // User
 export const SET_PROJECT_CONTRIBUTORS = createConstant('SET_PROJECT_CONTRIBUTORS')
 export const SET_PROJECT_OWNERS = createConstant('SET_PROJECT_OWNERS')
+
+// Invite
+export const SET_USER_INVITES = createConstant('SET_USER_INVITES')

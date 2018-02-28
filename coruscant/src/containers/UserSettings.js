@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 import { Tab, Tabs } from 'material-ui'
 import PropTypes from 'prop-types'
@@ -8,6 +9,7 @@ import InvitesSettings from '../components/user-settings-tabs/InvitesSettings'
 import NotificationSettings from '../components/user-settings-tabs/NoficiationSettings'
 import PageWrap from '../components/PageWrap'
 import ProfileSettings from '../components/user-settings-tabs/ProfileSettings'
+import { getUserInvites } from '../actions/invite'
 
 
 const tabValues = ['profile', 'invites', 'accounts', 'notification']
@@ -36,6 +38,17 @@ function onSaveProfileSettings() {
   console.log('TODO: Saving profile settings...')
 }
 
+const mapStateToProps = state => ({
+  session: state.session,
+  user: state.user,
+  invites: state.invites
+})
+
+const mapDispatchToProps = {
+  getUserInvites
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
 class UserSettings extends Component {
   constructor(props) {
     super(props)
@@ -44,7 +57,7 @@ class UserSettings extends Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // Catch any bad paths in the settings subdirectory
     const currentTabValue = this.props.match.params.tabValue
     if (!tabValues.includes(currentTabValue)) {
@@ -52,6 +65,8 @@ class UserSettings extends Component {
       this.state.value = 'profile'
       this.props.history.replace('/settings/profile')
     }
+    const { session, getUserInvites } = this.props
+    await getUserInvites(session.authToken)
   }
 
   handleChange = (value) => {
@@ -68,10 +83,13 @@ class UserSettings extends Component {
           onChange={this.handleChange}
         >
           <Tab label="Profile" value="profile" containerElement={<Link to="/settings/profile" />}>
-            <ProfileSettings onSaveProfileSettings={onSaveProfileSettings} />
+            <ProfileSettings
+              user={this.props.session.user}
+              onSaveProfileSettings={onSaveProfileSettings}
+            />
           </Tab>
           <Tab label="Invites" value="invites" containerElement={<Link to="/settings/invites" />}>
-            <InvitesSettings />
+            <InvitesSettings invites={this.props.invites} />
           </Tab>
           <Tab label="Accounts" value="accounts" containerElement={<Link to="/settings/accounts" />}>
             <AccountSettings accounts={accounts} onAddAccount={onAddAccount} />
@@ -87,7 +105,10 @@ class UserSettings extends Component {
 
 UserSettings.propTypes = {
   history: PropTypes.any.isRequired,
-  match: PropTypes.any.isRequired
+  session: PropTypes.object.isRequired,
+  match: PropTypes.any.isRequired,
+  invites: PropTypes.object.isRequired,
+  getUserInvites: PropTypes.func.isRequired
 }
 
 export default withRouter(UserSettings)

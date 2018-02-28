@@ -17,7 +17,7 @@ export function setPreviousRoute(previousRoute) {
 
 
 export function getSession(token) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -39,7 +39,7 @@ export function getSession(token) {
 }
 
 export function login(credentials) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       const { result, error } = await fetchClient.post({
@@ -76,7 +76,7 @@ export function login(credentials) {
 }
 
 export function logout() {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       await firebase.auth().signOut()
       dispatch(setAccessToken(null))
@@ -89,7 +89,7 @@ export function logout() {
 }
 
 export function register(credentials) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       const { result, error } = await fetchClient.post({
@@ -116,7 +116,7 @@ export function register(credentials) {
 }
 
 export function addGithubToken(token, body) {
-  return async function () {
+  return async () => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -137,7 +137,7 @@ export function addGithubToken(token, body) {
 }
 
 export function addTravisToken(token, body) {
-  return async function () {
+  return async () => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
