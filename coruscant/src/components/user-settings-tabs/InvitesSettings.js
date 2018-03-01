@@ -120,7 +120,7 @@ class InvitesSettings extends Component {
 }
 
 InvitesSettings.propTypes = {
-  invites: PropTypes.array.isRequired
+  invites: PropTypes.object.isRequired
 }
 
 export default InvitesSettings

@@ -24,6 +24,7 @@ const styles = {
 class AccountSettings extends Component {
   // eslint-disable-next-line class-methods-use-this
   renderAccountInfo(account) {
+    const key = `accounts.${account.name}`
     const label = `Connect to ${account.name}`
     const info = (account.linked)
       ? (
@@ -43,7 +44,7 @@ class AccountSettings extends Component {
         </div>
       )
     return (
-      <div>
+      <div key={key}>
         <h3>{account.name}</h3>
         {info}
       </div>

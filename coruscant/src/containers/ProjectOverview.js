@@ -155,7 +155,6 @@ const mapDispatchToProps = {
   getProject
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
 class ProjectOverview extends React.Component {
   async componentDidMount() {
     const {
@@ -236,4 +235,9 @@ ProjectOverview.propTypes = {
   match: PropTypes.object.isRequired
 }
 
-export default ProjectOverview
+const ExportedProjectOverview = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProjectOverview)
+
+export default ExportedProjectOverview

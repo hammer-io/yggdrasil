@@ -48,7 +48,6 @@ const mapDispatchToProps = {
   getUserInvites
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
 class UserSettings extends Component {
   constructor(props) {
     super(props)
@@ -78,26 +77,28 @@ class UserSettings extends Component {
   render() {
     return (
       <PageWrap title="Settings">
-        <Tabs
-          value={this.state.value}
-          onChange={this.handleChange}
-        >
-          <Tab label="Profile" value="profile" containerElement={<Link to="/settings/profile" />}>
-            <ProfileSettings
-              user={this.props.session.user}
-              onSaveProfileSettings={onSaveProfileSettings}
-            />
-          </Tab>
-          <Tab label="Invites" value="invites" containerElement={<Link to="/settings/invites" />}>
-            <InvitesSettings invites={this.props.invites} />
-          </Tab>
-          <Tab label="Accounts" value="accounts" containerElement={<Link to="/settings/accounts" />}>
-            <AccountSettings accounts={accounts} onAddAccount={onAddAccount} />
-          </Tab>
-          <Tab label="Notification" value="notification" containerElement={<Link to="/settings/notification" />}>
-            <NotificationSettings />
-          </Tab>
-        </Tabs>
+        <div>
+          <Tabs
+            value={this.state.value}
+            onChange={this.handleChange}
+          >
+            <Tab label="Profile" value="profile" containerElement={<Link to="/settings/profile" />}>
+              <ProfileSettings
+                user={this.props.session.user}
+                onSaveProfileSettings={onSaveProfileSettings}
+              />
+            </Tab>
+            <Tab label="Invites" value="invites" containerElement={<Link to="/settings/invites" />}>
+              <InvitesSettings invites={this.props.invites} />
+            </Tab>
+            <Tab label="Accounts" value="accounts" containerElement={<Link to="/settings/accounts" />}>
+              <AccountSettings accounts={accounts} onAddAccount={onAddAccount} />
+            </Tab>
+            <Tab label="Notification" value="notification" containerElement={<Link to="/settings/notification" />}>
+              <NotificationSettings />
+            </Tab>
+          </Tabs>
+        </div>
       </PageWrap>
     )
   }
@@ -111,4 +112,9 @@ UserSettings.propTypes = {
   getUserInvites: PropTypes.func.isRequired
 }
 
-export default withRouter(UserSettings)
+const ExportedUserSettings = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UserSettings)
+
+export default withRouter(ExportedUserSettings)
