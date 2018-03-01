@@ -26,7 +26,6 @@ const mapDispatchToProps = {
   getBuildStatuses, addTravisToken
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
 class ProjectBuilds extends Component {
   static getIssueIcon(type) {
     switch (type) {
@@ -159,11 +158,19 @@ class ProjectBuilds extends Component {
   }
 }
 
+ProjectBuilds.defaultProps = {
+  travisUrl: null
+}
+
 ProjectBuilds.propTypes = {
   projectBuilds: PropTypes.object.isRequired,
-  travisUrl: PropTypes.string.isRequired,
+  travisUrl: PropTypes.string,
   projectId: PropTypes.string.isRequired,
 }
 
+const ExportedProjectBuilds = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProjectBuilds)
 
-export default ProjectBuilds
+export default ExportedProjectBuilds

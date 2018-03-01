@@ -33,7 +33,6 @@ const mapDispatchToProps = {
   register
 }
 
-@connect(null, mapDispatchToProps)
 class Register extends Component {
   constructor(props) {
     super(props)
@@ -157,4 +156,9 @@ Register.propTypes = {
   history: PropTypes.object.isRequired
 }
 
-export default withRouter(Register)
+const ExportedRegister = connect(
+  null,
+  mapDispatchToProps
+)(Register)
+
+export default withRouter(ExportedRegister)

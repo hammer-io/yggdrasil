@@ -31,7 +31,6 @@ const mapDispatchToProps = {
   getUserProjects
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
 class Home extends Component {
   constructor(props) {
     super(props)
@@ -94,4 +93,9 @@ Home.propTypes = {
   getUserProjects: PropTypes.func.isRequired
 }
 
-export default withRouter(Home)
+const ExportedHome = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home)
+
+export default withRouter(ExportedHome)

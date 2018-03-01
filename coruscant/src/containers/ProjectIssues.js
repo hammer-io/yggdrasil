@@ -24,7 +24,6 @@ const mapDispatchToProps = {
   getIssues, addGithubToken
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
 class ProjectIssues extends Component {
   static getIssueIcon(type) {
     switch (type) {
@@ -146,11 +145,19 @@ class ProjectIssues extends Component {
   }
 }
 
+ProjectIssues.defaultProps = {
+  githubUrl: null
+}
+
 ProjectIssues.propTypes = {
   projectIssues: PropTypes.object.isRequired,
-  githubUrl: PropTypes.string.isRequired,
+  githubUrl: PropTypes.string,
   projectId: PropTypes.string.isRequired,
 }
 
+const ExportedProjectIssues = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProjectIssues)
 
-export default ProjectIssues
+export default ExportedProjectIssues

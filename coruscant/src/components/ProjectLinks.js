@@ -39,10 +39,16 @@ class ProjectLinks extends React.PureComponent {
   }
 }
 
+ProjectLinks.defaultProps = {
+  githubUrl: null,
+  travisUrl: null,
+  herokuUrl: null
+}
+
 ProjectLinks.propTypes = {
-  githubUrl: PropTypes.string.isRequired,
-  travisUrl: PropTypes.string.isRequired,
-  herokuUrl: PropTypes.string.isRequired
+  githubUrl: PropTypes.string,
+  travisUrl: PropTypes.string,
+  herokuUrl: PropTypes.string
 }
 
 export default ProjectLinks
