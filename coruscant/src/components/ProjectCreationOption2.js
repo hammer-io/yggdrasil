@@ -1,5 +1,4 @@
 import React from 'react'
-import { TextField, FlatButton, DropDownMenu, MenuItem } from 'material-ui'
 import PropTypes from 'prop-types'
 
 import ProjectOptionTile from './../components/ProjectOptionTile'
@@ -57,7 +56,16 @@ const ProjectCreationOption2 = ({
 )
 
 ProjectCreationOption2.propTypes = {
-
+  clickDocker: PropTypes.func.isRequired,
+  clickHeroku: PropTypes.func.isRequired,
+  clickNoContainer: PropTypes.func.isRequired,
+  clickNoDeploy: PropTypes.func.isRequired,
+  dockerSelected: PropTypes.bool.isRequired,
+  noContainerSelected: PropTypes.bool.isRequired,
+  herokuSelected: PropTypes.bool.isRequired,
+  noDeploySelected: PropTypes.bool.isRequired,
+  dockerDisabled: PropTypes.bool.isRequired,
+  herokuDisabled: PropTypes.bool.isRequired
 }
 
 export default ProjectCreationOption2

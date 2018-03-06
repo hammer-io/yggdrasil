@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Theme from '../../../style/theme'
 
 const HerokuLogo = ({
   width,

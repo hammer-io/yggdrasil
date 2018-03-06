@@ -1,5 +1,4 @@
 import React from 'react'
-import { TextField, FlatButton, DropDownMenu, MenuItem } from 'material-ui'
 import PropTypes from 'prop-types'
 
 import ProjectOptionTile from './../components/ProjectOptionTile'
@@ -57,7 +56,16 @@ const ProjectCreationOption1 = ({
 )
 
 ProjectCreationOption1.propTypes = {
-
+  clickGithub: PropTypes.func.isRequired,
+  clickTravis: PropTypes.func.isRequired,
+  clickNoSource: PropTypes.func.isRequired,
+  clickNoCI: PropTypes.func.isRequired,
+  githubSelected: PropTypes.bool.isRequired,
+  noSourceSelected: PropTypes.bool.isRequired,
+  travisSelected: PropTypes.bool.isRequired,
+  noCISelected: PropTypes.bool.isRequired,
+  githubDisabled: PropTypes.bool.isRequired,
+  travisDisabled: PropTypes.bool.isRequired
 }
 
 export default ProjectCreationOption1

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Paper, RaisedButton } from 'material-ui'
+import { RaisedButton } from 'material-ui'
 import WarningIcon from 'material-ui/svg-icons/alert/warning'
 import CheckIcon from 'material-ui/svg-icons/action/check-circle'
 import NoneIcon from 'material-ui/svg-icons/content/remove-circle-outline'

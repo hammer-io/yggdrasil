@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextField, FlatButton, DropDownMenu, MenuItem } from 'material-ui'
+import { TextField, DropDownMenu, MenuItem } from 'material-ui'
 import PropTypes from 'prop-types'
 
 const styles = {
@@ -59,7 +59,11 @@ const ProjectCreationForm = ({
 )
 
 ProjectCreationForm.propTypes = {
-
+  handleDropDownChange: PropTypes.func.isRequired,
+  dropDownValue: PropTypes.number.isRequired,
+  nameOnChange: PropTypes.func.isRequired,
+  authorOnChange: PropTypes.func.isRequired,
+  descriptionOnChange: PropTypes.func.isRequired
 }
 
 export default ProjectCreationForm

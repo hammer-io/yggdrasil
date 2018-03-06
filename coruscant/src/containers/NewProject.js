@@ -1,3 +1,4 @@
+/* eslint react/no-unused-state: 0 */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
@@ -104,7 +105,6 @@ class NewProject extends Component {
       dockerDisabled: true,
       herokuDisabled: true,
 
-      isGithubAuthenticated: false,
       isTravisAuthenticated: false,
       isHerokuAuthenticated: false,
 
@@ -510,7 +510,13 @@ class NewProject extends Component {
 }
 
 NewProject.propTypes = {
-  // projects: PropTypes.object.isRequired
+  session: PropTypes.object.isRequired,
+  tools: PropTypes.object.isRequired,
+  checkGithubToken: PropTypes.func.isRequired,
+  checkTravisToken: PropTypes.func.isRequired,
+  checkHerokuToken: PropTypes.func.isRequired,
+  getTools: PropTypes.func.isRequired,
+  addProject: PropTypes.func.isRequired
 }
 
 export default withRouter(NewProject)
