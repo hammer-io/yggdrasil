@@ -26,6 +26,10 @@ export function setProjects(projects) {
   return actionCreator(Constants.SET_PROJECTS, { projects })
 }
 
+export function setProject(project) {
+  return actionCreator(Constants.SET_PROJECT, { project })
+}
+
 export function getUserProjects(token) {
   return async (dispatch) => {
     try {
@@ -258,6 +262,28 @@ export function getUser(token, user) {
         url: `/users/${user}`
       })
       if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
+export function addProject(token, project) {
+  return async (dispatch) => {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.post({
+        url: '/user/projects',
+        body: project
+      })
+      if (result) {
+        dispatch(setProject(result))
         return { result, error }
       }
       console.log(error)

@@ -18,8 +18,7 @@ const styles = {
   },
   image: {
     height: '75px',
-    width: '75px',
-    minWidth: '0px'
+    width: '75px'
   },
   menuItem: {
     fontWeight: Theme.font.weight.heavy,
