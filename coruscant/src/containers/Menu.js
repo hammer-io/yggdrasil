@@ -10,7 +10,6 @@ const mapDispatchToProps = {
   logout
 }
 
-@connect(null, mapDispatchToProps)
 class Menu extends Component {
   constructor(props) {
     super(props)
@@ -31,7 +30,7 @@ class Menu extends Component {
       logout()
       history.push('/login')
     } else if (item.props.primaryText === 'New Project') {
-      history.push('/projects/new')
+      history.push('/new')
     }
   }
 
@@ -45,6 +44,8 @@ class Menu extends Component {
       history.push('/home')
     } else if (item.props.primaryText === 'Settings' && location.pathname !== '/settings') {
       history.push('/settings')
+    } else if (item.props.primaryText === 'Tyr' && location.pathname !== '/tyr') {
+      history.push('/tyr')
     } else {
       this.clickToggleDrawer()
     }
@@ -78,4 +79,9 @@ Menu.propTypes = {
   logout: PropTypes.func.isRequired
 }
 
-export default withRouter(Menu)
+const ExportedMenu = connect(
+  null,
+  mapDispatchToProps
+)(Menu)
+
+export default withRouter(ExportedMenu)

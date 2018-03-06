@@ -1,3 +1,4 @@
+import * as firebase from 'firebase'
 import FetchClient from './../utils/fetchClient'
 import actionCreator from './../utils/actionCreator'
 import * as Constants from './../constants'
@@ -16,7 +17,7 @@ export function setPreviousRoute(previousRoute) {
 
 
 export function getSession(token) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -38,7 +39,7 @@ export function getSession(token) {
 }
 
 export function login(credentials) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       const { result, error } = await fetchClient.post({
@@ -56,6 +57,10 @@ export function login(credentials) {
         if (response.result) {
           dispatch(setAccessToken(result.access_token.value))
           dispatch(setUser(response.result))
+          await firebase.auth().signInWithEmailAndPassword(
+            response.result.email,
+            credentials.password
+          )
         } else {
           console.log(response.error)
         }
@@ -71,8 +76,9 @@ export function login(credentials) {
 }
 
 export function logout() {
-  return function (dispatch) {
+  return async (dispatch) => {
     try {
+      await firebase.auth().signOut()
       dispatch(setAccessToken(null))
       dispatch(setUser(null))
     } catch (error) {
@@ -83,7 +89,7 @@ export function logout() {
 }
 
 export function register(credentials) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       const { result, error } = await fetchClient.post({
@@ -91,6 +97,11 @@ export function register(credentials) {
         body: credentials
       })
       if (result) {
+        await firebase.auth().createUserWithEmailAndPassword(
+          credentials.email,
+          credentials.password
+        )
+        await firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
         dispatch(setAccessToken(result.token.value))
         dispatch(setUser(result.user))
         return { result, error }
@@ -104,8 +115,50 @@ export function register(credentials) {
   }
 }
 
+export function addGithubToken(token, body) {
+  return async () => {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.post({
+        url: '/auth/github',
+        body
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
+export function addTravisToken(token, body) {
+  return async () => {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.post({
+        url: '/auth/travis',
+        body
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
 export function checkGithubToken(token) {
-  return async function () {
+  return async () => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -125,7 +178,7 @@ export function checkGithubToken(token) {
 }
 
 export function checkTravisToken(token) {
-  return async function () {
+  return async () => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -145,7 +198,7 @@ export function checkTravisToken(token) {
 }
 
 export function checkHerokuToken(token) {
-  return async function () {
+  return async () => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)

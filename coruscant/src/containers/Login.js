@@ -37,7 +37,6 @@ const mapDispatchToProps = {
   setPreviousRoute
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
 class Login extends Component {
   constructor(props) {
     super(props)
@@ -148,4 +147,9 @@ Login.propTypes = {
   setPreviousRoute: PropTypes.func.isRequired
 }
 
-export default withRouter(Login)
+const ExportedLogin = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login)
+
+export default withRouter(ExportedLogin)

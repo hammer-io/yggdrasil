@@ -16,7 +16,6 @@ const mapDispatchToProps = {
   setPreviousRoute
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
 class App extends Component {
   async componentDidMount() {
     document.body.style.backgroundColor = Theme.palette.bodyBackground
@@ -69,4 +68,9 @@ App.propTypes = {
   setPreviousRoute: PropTypes.func.isRequired
 }
 
-export default withRouter(App)
+const ExportedApp = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)
+
+export default withRouter(ExportedApp)

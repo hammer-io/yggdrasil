@@ -5,10 +5,6 @@ import Healthy from 'material-ui/svg-icons/action/check-circle'
 import Warning from 'material-ui/svg-icons/content/report'
 import Failing from 'material-ui/svg-icons/navigation/cancel'
 
-import IconMenu from 'material-ui/IconMenu'
-import MenuItem from 'material-ui/MenuItem'
-import IconButton from 'material-ui/IconButton'
-import MoreHorizIcon from 'material-ui/svg-icons/navigation/more-horiz'
 import { yellow500, red500, green500 } from 'material-ui/styles/colors'
 
 const styles = {
@@ -46,6 +42,12 @@ const styles = {
 }
 
 class ProjectHeader extends Component {
+  descriptionTag = (tag, value) => (
+    <div style={styles.descriptionText}>
+      <div style={styles.bold}>{tag}</div>{value}
+    </div>
+  )
+
   renderStatus() {
     switch (this.props.projectStatus) {
       case 'Healthy':
@@ -74,26 +76,21 @@ class ProjectHeader extends Component {
   }
 
   render() {
+    const updatedAtString = new Date(Date.parse(this.props.updatedAt)).toLocaleString()
     return (
       <div style={styles.headerContainer}>
         <Paper style={styles.header}>
           <div>
             <div style={styles.ProjectNameFont}>{this.props.projectName}</div>
             {this.renderStatus()}
-            <IconMenu
-              iconButtonElement={<IconButton><MoreHorizIcon /></IconButton>}
-            >
-              <MenuItem value="1" primaryText="Rename" />
-              <MenuItem value="2" primaryText="Project Settings" />
-              <MenuItem value="3" primaryText="Delete" />
-            </IconMenu>
           </div>
-          <div style={styles.descriptionText}>
-            <div style={styles.bold}>Owner:</div> {this.props.projectOwner}
+          <div>
+            {this.descriptionTag('', this.props.description)}
           </div>
-          <div style={styles.descriptionText}>
-            <div style={styles.bold}>Last Updated:</div>{this.props.lastUpdated}
-          </div>
+          {this.descriptionTag('Authors: ', this.props.authors)}
+          {this.descriptionTag('License: ', this.props.license)}
+          {this.descriptionTag('Version: ', this.props.version)}
+          {this.descriptionTag('Last Updated: ', updatedAtString)}
 
 
         </Paper>
@@ -104,8 +101,11 @@ class ProjectHeader extends Component {
 
 
 ProjectHeader.propTypes = {
-  projectOwner: PropTypes.string.isRequired,
-  lastUpdated: PropTypes.string.isRequired,
+  authors: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  updatedAt: PropTypes.string.isRequired,
+  license: PropTypes.string.isRequired,
+  version: PropTypes.string.isRequired,
   projectName: PropTypes.string.isRequired,
   projectStatus: PropTypes.string.isRequired
 }

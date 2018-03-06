@@ -3,6 +3,7 @@ import { Drawer, MenuItem, Menu } from 'material-ui'
 import PropTypes from 'prop-types'
 import Home from 'material-ui/svg-icons/action/home'
 import Settings from 'material-ui/svg-icons/action/settings'
+import WebAsset from 'material-ui/svg-icons/av/web-asset'
 import Theme from '../../style/theme'
 import HammerLogo from './../assets/icons/Viking_Hammer_Logo_1.png'
 
@@ -71,6 +72,11 @@ const Sidebar = ({
         style={getMenuStyle('/home', currentRoute)}
         primaryText="Home"
         leftIcon={<Home style={getIconStyle('/home', currentRoute)} />}
+      />
+      <MenuItem
+        style={getMenuStyle('/tyr', currentRoute)}
+        primaryText="Tyr"
+        leftIcon={<WebAsset style={getIconStyle('/tyr', currentRoute)} />}
       />
       <MenuItem
         style={getMenuStyle('/settings', currentRoute)}

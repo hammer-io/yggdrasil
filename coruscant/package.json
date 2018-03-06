@@ -40,7 +40,9 @@
   },
   "dependencies": {
     "babel-preset-stage-1": "^6.1.18",
+    "config": "^1.29.4",
     "email-validator": "^1.1.1",
+    "firebase": "^4.10.1",
     "flexbox-react": "^4.4.0",
     "lodash": "^3.10.1",
     "material-ui": "^0.20.0",
