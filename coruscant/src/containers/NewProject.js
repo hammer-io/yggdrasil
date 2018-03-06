@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import {
   Step,
   Stepper,
-  StepLabel,
+  StepLabel
 } from 'material-ui/Stepper'
 import { Paper, RaisedButton, FlatButton } from 'material-ui'
 
