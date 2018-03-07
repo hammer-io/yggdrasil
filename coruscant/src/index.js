@@ -1,6 +1,4 @@
-/* eslint-disable prefer-destructuring */
 import React from 'react'
-import * as firebase from 'firebase'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import throttle from 'lodash/throttle'
@@ -21,9 +19,6 @@ import HerokuRedirect from './containers/HerokuRedirect'
 import NotFound from './components/PageNotFound'
 import TyrInfo from './components/TyrInfo'
 import NewProject from './containers/NewProject'
-import { externals } from '../webpack.config'
-
-const config = externals.config
 
 const store = getStore()
 store.subscribe(throttle(() => {
@@ -31,8 +26,6 @@ store.subscribe(throttle(() => {
     session: store.getState().session
   })
 }), 1000)
-
-window.firebaseInstance = firebase.initializeApp(config.firebase)
 
 const Root = () => (
   <MuiThemeProvider muiTheme={getMuiTheme(theme)}>

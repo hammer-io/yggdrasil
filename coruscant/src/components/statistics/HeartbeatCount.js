@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Divider, Paper } from 'material-ui'
 
+import { database } from '../../utils/firebase'
 import Theme from '../../../style/theme'
 
 class HeartbeatCount extends Component {
@@ -14,10 +15,8 @@ class HeartbeatCount extends Component {
   }
   componentWillMount() {
     try {
-      const db = window.firebaseInstance.database()
-
       // Get the last heartbeat
-      db.ref(`/heartbeats/${this.props.projectId}`).limitToLast(1).once('value').then((snapshot) => {
+      database.ref(`/heartbeats/${this.props.projectId}`).limitToLast(1).once('value').then((snapshot) => {
         let lastHeartbeat = 'N/A'
         snapshot.forEach((heartbeat) => {
           const date = new Date(heartbeat.val().timestamp)
@@ -27,7 +26,7 @@ class HeartbeatCount extends Component {
       })
 
       // Count the total number of heartbeats
-      db.ref(`/heartbeats/${this.props.projectId}`).once('value').then((snapshot) => {
+      database.ref(`/heartbeats/${this.props.projectId}`).once('value').then((snapshot) => {
         let heartbeatCount = snapshot.numChildren()
         if (heartbeatCount === 0) {
           heartbeatCount = 'N/A'
