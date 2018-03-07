@@ -88,13 +88,10 @@ class ProjectBuilds extends Component {
   async componentDidMount() {
     const {
       session,
-      getBuildStatuses,
-      // addTravisToken
+      getBuildStatuses
     } = this.props
 
     const id = this.props.projectId
-    // Use this to set your travis token for now
-    // await addTravisToken(session.authToken, { travisToken: '' })
     await getBuildStatuses(session.authToken, id, 5)
   }
 

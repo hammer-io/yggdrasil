@@ -285,14 +285,53 @@ export function deleteGithubToken(token) {
   }
 }
 
-export function addTravisToken(token, body) {
+export function addTravisToken(token) {
   return async function () {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
       const { result, error } = await fetchClient.post({
-        url: '/auth/travis',
-        body
+        url: '/auth/travis'
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
+export function deleteTravisToken(token) {
+  return async function () {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.delete({
+        url: '/auth/travis'
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
+export function checkTravisToken(token) {
+  return async function () {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.get({
+        url: '/auth/travis'
       })
       if (result) {
         return { result, error }

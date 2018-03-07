@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { saveState } from '../../utils/localStorage'
 import Theme from '../../../style/theme'
 import BasicSpinner from '../../components/BasicSpinner'
-import { checkGithubToken, deleteGithubToken, checkHerokuToken, deleteHerokuToken, setGithubState, setHerokuState } from '../../actions/session'
+import { checkGithubToken, checkTravisToken, addTravisToken, deleteTravisToken, deleteGithubToken, checkHerokuToken, deleteHerokuToken } from '../../actions/session'
 
 const styles = {
   container: {
@@ -18,11 +18,12 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   checkGithubToken,
-  deleteGithubToken,
   checkHerokuToken,
+  checkTravisToken,
+  deleteGithubToken,
   deleteHerokuToken,
-  setGithubState,
-  setHerokuState
+  deleteTravisToken,
+  addTravisToken
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -37,6 +38,7 @@ class AccountSettings extends Component {
     super(props)
     this.state = {
       github: 'spin',
+      travis: 'spin',
       heroku: 'spin'
     }
   }
@@ -44,6 +46,7 @@ class AccountSettings extends Component {
   componentDidMount() {
     this.checkGithub()
     this.checkHeroku()
+    this.checkTravis()
   }
 
   async checkGithub() {
@@ -55,10 +58,20 @@ class AccountSettings extends Component {
     if (result) {
       this.setState({ github: result.isGithubAuthenticated })
     } else {
-      // TODO
-      // This should actually set github to spin,
-      // but the backend is throwing an error when there is no token.
-      this.setState({ github: false })
+      this.setState({ github: 'spin' })
+    }
+  }
+
+  async checkTravis() {
+    const {
+      checkTravisToken,
+      session
+    } = this.props
+    const { result } = await checkTravisToken(session.authToken)
+    if (result) {
+      this.setState({ travis: result.isTravisAuthenticated })
+    } else {
+      this.setState({ travis: 'spin' })
     }
   }
 
@@ -94,6 +107,28 @@ class AccountSettings extends Component {
     const { error } = await deleteHerokuToken(session.authToken)
     if (!error) {
       this.setState({ heroku: false })
+    }
+  }
+
+  async removeTravis() {
+    const {
+      deleteTravisToken,
+      session
+    } = this.props
+    const { error } = await deleteTravisToken(session.authToken)
+    if (!error) {
+      this.setState({ travis: false })
+    }
+  }
+
+  async addTravis() {
+    const {
+      addTravisToken,
+      session
+    } = this.props
+    const { error } = await addTravisToken(session.authToken)
+    if (!error) {
+      this.setState({ travis: true })
     }
   }
 
@@ -200,12 +235,51 @@ class AccountSettings extends Component {
     )
   }
 
+  renderTravisInfo() {
+    const travisLinked = this.state.travis
+    if (travisLinked === 'spin') {
+      return <BasicSpinner />
+    }
+    if (travisLinked) {
+      return (
+        <div>
+          <div style={{ marginBottom: 10 }}>
+            Linked to account: <div style={{ fontWeight: 'bold', display: 'inline' }}>NathanDeGraafTest</div>
+          </div>
+          <RaisedButton
+            label="Remove Travis Access"
+            secondary
+            onClick={() => { this.removeTravis() }}
+          />
+        </div>
+      )
+    }
+    return (
+      <div>
+        <p>
+          No account linked. Click the &quot;Connect&quot; button
+          below to automatically link the Travis account associated
+          with your GitHub account to Yggdrasil. A GitHub account
+          must be linked before a Travis account can be linked.
+        </p>
+        <RaisedButton
+          label="Connect to Travis"
+          primary
+          disabled={this.state.github !== true}
+          onClick={(() => { this.addTravis() })}
+        />
+      </div>
+    )
+  }
+
   render() {
     return (
       <div style={styles.container}>
         <h2>Linked Accounts</h2>
         <h3>GitHub</h3>
         {this.renderGithubInfo()}
+        <h3>Travis</h3>
+        {this.renderTravisInfo()}
         <h3>Heroku</h3>
         {this.renderHerokuInfo()}
       </div>
