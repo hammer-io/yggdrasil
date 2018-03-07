@@ -53,7 +53,10 @@ class Login extends Component {
     this.passwordOnChange = this.passwordOnChange.bind(this)
   }
 
-  async submitForm() {
+  async submitForm(event) {
+    event.preventDefault()
+    event.stopPropagation()
+
     const { username, password } = this.state
     const {
       session,
@@ -111,7 +114,7 @@ class Login extends Component {
 
   render() {
     return (
-      <div style={styles.container}>
+      <form style={styles.container} onSubmit={this.submitForm}>
         <Paper style={styles.form}>
           <h4>Sign in to Hammer-io</h4>
           <TextField
@@ -130,12 +133,13 @@ class Login extends Component {
           <RaisedButton
             label="Sign in"
             primary
-            onClick={() => this.submitForm()}
+            type="submit"
+            onClick={this.submitForm}
             style={styles.button}
           />
           <NavLink to="/register">Not a user?</NavLink>
         </Paper>
-      </div>
+      </form>
     )
   }
 }
