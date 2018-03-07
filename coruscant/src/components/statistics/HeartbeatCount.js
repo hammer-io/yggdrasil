@@ -8,7 +8,45 @@ class HeartbeatCount extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      heartbeatCount: 0
+      heartbeatCount: '...',
+      lastHeartbeat: '...'
+    }
+  }
+  componentWillMount() {
+    try {
+      const db = window.firebaseInstance.database()
+
+      // Get the last heartbeat
+      db.ref(`/heartbeats/${this.props.projectId}`).limitToLast(1).once('value').then((snapshot) => {
+        let lastHeartbeat = 'N/A'
+        snapshot.forEach((heartbeat) => {
+          const date = new Date(heartbeat.val().timestamp)
+          lastHeartbeat = date.toLocaleString()
+        })
+        this.setState({ lastHeartbeat })
+      })
+
+      // Count the total number of heartbeats
+      db.ref(`/heartbeats/${this.props.projectId}`).once('value').then((snapshot) => {
+        let heartbeatCount = snapshot.numChildren()
+        if (heartbeatCount === 0) {
+          heartbeatCount = 'N/A'
+        }
+        this.setState({ heartbeatCount })
+      })
+    } catch (err) {
+      this.setState({
+        heartbeatCount: 'N/A',
+        lastHeartbeat: 'N/A'
+      })
+      console.error(err)
+    }
+  }
+  componentWillUnmount() {
+    try {
+      // this.state.projectHeartbeatsRef.off()
+    } catch (err) {
+      console.error(err)
     }
   }
   render() {
@@ -17,15 +55,15 @@ class HeartbeatCount extends Component {
         <div style={Theme.projectDetails.headerText}>Heartbeats</div>
         <Divider />
 
-        <p>Total heartbeats received: {this.state.heartbeatCount}</p>
+        <p>Total received: {this.state.heartbeatCount}</p>
+        <p>Last received: {this.state.lastHeartbeat}</p>
       </Paper>
     )
   }
 }
 
 HeartbeatCount.propTypes = {
-  // accounts: PropTypes.array.isRequired,
-  // onAddAccount: PropTypes.func.isRequired
+  projectId: PropTypes.string.isRequired
 }
 
 export default HeartbeatCount

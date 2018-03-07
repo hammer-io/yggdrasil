@@ -195,7 +195,7 @@ class ProjectOverview extends React.Component {
                 alignItems="flex-start"
               >
                 <Flexbox>
-                  <HeartbeatCount />
+                  <HeartbeatCount projectId={params.id} />
                 </Flexbox>
                 <Flexbox>
                   <ProjectIssues

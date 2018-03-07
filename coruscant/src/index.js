@@ -32,7 +32,7 @@ store.subscribe(throttle(() => {
   })
 }), 1000)
 
-firebase.initializeApp(config.firebase)
+window.firebaseInstance = firebase.initializeApp(config.firebase)
 
 const Root = () => (
   <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
