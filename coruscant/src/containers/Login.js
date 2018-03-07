@@ -54,6 +54,7 @@ class Login extends Component {
   }
 
   async submitForm(event) {
+    // Prevents form submission from leaving the single-page app
     event.preventDefault()
     event.stopPropagation()
 
