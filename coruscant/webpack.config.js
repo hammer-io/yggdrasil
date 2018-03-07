@@ -1,21 +1,22 @@
 /* eslint-disable global-require,import/no-unresolved */
 let config = {}
-switch (process.env.ENV) {
-  case 'production':
-    config = JSON.stringify(require('./config/production.json'))
-    break
-  case 'test':
-    config = JSON.stringify(require('./config/test.json'))
-    break
-  default:
-    try {
-      config = JSON.stringify(require('./config/development.json'))
-    } catch (err) {
-      console.error('Couldn\'t load development configuration. Using default (empty) configs. ' +
-        'This could cause things to work incorrectly. Please create and specify an appropriate ' +
-        'configuration file.')
-      config = JSON.stringify(require('./config/default.json'))
-    }
+try {
+  switch (process.env.ENV) {
+    case 'production':
+      config = require('./config/production.json')
+      break
+    case 'test':
+      config = require('./config/test.json')
+      break
+    default:
+      config = require('./config/development.json')
+      break
+  }
+} catch (err) {
+  console.error('Couldn\'t load development configuration. Using default (empty) configs. ' +
+    'This could cause things to work incorrectly. Please create and specify an appropriate ' +
+    'configuration file. (See README.md for more details of configuration requirements)')
+  config = require('./config/default.json')
 }
 
 module.exports = {

@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import React from 'react'
 import * as firebase from 'firebase'
 import { Provider } from 'react-redux'
@@ -20,7 +21,9 @@ import HerokuRedirect from './containers/HerokuRedirect'
 import NotFound from './components/PageNotFound'
 import TyrInfo from './components/TyrInfo'
 import NewProject from './containers/NewProject'
-import config from '../config/default.json'
+import { externals } from '../webpack.config'
+
+const config = externals.config
 
 const store = getStore()
 store.subscribe(throttle(() => {

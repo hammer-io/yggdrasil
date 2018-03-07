@@ -9,6 +9,10 @@
 
 ## Configuration
 
+**TL;DR - You should copy the `config/default.json` file into all three config
+files listed in the table below, and then fill in the development config with
+real data.**
+
 Project configuration is done in the `json` files in the `config` folder.
 The `webpack.config.js` pulls in these files depending on the NODE_ENV environment
 variable.
