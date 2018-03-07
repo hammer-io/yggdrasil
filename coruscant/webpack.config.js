@@ -13,7 +13,7 @@ try {
       break
   }
 } catch (err) {
-  console.error('Couldn\'t load development configuration. Using default (empty) configs. ' +
+  console.error('Couldn\'t load standard configuration. Using default (empty) configs. ' +
     'This could cause things to work incorrectly. Please create and specify an appropriate ' +
     'configuration file. (See README.md for more details of configuration requirements)')
   config = require('./config/default.json')

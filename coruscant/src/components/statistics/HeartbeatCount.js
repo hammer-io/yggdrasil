@@ -42,13 +42,6 @@ class HeartbeatCount extends Component {
       console.error(err)
     }
   }
-  componentWillUnmount() {
-    try {
-      // this.state.projectHeartbeatsRef.off()
-    } catch (err) {
-      console.error(err)
-    }
-  }
   render() {
     return (
       <Paper style={Theme.projectDetails.header}>
