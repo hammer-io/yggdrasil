@@ -38,7 +38,6 @@ const mapDispatchToProps = {
   removeOwner
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
 class ProjectContributors extends Component {
   constructor(props) {
     super(props)
@@ -145,8 +144,12 @@ class ProjectContributors extends Component {
     } else {
       name = `${info.firstName} ${info.lastName}`
     }
+    const projectId = (owner) ? info.projectOwner.projectId : info.projectContributor.projectId
+    const role = (owner) ? 'owner' : 'contributor'
+    const key = `project.${projectId}.${role}.${info.id}`
     return (
       <ListItem
+        key={key}
         primaryText={name}
         secondaryText={info.email}
         rightIconButton={this.renderRightIconMenu(owner, info.id)}
@@ -257,5 +260,9 @@ ProjectContributors.propTypes = {
   projectId: PropTypes.string.isRequired,
 }
 
+const ExportedProjectContributors = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProjectContributors)
 
-export default ProjectContributors
+export default ExportedProjectContributors

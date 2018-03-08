@@ -26,8 +26,12 @@ export function setProjects(projects) {
   return actionCreator(Constants.SET_PROJECTS, { projects })
 }
 
+export function setProject(project) {
+  return actionCreator(Constants.SET_PROJECT, { project })
+}
+
 export function getUserProjects(token) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -46,7 +50,7 @@ export function getUserProjects(token) {
 }
 
 export function getIssues(token, id, parameters) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -67,7 +71,7 @@ export function getIssues(token, id, parameters) {
 }
 
 export function getBuildStatuses(token, id, limit) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -88,7 +92,7 @@ export function getBuildStatuses(token, id, limit) {
 }
 
 export function getProjectContributors(token, id) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -109,7 +113,7 @@ export function getProjectContributors(token, id) {
 }
 
 export function getProjectOwners(token, id) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -128,7 +132,7 @@ export function getProjectOwners(token, id) {
 }
 
 export function getProjects(token) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -147,7 +151,7 @@ export function getProjects(token) {
 }
 
 export function getProject(token, id) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -166,7 +170,7 @@ export function getProject(token, id) {
 }
 
 export function addContributor(token, info) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -187,7 +191,7 @@ export function addContributor(token, info) {
 }
 
 export function addOwner(token, info) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -208,7 +212,7 @@ export function addOwner(token, info) {
 }
 
 export function removeContributor(token, info) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -229,7 +233,7 @@ export function removeContributor(token, info) {
 }
 
 export function removeOwner(token, info) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -250,7 +254,7 @@ export function removeOwner(token, info) {
 }
 
 export function getUser(token, user) {
-  return async function () {
+  return async () => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -258,6 +262,28 @@ export function getUser(token, user) {
         url: `/users/${user}`
       })
       if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
+export function addProject(token, project) {
+  return async (dispatch) => {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.post({
+        url: '/user/projects',
+        body: project
+      })
+      if (result) {
+        dispatch(setProject(result))
         return { result, error }
       }
       console.log(error)

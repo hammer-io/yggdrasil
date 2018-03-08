@@ -35,15 +35,15 @@ const TyrInfo = () => (
       with what we think are the best tools for a small team creating a new open-source project.
       Upon running the CLI tool, it will ask you a series of questions and use the answers to
       do the following:
-      <ul>
-        <li>Generate a new Node.js project</li>
-        <li>Add testing, web, and database frameworks</li>
-        <li>Initialize and push the code to a new GitHub repository</li>
-        <li>Establish a continuous integration environment</li>
-        <li>Build a Docker container for the code</li>
-        <li>Deploy the app container to a cloud service</li>
-      </ul>
     </p>
+    <ul>
+      <li>Generate a new Node.js project</li>
+      <li>Add testing, web, and database frameworks</li>
+      <li>Initialize and push the code to a new GitHub repository</li>
+      <li>Establish a continuous integration environment</li>
+      <li>Build a Docker container for the code</li>
+      <li>Deploy the app container to a cloud service</li>
+    </ul>
     <h2 style={styles.subheader}>Usage</h2>
     <p style={styles.text}>For installation and usage instructions check out the Github <a href="https://github.com/hammer-io/tyr">page</a>.</p>
   </div>

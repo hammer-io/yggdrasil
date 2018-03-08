@@ -17,7 +17,7 @@ export function setPreviousRoute(previousRoute) {
 
 
 export function getSession(token) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -39,7 +39,7 @@ export function getSession(token) {
 }
 
 export function login(credentials) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       const { result, error } = await fetchClient.post({
@@ -76,7 +76,7 @@ export function login(credentials) {
 }
 
 export function logout() {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       await firebase.auth().signOut()
       dispatch(setAccessToken(null))
@@ -89,7 +89,7 @@ export function logout() {
 }
 
 export function register(credentials) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       const { result, error } = await fetchClient.post({
@@ -116,7 +116,7 @@ export function register(credentials) {
 }
 
 export function addGithubToken(token, body) {
-  return async function () {
+  return async () => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -136,13 +136,13 @@ export function addGithubToken(token, body) {
   }
 }
 
-export function addHerokuToken(token, body) {
-  return async function () {
+export function addTravisToken(token, body) {
+  return async () => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
       const { result, error } = await fetchClient.post({
-        url: '/auth/heroku',
+        url: '/auth/travis',
         body
       })
       if (result) {
@@ -157,8 +157,48 @@ export function addHerokuToken(token, body) {
   }
 }
 
+export function checkGithubToken(token) {
+  return async () => {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.get({
+        url: '/auth/github'
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
+export function checkTravisToken(token) {
+  return async () => {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.get({
+        url: '/auth/travis'
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.log(error)
+      return { result: null, error }
+    } catch (error) {
+      console.log(error)
+      return { result: null, error }
+    }
+  }
+}
+
 export function checkHerokuToken(token) {
-  return async function () {
+  return async () => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -177,28 +217,9 @@ export function checkHerokuToken(token) {
   }
 }
 
-export function deleteHerokuToken(token) {
-  return async function () {
-    try {
-      const fetchClient = new FetchClient()
-      fetchClient.setAuthToken(token)
-      const { result, error } = await fetchClient.delete({
-        url: '/auth/heroku'
-      })
-      if (result) {
-        return { result, error }
-      }
-      console.log(error)
-      return { result: null, error }
-    } catch (error) {
-      console.log(error)
-      return { result: null, error }
-    }
-  }
-}
 
 export function exchangeForGithubToken(token, code, state) {
-  return async function () {
+  return async () => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -222,7 +243,7 @@ export function exchangeForGithubToken(token, code, state) {
 }
 
 export function exchangeForHerokuToken(token, code, state) {
-  return async function () {
+  return async () => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -245,53 +266,13 @@ export function exchangeForHerokuToken(token, code, state) {
   }
 }
 
-export function checkGithubToken(token) {
-  return async function () {
-    try {
-      const fetchClient = new FetchClient()
-      fetchClient.setAuthToken(token)
-      const { result, error } = await fetchClient.get({
-        url: '/auth/github'
-      })
-      if (result) {
-        return { result, error }
-      }
-      console.log(error)
-      return { result: null, error }
-    } catch (error) {
-      console.log(error)
-      return { result: null, error }
-    }
-  }
-}
-
 export function deleteGithubToken(token) {
-  return async function () {
+  return async () => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
       const { result, error } = await fetchClient.delete({
         url: '/auth/github'
-      })
-      if (result) {
-        return { result, error }
-      }
-      console.log(error)
-      return { result: null, error }
-    } catch (error) {
-      console.log(error)
-      return { result: null, error }
-    }
-  }
-}
-
-export function addTravisToken(token) {
-  return async function () {
-    try {
-      const fetchClient = new FetchClient()
-      fetchClient.setAuthToken(token)
-      const { result, error } = await fetchClient.post({
-        url: '/auth/travis'
       })
       if (result) {
         return { result, error }
@@ -306,7 +287,7 @@ export function addTravisToken(token) {
 }
 
 export function deleteTravisToken(token) {
-  return async function () {
+  return async () => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -325,13 +306,13 @@ export function deleteTravisToken(token) {
   }
 }
 
-export function checkTravisToken(token) {
-  return async function () {
+export function deleteHerokuToken(token) {
+  return async () => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
-      const { result, error } = await fetchClient.get({
-        url: '/auth/travis'
+      const { result, error } = await fetchClient.delete({
+        url: '/auth/heroku'
       })
       if (result) {
         return { result, error }

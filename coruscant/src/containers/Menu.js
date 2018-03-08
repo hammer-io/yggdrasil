@@ -10,7 +10,6 @@ const mapDispatchToProps = {
   logout
 }
 
-@connect(null, mapDispatchToProps)
 class Menu extends Component {
   constructor(props) {
     super(props)
@@ -80,4 +79,9 @@ Menu.propTypes = {
   logout: PropTypes.func.isRequired
 }
 
-export default withRouter(Menu)
+const ExportedMenu = connect(
+  null,
+  mapDispatchToProps
+)(Menu)
+
+export default withRouter(ExportedMenu)

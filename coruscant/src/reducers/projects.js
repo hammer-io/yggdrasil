@@ -1,5 +1,6 @@
 import { normalize } from 'normalizr'
 import * as Constants from './../constants'
+import project from './../models/project'
 import projectList from './../models/projectList'
 
 function makeInitialState() {
@@ -11,6 +12,22 @@ function makeInitialState() {
   }
 }
 
+function setProject(state, action) {
+  const normalizedProjects = normalize(action.payload.project, project)
+  return {
+    ...state,
+    all: {
+      byId: {
+        ...state.all.byId,
+        ...normalizedProjects.entities.projects
+      },
+      allIds: {
+        ...state.all.allIds,
+        ...normalizedProjects.result
+      }
+    }
+  }
+}
 
 function setProjects(state, action) {
   const normalizedProjects = normalize(action.payload.projects, projectList)
@@ -54,6 +71,8 @@ function setUserProjects(state, action) {
 
 export default function (state = makeInitialState(), action) {
   switch (action.type) {
+    case Constants.SET_PROJECT:
+      return setProject(state, action)
     case Constants.SET_PROJECTS:
       return setProjects(state, action)
     case Constants.SET_USER_PROJECTS:

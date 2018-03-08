@@ -31,7 +31,6 @@ class AccountSettings extends Component {
   static getUnguessableString() {
     return Math.random().toString(36).substring(2, 15)
       + Math.random().toString(36).substring(2, 15)
-    // return '4'
   }
 
   constructor(props) {

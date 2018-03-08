@@ -19,8 +19,8 @@ import GithubRedirect from './containers/GithubRedirect'
 import HerokuRedirect from './containers/HerokuRedirect'
 import NotFound from './components/PageNotFound'
 import TyrInfo from './components/TyrInfo'
+import NewProject from './containers/NewProject'
 import config from '../config/default.json'
-
 
 const store = getStore()
 store.subscribe(throttle(() => {
@@ -37,6 +37,7 @@ const Root = () => (
       <Router>
         <App>
           <Switch>
+            <Route path={['/home', '/projects', '/projects/new']} component={Menu} />
             <Route path={['/home', '/projects/:id', '/settings', '/tyr']} component={Menu} />
           </Switch>
           <Switch>
@@ -44,6 +45,7 @@ const Root = () => (
             <Route exact path="/home" component={Home} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
+            <Route exact path="/projects/new" component={NewProject} />
             <Route exact path="/projects/:id" component={ProjectOverview} />
             <Route exact path="/settings/:tabValue" component={UserSettings} />
             <Route exact path="/githubAuth" component={GithubRedirect} />
