@@ -40,10 +40,10 @@ export function getUserProjects(token) {
         dispatch(setUserProjects(result))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -61,10 +61,10 @@ export function getIssues(token, id, parameters) {
         dispatch(setIssues(result))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -82,10 +82,10 @@ export function getBuildStatuses(token, id, limit) {
         dispatch(setBuildStatuses(result))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -103,10 +103,10 @@ export function getProjectContributors(token, id) {
         dispatch(setProjectContributors(result))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -122,10 +122,10 @@ export function getProjectOwners(token, id) {
         dispatch(setProjectOwners(result))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -141,10 +141,10 @@ export function getProjects(token) {
         dispatch(setProjects(result))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -160,10 +160,10 @@ export function getProject(token, id) {
         dispatch(setProjects([result]))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -181,10 +181,10 @@ export function addContributor(token, info) {
         dispatch(setProjectContributors(result))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -202,10 +202,10 @@ export function addOwner(token, info) {
         dispatch(setProjectOwners(result))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -223,10 +223,10 @@ export function removeContributor(token, info) {
         dispatch(setProjectContributors(result))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -244,10 +244,10 @@ export function removeOwner(token, info) {
         dispatch(setProjectOwners(result))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -264,10 +264,10 @@ export function getUser(token, user) {
       if (result) {
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -286,10 +286,10 @@ export function addProject(token, project) {
         dispatch(setProject(result))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }

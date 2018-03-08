@@ -87,7 +87,7 @@ class Login extends Component {
           this.setState({ passwordErrorText: error.error.message })
         }
       }
-      console.log(error)
+      console.error(error)
       return
     }
 

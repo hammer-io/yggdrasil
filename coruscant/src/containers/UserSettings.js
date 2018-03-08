@@ -42,7 +42,7 @@ class UserSettings extends Component {
     // Catch any bad paths in the settings subdirectory
     const currentTabValue = this.props.match.params.tabValue
     if (!tabValues.includes(currentTabValue)) {
-      console.log(`There is no settings page for '${currentTabValue}'! Redirecting to '/settings/profile'`)
+      console.error(`There is no settings page for '${currentTabValue}'! Redirecting to '/settings/profile'`)
       this.state.value = 'profile'
       this.props.history.replace('/settings/profile')
     }
