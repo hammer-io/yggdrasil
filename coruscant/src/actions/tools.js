@@ -16,10 +16,10 @@ export function getTools(token) {
         dispatch(setTools(result))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }

@@ -95,7 +95,7 @@ class Register extends Component {
           return err
         })
       }
-      console.log(error)
+      console.error(error)
     }
   }
 

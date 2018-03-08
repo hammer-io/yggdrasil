@@ -16,10 +16,10 @@ export function getUserInvites(token) {
         dispatch(setUserInvites(result))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }

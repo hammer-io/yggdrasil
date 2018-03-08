@@ -28,11 +28,11 @@ export function getSession(token) {
         dispatch(setAccessToken(token))
         dispatch(setUser(result))
       } else {
-        console.log(error)
+        console.error(error)
       }
       return { result, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -62,14 +62,14 @@ export function login(credentials) {
             credentials.password
           )
         } else {
-          console.log(response.error)
+          console.error(response.error)
         }
         return response
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -82,7 +82,7 @@ export function logout() {
       dispatch(setAccessToken(null))
       dispatch(setUser(null))
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return error
     }
   }
@@ -106,10 +106,10 @@ export function register(credentials) {
         dispatch(setUser(result.user))
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -127,10 +127,10 @@ export function addGithubToken(token, body) {
       if (result) {
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -148,10 +148,10 @@ export function addTravisToken(token, body) {
       if (result) {
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -168,10 +168,10 @@ export function checkGithubToken(token) {
       if (result) {
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -188,10 +188,10 @@ export function checkTravisToken(token) {
       if (result) {
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -208,10 +208,10 @@ export function checkHerokuToken(token) {
       if (result) {
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -233,10 +233,10 @@ export function exchangeForGithubToken(token, code, state) {
       if (result) {
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -257,10 +257,10 @@ export function exchangeForHerokuToken(token, code, state) {
       if (result) {
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -277,10 +277,10 @@ export function deleteGithubToken(token) {
       if (result) {
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -297,10 +297,10 @@ export function deleteTravisToken(token) {
       if (result) {
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
@@ -317,10 +317,10 @@ export function deleteHerokuToken(token) {
       if (result) {
         return { result, error }
       }
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return { result: null, error }
     }
   }
