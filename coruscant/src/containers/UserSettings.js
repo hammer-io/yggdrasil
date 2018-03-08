@@ -14,24 +14,6 @@ import { getUserInvites } from '../actions/invite'
 
 const tabValues = ['profile', 'invites', 'accounts', 'notification']
 
-// TODO: Load this dynamically
-const accounts = [
-  {
-    name: 'GitHub',
-    linked: false,
-    onConnectHandler: () => { console.log('TODO: Connecting to GitHub...') }
-  },
-  {
-    name: 'Heroku',
-    linked: true,
-    onConnectHandler: () => { console.log('TODO: Connecting to Heroku...') }
-  }
-]
-
-// TODO: Create some view to add accounts
-function onAddAccount() {
-  console.log('TODO: Adding account...')
-}
 
 // TODO
 function onSaveProfileSettings() {
@@ -52,7 +34,7 @@ class UserSettings extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      value: props.match.params.tabValue,
+      value: props.match.params.tabValue
     }
   }
 
@@ -92,7 +74,7 @@ class UserSettings extends Component {
               <InvitesSettings invites={this.props.invites} />
             </Tab>
             <Tab label="Accounts" value="accounts" containerElement={<Link to="/settings/accounts" />}>
-              <AccountSettings accounts={accounts} onAddAccount={onAddAccount} />
+              <AccountSettings />
             </Tab>
             <Tab label="Notification" value="notification" containerElement={<Link to="/settings/notification" />}>
               <NotificationSettings />

@@ -63,10 +63,7 @@ class FetchClient {
         const err = await res.json()
         return new FetchResponse(null, err, res)
       }
-      let data = null
-      if (res.status !== 204) {
-        data = await res.json()
-      }
+      const data = await res.text().then(text => (text ? JSON.parse(text) : null))
       return new FetchResponse(data, null, res)
     } catch (e) {
       return new FetchResponse(null, e, null)
