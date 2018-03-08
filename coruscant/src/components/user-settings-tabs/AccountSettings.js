@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import React, { Component } from 'react'
 import { RaisedButton } from 'material-ui'
 import { connect } from 'react-redux'
@@ -5,6 +6,9 @@ import { saveState } from '../../utils/localStorage'
 import Theme from '../../../style/theme'
 import BasicSpinner from '../../components/BasicSpinner'
 import { checkGithubToken, checkTravisToken, addTravisToken, deleteTravisToken, deleteGithubToken, checkHerokuToken, deleteHerokuToken } from '../../actions/session'
+import { externals } from '../../../webpack.config'
+
+const config = externals.config
 
 const styles = {
   container: {
@@ -26,7 +30,6 @@ const mapDispatchToProps = {
   addTravisToken
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
 class AccountSettings extends Component {
   static getUnguessableString() {
     return Math.random().toString(36).substring(2, 15)
@@ -142,10 +145,10 @@ class AccountSettings extends Component {
       githubState: state
     })
 
-    window.location = `${'https://github.com/login/oauth/authorize?' +
-    'client_id=6b57706945fa18ee0397&' +
-    'scope=repo&' +
-    'state='}${state}`
+    window.location = 'https://github.com/login/oauth/authorize?' +
+      `client_id=${config.github.clientId}&` +
+      'scope=repo&' +
+      `state=${state}`
   }
 
   async redirectToHeroku() {
@@ -159,11 +162,11 @@ class AccountSettings extends Component {
       herokuState: state
     })
 
-    window.location = `${'https://id.heroku.com/oauth/authorize?' +
-    'client_id=9a65de7d-f3d0-4457-9197-556e85d56bca&' +
-    'response_type=code&' +
-    'scope=write&' +
-    'state='}${state}`
+    window.location = 'https://id.heroku.com/oauth/authorize?' +
+      `client_id=${config.heroku.clientId}&` +
+      'response_type=code&' +
+      'scope=write&' +
+      `state=${state}`
   }
 
   renderGithubInfo() {
@@ -174,9 +177,9 @@ class AccountSettings extends Component {
     if (gitHubLinked) {
       return (
         <div>
-          <div style={{ marginBottom: 10 }}>
-            Linked to account: <div style={{ fontWeight: 'bold', display: 'inline' }}>NathanDeGraafTest</div>
-          </div>
+          <p>
+            Linked to account: <b>NathanDeGraafTest</b>
+          </p>
           <RaisedButton
             label="Remove GitHub Access"
             secondary
@@ -208,9 +211,9 @@ class AccountSettings extends Component {
     if (herokuLinked) {
       return (
         <div>
-          <div style={{ marginBottom: 10 }}>
-            Linked to account: <div style={{ fontWeight: 'bold', display: 'inline' }}>NathanDeGraafTest</div>
-          </div>
+          <p>
+            Linked to account: <b>NathanDeGraafTest</b>
+          </p>
           <RaisedButton
             label="Remove Heroku Access"
             secondary
@@ -242,9 +245,9 @@ class AccountSettings extends Component {
     if (travisLinked) {
       return (
         <div>
-          <div style={{ marginBottom: 10 }}>
-            Linked to account: <div style={{ fontWeight: 'bold', display: 'inline' }}>NathanDeGraafTest</div>
-          </div>
+          <p>
+            Linked to account: <b>NathanDeGraafTest</b>
+          </p>
           <RaisedButton
             label="Remove Travis Access"
             secondary
@@ -289,5 +292,9 @@ class AccountSettings extends Component {
 AccountSettings.propTypes = {
 }
 
+const ExportedAccountSettings = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AccountSettings)
 
-export default AccountSettings
+export default ExportedAccountSettings

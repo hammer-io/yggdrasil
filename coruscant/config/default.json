@@ -5,5 +5,11 @@
     "databaseURL": "",
     "projectId": "",
     "storageBucket": ""
+  },
+  "github": {
+    "clientId": ""
+  },
+  "heroku": {
+    "clientId": ""
   }
 }

@@ -33,6 +33,9 @@ If the `development.json` file doesn't exist, webpack will use the `default.json
 file that is committed with the repository. This file should never be edited: it's
 only to be used as a template for creating the other config files.
 
+Make sure to get the client IDs for any third-party clients (ask project owners or
+create your own) and populate the development config file with those IDs.
+
 
 ## Setting up Firebase
 
