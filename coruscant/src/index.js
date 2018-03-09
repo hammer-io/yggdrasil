@@ -1,6 +1,8 @@
+/* eslint-disable prefer-destructuring */
 import React from 'react'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+import * as firebase from 'firebase'
 import throttle from 'lodash/throttle'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
@@ -19,6 +21,11 @@ import HerokuRedirect from './containers/HerokuRedirect'
 import NotFound from './components/PageNotFound'
 import TyrInfo from './components/TyrInfo'
 import NewProject from './containers/NewProject'
+import { externals } from '../webpack.config'
+
+const config = externals.config
+
+firebase.initializeApp(config.firebase)
 
 const store = getStore()
 store.subscribe(throttle(() => {
