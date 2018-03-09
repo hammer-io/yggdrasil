@@ -7,7 +7,7 @@ export function setTools(tools) {
 }
 
 export function getTools(token) {
-  return async function (dispatch) {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)

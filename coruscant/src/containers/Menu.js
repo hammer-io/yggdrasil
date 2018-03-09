@@ -46,9 +46,8 @@ class Menu extends Component {
       history.push('/settings')
     } else if (item.props.primaryText === 'Tyr' && location.pathname !== '/tyr') {
       history.push('/tyr')
-    } else {
-      this.clickToggleDrawer()
     }
+    this.clickToggleDrawer()
   }
 
   updateDrawerState(open) {

@@ -52,7 +52,11 @@ class Register extends Component {
     this.passwordOnChange = this.passwordOnChange.bind(this)
   }
 
-  async submitForm() {
+  async submitForm(event) {
+    // Prevents form submission from leaving the single-page app
+    event.preventDefault()
+    event.stopPropagation()
+
     const { username, password, email } = this.state
     const { history, register } = this.props
 
@@ -116,7 +120,7 @@ class Register extends Component {
 
   render() {
     return (
-      <div style={styles.container}>
+      <form style={styles.container} onSubmit={this.submitForm}>
         <Paper style={styles.form}>
           <h4>Create an account</h4>
           <TextField
@@ -141,12 +145,13 @@ class Register extends Component {
           <RaisedButton
             label="Register"
             primary
-            onClick={() => this.submitForm()}
+            type="submit"
+            onClick={this.submitForm}
             style={styles.button}
           />
           <NavLink to="/login">Already a user?</NavLink>
         </Paper>
-      </div>
+      </form>
     )
   }
 }

@@ -1,7 +1,8 @@
+/* eslint-disable prefer-destructuring */
 import React from 'react'
-import * as firebase from 'firebase'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+import * as firebase from 'firebase'
 import throttle from 'lodash/throttle'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
@@ -20,7 +21,11 @@ import HerokuRedirect from './containers/HerokuRedirect'
 import NotFound from './components/PageNotFound'
 import TyrInfo from './components/TyrInfo'
 import NewProject from './containers/NewProject'
-import config from '../config/default.json'
+import { externals } from '../webpack.config'
+
+const config = externals.config
+
+firebase.initializeApp(config.firebase)
 
 const store = getStore()
 store.subscribe(throttle(() => {
@@ -28,8 +33,6 @@ store.subscribe(throttle(() => {
     session: store.getState().session
   })
 }), 1000)
-
-firebase.initializeApp(config.firebase)
 
 const Root = () => (
   <MuiThemeProvider muiTheme={getMuiTheme(theme)}>

@@ -24,15 +24,15 @@ class ProfileSettings extends Component {
           /><br />
           <TextField
             floatingLabelText="Email"
-            value={this.props.user.email}
+            defaultValue={this.props.user.email}
           /><br />
           <TextField
             floatingLabelText="First Name"
-            value={this.props.user.firstName}
+            defaultValue={this.props.user.firstName || ''}
           />
           <TextField
             floatingLabelText="Last Name"
-            value={this.props.user.lastName}
+            defaultValue={this.props.user.lastName || ''}
           /><br />
           <br />
           <RaisedButton label="Save Changes" primary onClick={this.props.onSaveProfileSettings} />

@@ -13,6 +13,7 @@ import ProjectLinks from '../components/ProjectLinks'
 import ProjectContributors from './ProjectContributors'
 import Theme from '../../style/theme'
 import BasicSpinner from './../components/BasicSpinner'
+import HeartbeatCount from '../components/statistics/HeartbeatCount'
 
 const styles = {
   headingContainer: {
@@ -193,6 +194,9 @@ class ProjectOverview extends React.Component {
                 justifyContent="space-around"
                 alignItems="flex-start"
               >
+                <Flexbox>
+                  <HeartbeatCount projectId={params.id} />
+                </Flexbox>
                 <Flexbox>
                   <ProjectIssues
                     githubUrl={project.githubRepositoryName}
