@@ -3,7 +3,7 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import * as firebase from 'firebase'
-import throttle from 'lodash/throttle'
+import _ from 'lodash'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import theme from '../style/theme'
@@ -28,7 +28,7 @@ const config = externals.config
 firebase.initializeApp(config.firebase)
 
 const store = getStore()
-store.subscribe(throttle(() => {
+store.subscribe(_.throttle(() => {
   saveState({
     session: store.getState().session
   })

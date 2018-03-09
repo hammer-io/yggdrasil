@@ -3,7 +3,7 @@ node_js:
   - '6'
   - '8'
 
-script: cd coruscant && npm install && npm run lint
+script: npm install && npm run lint
 
 notifications:
   email:
