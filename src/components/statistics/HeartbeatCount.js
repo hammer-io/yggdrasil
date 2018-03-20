@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Divider, Paper } from 'material-ui'
+import { Paper } from 'material-ui'
 import * as firebase from 'firebase'
 
 import Theme from '../../../style/theme'
@@ -52,8 +52,6 @@ class HeartbeatCount extends Component {
     return (
       <Paper style={Theme.projectDetails.header}>
         <div style={Theme.projectDetails.headerText}>Heartbeats</div>
-        <Divider />
-
         <p>Total received: {this.state.heartbeatCount}</p>
         <p>Last received: {this.state.lastHeartbeat}</p>
       </Paper>
