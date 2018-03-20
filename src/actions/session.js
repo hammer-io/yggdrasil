@@ -57,10 +57,10 @@ export function login(credentials) {
         if (response.result) {
           dispatch(setAccessToken(result.access_token.value))
           dispatch(setUser(response.result))
-          await firebase.auth().signInWithEmailAndPassword(
-            response.result.email,
-            credentials.password
-          )
+          // await firebase.auth().signInWithEmailAndPassword(
+          //   response.result.email,
+          //   credentials.password
+          // )
         } else {
           console.error(response.error)
         }

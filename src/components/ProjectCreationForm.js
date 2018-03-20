@@ -22,22 +22,33 @@ const styles = {
 const ProjectCreationForm = ({
   handleDropDownChange,
   dropDownValue,
+  name,
+  description,
+  author,
+  version,
   nameOnChange,
   descriptionOnChange,
-  authorOnChange
+  authorOnChange,
+  versionOnChange,
+  nameErrorText,
+  descriptionErrorText,
+  authorErrorText,
+  versionErrorText
 }) => (
   <div style={styles.container}>
     <TextField
       hintText="Project Name"
       floatingLabelText="Project Name"
-      errorText=""
+      errorText={nameErrorText}
       onChange={nameOnChange}
+      value={name}
     />
     <TextField
       hintText="Project Description"
       floatingLabelText="Project Description"
-      errorText=""
+      errorText={descriptionErrorText}
       onChange={descriptionOnChange}
+      value={description}
     />
     <DropDownMenu
       value={dropDownValue}
@@ -52,8 +63,16 @@ const ProjectCreationForm = ({
     <TextField
       hintText="Author"
       floatingLabelText="Author"
-      errorText=""
+      errorText={authorErrorText}
       onChange={authorOnChange}
+      value={author}
+    />
+    <TextField
+      hintText="Version"
+      floatingLabelText="Version"
+      errorText={versionErrorText}
+      onChange={versionOnChange}
+      value={version}
     />
   </div>
 )
@@ -61,9 +80,18 @@ const ProjectCreationForm = ({
 ProjectCreationForm.propTypes = {
   handleDropDownChange: PropTypes.func.isRequired,
   dropDownValue: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  version: PropTypes.string.isRequired,
   nameOnChange: PropTypes.func.isRequired,
   authorOnChange: PropTypes.func.isRequired,
-  descriptionOnChange: PropTypes.func.isRequired
+  descriptionOnChange: PropTypes.func.isRequired,
+  versionOnChange: PropTypes.func.isRequired,
+  nameErrorText: PropTypes.string.isRequired,
+  descriptionErrorText: PropTypes.string.isRequired,
+  authorErrorText: PropTypes.string.isRequired,
+  versionErrorText: PropTypes.string.isRequired
 }
 
 export default ProjectCreationForm

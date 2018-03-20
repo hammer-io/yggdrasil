@@ -12,7 +12,8 @@ import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import Checkbox from 'material-ui/Checkbox'
 import { connect } from 'react-redux'
-import { getProject, getProjectContributors, getProjectOwners, addContributor, getUser, removeContributor, addOwner, removeOwner } from '../actions/project'
+import { getProject, getProjectContributors, getProjectOwners, addContributor, removeContributor, addOwner, removeOwner } from '../actions/project'
+import { getUser } from '../actions/user'
 import Theme from '../../style/theme'
 
 const iconButtonElement = (

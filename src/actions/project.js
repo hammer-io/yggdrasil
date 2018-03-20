@@ -1,3 +1,4 @@
+import download from './../vendor/download'
 import FetchClient from './../utils/fetchClient'
 import actionCreator from './../utils/actionCreator'
 import * as Constants from './../constants'
@@ -169,6 +170,32 @@ export function getProject(token, id) {
   }
 }
 
+export function getProjectFiles(token, id) {
+  return async () => {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.get({
+        url: `/projects/${id}/zipFile`,
+        headers: {
+          'Content-Type': 'application/zip',
+          Accept: 'application/zip'
+        }
+      })
+      console.log(result)
+      if (result) {
+        download(result)
+        return { result, error }
+      }
+      console.error(error)
+      return { result: null, error }
+    } catch (error) {
+      console.error(error)
+      return { result: null, error }
+    }
+  }
+}
+
 export function addContributor(token, info) {
   return async (dispatch) => {
     try {
@@ -242,26 +269,6 @@ export function removeOwner(token, info) {
       })
       if (result) {
         dispatch(setProjectOwners(result))
-        return { result, error }
-      }
-      console.error(error)
-      return { result: null, error }
-    } catch (error) {
-      console.error(error)
-      return { result: null, error }
-    }
-  }
-}
-
-export function getUser(token, user) {
-  return async () => {
-    try {
-      const fetchClient = new FetchClient()
-      fetchClient.setAuthToken(token)
-      const { result, error } = await fetchClient.get({
-        url: `/users/${user}`
-      })
-      if (result) {
         return { result, error }
       }
       console.error(error)

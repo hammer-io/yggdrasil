@@ -49,21 +49,27 @@ class FetchClient {
       method,
       body: JSON.stringify(opts.body),
       headers: {
-        ...opts.headers,
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        ...opts.headers,
         Authorization: `Bearer ${this.authToken}`
       }
     }
 
     try {
+      let data
       const res = await fetch(url, o)
 
       if (FetchClient.isErrorCode(res.status)) {
         const err = await res.json()
         return new FetchResponse(null, err, res)
       }
-      const data = await res.text().then(text => (text ? JSON.parse(text) : null))
+
+      if (o.headers['Content-Type'] === 'application/zip') {
+        data = await res.blob()
+      } else {
+        data = await res.text().then(text => (text ? JSON.parse(text) : null))
+      }
       return new FetchResponse(data, null, res)
     } catch (e) {
       return new FetchResponse(null, e, null)
