@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Paper } from 'material-ui'
-import Divider from 'material-ui/Divider'
 import { List, ListItem } from 'material-ui/List'
 import Theme from '../../style/theme'
 
@@ -25,7 +24,6 @@ class ProjectLinks extends React.PureComponent {
       <div>
         <Paper style={Theme.projectDetails.header}>
           <div style={Theme.projectDetails.headerText}>Connected Services</div>
-          <Divider />
 
           <List>
             {ProjectLinks.renderItem(`https://github.com/${this.props.githubUrl}`, 'Github', this.props.githubUrl)}
