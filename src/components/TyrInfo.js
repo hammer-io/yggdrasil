@@ -1,52 +1,80 @@
-import React from 'react'
+import React, { Component } from 'react'
+import ReactMarkdown from 'react-markdown'
+import { RaisedButton } from 'material-ui'
 import Theme from './../../style/theme'
+import PageWrap from './PageWrap'
+import BasicSpinner from './BasicSpinner'
+import Divider from './Divider'
+
+const repositoryUrl = 'https://github.com/hammer-io/tyr'
+const readmeUrl = 'https://raw.githubusercontent.com/hammer-io/tyr/master/README.md'
+
+function onClickVisitGitHub() {
+  window.open(repositoryUrl, '_blank')
+}
 
 const styles = {
+  button: {
+    width: 250,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    display: 'block',
+    marginBottom: Theme.padding.regular
+  },
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    paddingTop: '80px',
-    marginLeft: '100px',
-    marginRight: '100px'
-  },
-  header: {
-    fontFamily: Theme.font.family.regular,
-    fontWeight: Theme.font.weight.regular,
-    color: Theme.palette.primary1Color,
-    fontSize: '34px'
-  },
-  subheader: {
-    fontFamily: Theme.font.family.regular,
-    fontWeight: Theme.font.weight.regular,
-    color: Theme.palette.primary1Color,
-  },
-  text: {
-    fontFamily: Theme.font.family.regular
+    padding: Theme.padding.regular,
+    minWidth: 'inherit',
+    maxWidth: 'inherit',
+    width: 'inherit'
   }
 }
 
-const TyrInfo = () => (
-  <div style={styles.container}>
-    <h1 style={styles.header}>Tyr</h1>
-    <p style={styles.text}>
-      A CLI tool to scaffold Node.js microservice applications with DevOps capabilities.
-      It takes an opinionated approach, meaning we have done the homework and start you off
-      with what we think are the best tools for a small team creating a new open-source project.
-      Upon running the CLI tool, it will ask you a series of questions and use the answers to
-      do the following:
-    </p>
-    <ul>
-      <li>Generate a new Node.js project</li>
-      <li>Add testing, web, and database frameworks</li>
-      <li>Initialize and push the code to a new GitHub repository</li>
-      <li>Establish a continuous integration environment</li>
-      <li>Build a Docker container for the code</li>
-      <li>Deploy the app container to a cloud service</li>
-    </ul>
-    <h2 style={styles.subheader}>Usage</h2>
-    <p style={styles.text}>For installation and usage instructions check out the Github <a href="https://github.com/hammer-io/tyr">page</a>.</p>
-  </div>
-)
+class TyrInfo extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      markdown: null
+    }
+  }
+
+  componentWillMount() {
+    const options = {
+      method: 'GET',
+      Accept: 'text/plain'
+    }
+    fetch(readmeUrl, options)
+      .then(async (response) => {
+        const text = await response.text()
+        this.setState({
+          markdown: text
+        })
+      })
+      .catch(console.error)
+  }
+
+  renderContent() {
+    if (this.state.markdown) {
+      return <ReactMarkdown source={this.state.markdown} />
+    }
+    return <BasicSpinner />
+  }
+
+  render() {
+    return (
+      <PageWrap title="Tyr - The HammerIO Command Line Tool">
+        <div style={styles.container}>
+          <RaisedButton
+            label="Visit the GitHub Repository"
+            secondary
+            onClick={onClickVisitGitHub}
+            style={styles.button}
+          />
+          <Divider />
+          {this.renderContent()}
+        </div>
+      </PageWrap>
+    )
+  }
+}
 
 export default TyrInfo
