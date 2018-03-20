@@ -18,10 +18,15 @@ class Menu extends Component {
       drawerOpen: false
     }
 
+    this.clickHammerLogo = this.clickHammerLogo.bind(this)
     this.clickNavbarItem = this.clickNavbarItem.bind(this)
     this.clickToggleDrawer = this.clickToggleDrawer.bind(this)
     this.clickSidebarItem = this.clickSidebarItem.bind(this)
     this.updateDrawerState = this.updateDrawerState.bind(this)
+  }
+
+  clickHammerLogo() {
+    this.props.history.push('/home')
   }
 
   clickNavbarItem(event, item) {
@@ -58,6 +63,7 @@ class Menu extends Component {
     return (
       <div>
         <Navbar
+          clickHammerLogo={this.clickHammerLogo}
           clickNavbarItem={this.clickNavbarItem}
           clickToggleDrawer={this.clickToggleDrawer}
         />
