@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import { RaisedButton } from 'material-ui'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { saveState } from '../../utils/localStorage'
 import Theme from '../../../style/theme'
 import BasicSpinner from '../../components/BasicSpinner'
@@ -171,6 +172,8 @@ class AccountSettings extends Component {
 
   renderGithubInfo() {
     const gitHubLinked = this.state.github
+    const { session } = this.props
+
     if (gitHubLinked === 'spin') {
       return <BasicSpinner />
     }
@@ -178,7 +181,7 @@ class AccountSettings extends Component {
       return (
         <div>
           <p>
-            Linked to account: <b>NathanDeGraafTest</b>
+            Linked to account: <b>{session.user.githubUsername}</b>
           </p>
           <RaisedButton
             label="Remove GitHub Access"
@@ -205,6 +208,7 @@ class AccountSettings extends Component {
 
   renderHerokuInfo() {
     const herokuLinked = this.state.heroku
+    const { session } = this.props
     if (herokuLinked === 'spin') {
       return <BasicSpinner />
     }
@@ -212,7 +216,7 @@ class AccountSettings extends Component {
       return (
         <div>
           <p>
-            Linked to account: <b>NathanDeGraafTest</b>
+            Linked to account: <b>{session.user.herokuEmail}</b>
           </p>
           <RaisedButton
             label="Remove Heroku Access"
@@ -290,6 +294,7 @@ class AccountSettings extends Component {
 }
 
 AccountSettings.propTypes = {
+  session: PropTypes.object.isRequired
 }
 
 const ExportedAccountSettings = connect(
