@@ -182,9 +182,8 @@ export function getProjectFiles(token, id) {
           Accept: 'application/zip'
         }
       })
-      console.log(result)
       if (result) {
-        download(result)
+        download(result, 'project.zip')
         return { result, error }
       }
       console.error(error)

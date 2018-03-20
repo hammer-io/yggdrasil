@@ -266,7 +266,8 @@ class NewProject extends Component {
       tools,
       session,
       addProject,
-      getProjectFiles
+      getProjectFiles,
+      history
     } = this.props
 
     const {
@@ -302,7 +303,6 @@ class NewProject extends Component {
       return
     }
 
-    const { history } = this.state
     const sourceControlId = _.findKey(tools.all.allIds, (tool => this.state.githubSelected && tool.name === 'GitHub'))
     const ciId = _.findKey(tools.all.byId, (tool => this.state.travisSelected && tool.name === 'TravisCI'))
     const containerId = _.findKey(tools.all.byId, (tool => this.state.dockerSelected && tool.name === 'Docker'))
