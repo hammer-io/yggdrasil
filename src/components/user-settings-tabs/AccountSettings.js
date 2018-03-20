@@ -243,6 +243,7 @@ class AccountSettings extends Component {
 
   renderTravisInfo() {
     const travisLinked = this.state.travis
+    const { session } = this.props
     if (travisLinked === 'spin') {
       return <BasicSpinner />
     }
@@ -250,7 +251,7 @@ class AccountSettings extends Component {
       return (
         <div>
           <p>
-            Linked to account: <b>NathanDeGraafTest</b>
+            Linked to account: <b>{session.user.githubUsername}</b>
           </p>
           <RaisedButton
             label="Remove Travis Access"
