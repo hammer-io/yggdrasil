@@ -5,7 +5,8 @@ import PropTypes from 'prop-types'
 const ProjectCreationDialog = ({
   onCancel,
   onContinue,
-  closeDialog
+  open,
+  text
 }) => {
   const actions = [
     <FlatButton
@@ -24,10 +25,9 @@ const ProjectCreationDialog = ({
     <Dialog
       actions={actions}
       modal={false}
-      open={this.state.open}
-      onRequestClose={closeDialog}
+      open={open}
     >
-      Are you sure you want to continue? All changes will be lost.
+      { text }
     </Dialog>
   )
 }
@@ -35,7 +35,8 @@ const ProjectCreationDialog = ({
 ProjectCreationDialog.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onContinue: PropTypes.func.isRequired,
-  closeDialog: PropTypes.func.isRequired
+  open: PropTypes.bool.isRequired,
+  text: PropTypes.string.isRequired
 }
 
 export default ProjectCreationDialog

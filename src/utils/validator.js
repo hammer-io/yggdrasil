@@ -3,6 +3,7 @@ import * as validator from 'email-validator'
 const letterNumber = /^[0-9a-zA-Z_]+$/
 const letter = /[a-zA-Z]/
 const number = /\d/
+const versionFormat = /^(\d+\.)?(\d+\.)?(\*|\d+)/
 
 /**
  * Determines if a string is blank or not
@@ -72,6 +73,49 @@ export function validatePassword(password) {
 
   if (!password.match(number)) {
     return 'Password must contain at least one digit'
+  }
+
+  return true
+}
+
+/**
+ * Validates project name
+ * @param projectName the project name to validate
+ * @returns {*} if not valid, returns the error message. Otherwise, returns true
+ */
+export function validateProjectName(projectName) {
+  if (isBlank(projectName)) {
+    return 'Project name cannot be blank!'
+  }
+
+  return true
+}
+
+/**
+ * Validates author
+ * @param author the author to validate
+ * @returns {*} if not valid, returns the error message. Otherwise, returns true
+ */
+export function validateAuthor(author) {
+  if (isBlank(author)) {
+    return 'Author cannot be blank!'
+  }
+
+  return true
+}
+
+/**
+ * Validates project version
+ * @param version the project version to validate
+ * @returns {*} if not valid, returns the error message. Otherwise, returns true
+ */
+export function validateVersion(version) {
+  if (isBlank(version)) {
+    return 'Project version cannot be blank!'
+  }
+
+  if (!version.match(versionFormat)) {
+    return 'Project version must be of the form (number)(.number)*'
   }
 
   return true

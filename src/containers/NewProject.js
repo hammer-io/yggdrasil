@@ -1,4 +1,5 @@
 /* eslint react/no-unused-state: 0 */
+/* eslint react/no-did-mount-set-state: 0 */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
@@ -16,9 +17,11 @@ import ProjectCreationForm from './../components/ProjectCreationForm'
 import ProjectCreationOption1 from './../components/ProjectCreationOption1'
 import ProjectCreationOption2 from './../components/ProjectCreationOption2'
 import ProjectCreationOption3 from './../components/ProjectCreationOption3'
+import ProjectCreationDialog from './../components/ProjectCreationDialog'
 import { checkGithubToken, checkTravisToken, checkHerokuToken } from '../actions/session'
 import { getTools } from '../actions/tools'
-import { addProject } from '../actions/project'
+import { addProject, getProjectFiles } from '../actions/project'
+import * as validator from '../utils/validator'
 
 const styles = {
   container: {
@@ -31,7 +34,7 @@ const styles = {
     paddingTop: '50px'
   },
   stepWrapper: {
-    height: '500px',
+    height: '550px',
     backgroundColor: Theme.colors.white
   },
   stepHeader: {
@@ -62,10 +65,10 @@ const mapDispatchToProps = {
   checkTravisToken,
   checkHerokuToken,
   getTools,
-  addProject
+  addProject,
+  getProjectFiles
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
 class NewProject extends Component {
   constructor(props) {
     super(props)
@@ -82,6 +85,8 @@ class NewProject extends Component {
       descriptionErrorText: '',
       author: '',
       authorErrorText: '',
+      version: '',
+      versionErrorText: '',
 
       // Selected options
       githubSelected: false,
@@ -108,14 +113,23 @@ class NewProject extends Component {
       isTravisAuthenticated: false,
       isHerokuAuthenticated: false,
 
+      githubErrorText: '',
+      travisErrorText: '',
+      herokuErrorText: '',
+
       // back and next buttons
-      backDisabled: true
+      backDisabled: true,
+
+      // dialog
+      dialogOpen: false,
+      dialogErrorText: ''
     }
 
     this.handleDropDownChange = this.handleDropDownChange.bind(this)
     this.nameOnChange = this.nameOnChange.bind(this)
     this.descriptionOnChange = this.descriptionOnChange.bind(this)
     this.authorOnChange = this.authorOnChange.bind(this)
+    this.versionOnChange = this.versionOnChange.bind(this)
     this.clickBack = this.clickBack.bind(this)
     this.clickNext = this.clickNext.bind(this)
     this.clickCreate = this.clickCreate.bind(this)
@@ -133,6 +147,7 @@ class NewProject extends Component {
     this.clickNoBackend = this.clickNoBackend.bind(this)
     this.clickSequelize = this.clickSequelize.bind(this)
     this.clickNoORM = this.clickNoORM.bind(this)
+    this.dialogClose = this.dialogClose.bind(this)
   }
 
   async componentDidMount() {
@@ -143,12 +158,11 @@ class NewProject extends Component {
       checkHerokuToken,
       getTools
     } = this.props
-    const isGithubAuthenticated = await checkGithubToken(session.authToken)
-    const isTravisAuthenticated = await checkTravisToken(session.authToken)
-    const isHerokuAuthenticated = await checkHerokuToken(session.authToken)
+    const { result: { isGithubAuthenticated } } = await checkGithubToken(session.authToken)
+    const { result: { isTravisAuthenticated } } = await checkTravisToken(session.authToken)
+    const { result: { isHerokuAuthenticated } } = await checkHerokuToken(session.authToken)
     await getTools(session.authToken)
 
-    // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({
       isGithubAuthenticated,
       isTravisAuthenticated,
@@ -156,8 +170,19 @@ class NewProject extends Component {
     })
 
     if (isGithubAuthenticated) {
-      // eslint-disable-next-line react/no-did-mount-set-state
-      this.setState({ githubDisabled: false })
+      this.setState({
+        githubDisabled: false
+      })
+    } else {
+      this.setState({ githubErrorText: 'Github account not linked. Go to user settings to update.' })
+    }
+
+    if (!isTravisAuthenticated) {
+      this.setState({ travisErrorText: 'Travis account not linked. Go to user settings to update.' })
+    }
+
+    if (!isHerokuAuthenticated) {
+      this.setState({ herokuErrorText: 'Heroku account not linked. Go to user settings to update.' })
     }
   }
 
@@ -167,10 +192,19 @@ class NewProject extends Component {
         return (
           <ProjectCreationForm
             dropDownValue={this.state.dropDownValue}
+            name={this.state.name}
+            description={this.state.description}
+            author={this.state.author}
+            version={this.state.version}
             handleDropDownChange={this.handleDropDownChange}
             nameOnChange={this.nameOnChange}
             descriptionOnChange={this.descriptionOnChange}
             authorOnChange={this.authorOnChange}
+            versionOnChange={this.versionOnChange}
+            nameErrorText={this.state.nameErrorText}
+            descriptionErrorText={this.state.descriptionErrorText}
+            authorErrorText={this.state.authorErrorText}
+            versionErrorText={this.state.versionErrorText}
           />
         )
       case 1:
@@ -186,6 +220,8 @@ class NewProject extends Component {
             clickNoCI={this.clickNoCI}
             githubDisabled={this.state.githubDisabled}
             travisDisabled={this.state.travisDisabled}
+            githubErrorText={this.state.githubErrorText}
+            travisErrorText={this.state.travisErrorText}
           />
         )
       case 2:
@@ -201,6 +237,7 @@ class NewProject extends Component {
             clickNoDeploy={this.clickNoDeploy}
             dockerDisabled={this.state.dockerDisabled}
             herokuDisabled={this.state.herokuDisabled}
+            herokuErrorText={this.state.herokuErrorText}
           />
         )
       case 3:
@@ -220,25 +257,65 @@ class NewProject extends Component {
             clickNoORM={this.clickNoORM}
           />
         )
-      default:
-        return 'You\'re a long way from home sonny jim!'
+      default: return null
     }
   }
 
   async clickCreate() {
-    const { tools, addProject, session } = this.props
+    const {
+      tools,
+      session,
+      addProject,
+      getProjectFiles,
+      history
+    } = this.props
+
+    const {
+      mochaSelected,
+      noTestSelected,
+      expressSelected,
+      noBackendSelected,
+      sequelizeSelected,
+      noORMSelected
+    } = this.state
+
+    if (!expressSelected && !noBackendSelected) {
+      this.setState({
+        dialogErrorText: 'Please select a web framework',
+        dialogOpen: true
+      })
+      return
+    }
+
+    if (!mochaSelected && !noTestSelected) {
+      this.setState({
+        dialogErrorText: 'Please select a testing framework',
+        dialogOpen: true
+      })
+      return
+    }
+
+    if (!sequelizeSelected && !noORMSelected) {
+      this.setState({
+        dialogErrorText: 'Please select an ORM framework',
+        dialogOpen: true
+      })
+      return
+    }
+
     const sourceControlId = _.findKey(tools.all.allIds, (tool => this.state.githubSelected && tool.name === 'GitHub'))
-    const ciId = _.findKey(tools.all.byId, (tool => this.state.travisSelected && tool.name === 'Travis'))
+    const ciId = _.findKey(tools.all.byId, (tool => this.state.travisSelected && tool.name === 'TravisCI'))
     const containerId = _.findKey(tools.all.byId, (tool => this.state.dockerSelected && tool.name === 'Docker'))
     const deployId = _.findKey(tools.all.byId, (tool => this.state.herokuSelected && tool.name === 'Heroku'))
-    const backendId = _.findKey(tools.all.byId, (tool => this.state.expressSelected && tool.name === 'Express'))
+    const backendId = _.findKey(tools.all.byId, (tool => this.state.expressSelected && tool.name === 'ExpressJS'))
     const testId = _.findKey(tools.all.byId, (tool => this.state.mochaSelected && tool.name === 'Mocha'))
     const ormId = _.findKey(tools.all.byId, (tool => this.state.sequelizeSelected && tool.name === 'Sequelize'))
     const newProject = {
       projectName: this.state.name,
       description: this.state.description,
       license: this.state.dropDownText,
-      authors: this.state.author,
+      author: this.state.author,
+      version: this.state.version,
       sourceControl: sourceControlId,
       ci: ciId,
       containerization: containerId,
@@ -247,26 +324,99 @@ class NewProject extends Component {
       test: testId,
       database: ormId
     }
-    await addProject(session.authToken, newProject)
+
+    const { result: project } = await addProject(session.authToken, newProject)
+    await getProjectFiles(session.authToken, project.id)
+    history.push(`/projects/${project.id}`)
   }
 
   clickNext() {
     switch (this.state.stepIndex) {
-      case 0:
-        // validate fields
+      case 0: {
+        const {
+          name,
+          author,
+          version
+        } = this.state
+
+        const validName = validator.validateProjectName(name)
+        if (typeof validName === 'string') {
+          this.setState({ nameErrorText: validName })
+          return
+        }
+
+        const validAuthor = validator.validateAuthor(author)
+        if (typeof validAuthor === 'string') {
+          this.setState({ authorErrorText: validAuthor })
+          return
+        }
+
+        const validVersion = validator.validateVersion(version)
+        if (typeof validVersion === 'string') {
+          this.setState({ versionErrorText: validVersion })
+          return
+        }
+
         this.setState({
           stepIndex: this.state.stepIndex + 1,
           backDisabled: false
         })
         break
-      case 1:
-        // validate options
+      }
+      case 1: {
+        const {
+          githubSelected,
+          noSourceSelected,
+          travisSelected,
+          noCISelected
+        } = this.state
+
+        if (!githubSelected && !noSourceSelected) {
+          this.setState({
+            dialogErrorText: 'Please select a source control tool',
+            dialogOpen: true
+          })
+          return
+        }
+
+        if (!travisSelected && !noCISelected) {
+          this.setState({
+            dialogErrorText: 'Please select a continuous integration tool',
+            dialogOpen: true
+          })
+          return
+        }
+
         this.setState({ stepIndex: this.state.stepIndex + 1 })
         break
-      case 2:
-        // validate options
+      }
+      case 2: {
+        const {
+          dockerSelected,
+          noContainerSelected,
+          herokuSelected,
+          noDeploySelected
+        } = this.state
+
+        if (!dockerSelected && !noContainerSelected) {
+          this.setState({
+            dialogErrorText: 'Please select a containerization tool',
+            dialogOpen: true
+          })
+          return
+        }
+
+        if (!herokuSelected && !noDeploySelected) {
+          this.setState({
+            dialogErrorText: 'Please select a deployment tool',
+            dialogOpen: true
+          })
+          return
+        }
+
         this.setState({ stepIndex: this.state.stepIndex + 1 })
         break
+      }
       default:
         break
     }
@@ -282,6 +432,13 @@ class NewProject extends Component {
     }
   }
 
+  dialogClose() {
+    this.setState({
+      dialogOpen: false,
+      dialogErrorText: ''
+    })
+  }
+
   nameOnChange(event, newValue) {
     this.setState({ name: newValue })
     this.setState({ nameErrorText: '' })
@@ -295,6 +452,11 @@ class NewProject extends Component {
   authorOnChange(event, newValue) {
     this.setState({ author: newValue })
     this.setState({ authorErrorText: '' })
+  }
+
+  versionOnChange(event, newValue) {
+    this.setState({ version: newValue })
+    this.setState({ versionErrorText: '' })
   }
 
   handleDropDownChange(event, index, value) {
@@ -504,6 +666,12 @@ class NewProject extends Component {
             }
           </div>
         </Paper>
+        <ProjectCreationDialog
+          onCancel={this.dialogClose}
+          onContinue={this.dialogClose}
+          open={this.state.dialogOpen}
+          text={this.state.dialogErrorText}
+        />
       </div>
     )
   }
@@ -516,7 +684,13 @@ NewProject.propTypes = {
   checkTravisToken: PropTypes.func.isRequired,
   checkHerokuToken: PropTypes.func.isRequired,
   getTools: PropTypes.func.isRequired,
-  addProject: PropTypes.func.isRequired
+  addProject: PropTypes.func.isRequired,
+  getProjectFiles: PropTypes.func.isRequired
 }
 
-export default withRouter(NewProject)
+const ExportedNewProject = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NewProject)
+
+export default withRouter(ExportedNewProject)
