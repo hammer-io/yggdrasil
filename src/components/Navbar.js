@@ -13,7 +13,6 @@ class Navbar extends React.Component {
         onItemClick={this.props.clickNavbarItem}
       >
         <MenuItem primaryText="New Project" />
-        <MenuItem primaryText="Help" />
         <MenuItem primaryText="Sign out" />
       </IconMenu>
     )
