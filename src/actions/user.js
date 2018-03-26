@@ -20,3 +20,25 @@ export function getUser(token, user) {
     }
   }
 }
+
+export function updateUser(token, userId, user) {
+  return async () => {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      console.log('here')
+      const { result, error } = await fetchClient.patch({
+        url: `/users/${userId}`,
+        body: user
+      })
+      if (result) {
+        return { result, error }
+      }
+      console.error(error)
+      return { result: null, error }
+    } catch (error) {
+      console.error(error)
+      return { result: null, error }
+    }
+  }
+}

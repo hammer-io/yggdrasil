@@ -17,7 +17,7 @@ import ProjectCreationForm from './../components/ProjectCreationForm'
 import ProjectCreationOption1 from './../components/ProjectCreationOption1'
 import ProjectCreationOption2 from './../components/ProjectCreationOption2'
 import ProjectCreationOption3 from './../components/ProjectCreationOption3'
-import ProjectCreationDialog from './../components/ProjectCreationDialog'
+import Dialog from './../components/Dialog'
 import { checkGithubToken, checkTravisToken, checkHerokuToken } from '../actions/session'
 import { getTools } from '../actions/tools'
 import { addProject, getProjectFiles } from '../actions/project'
@@ -666,7 +666,7 @@ class NewProject extends Component {
             }
           </div>
         </Paper>
-        <ProjectCreationDialog
+        <Dialog
           onCancel={this.dialogClose}
           onContinue={this.dialogClose}
           open={this.state.dialogOpen}
