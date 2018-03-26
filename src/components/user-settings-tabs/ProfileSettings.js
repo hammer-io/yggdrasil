@@ -1,4 +1,4 @@
-/* eslint-disable react/prefer-stateless-function */
+ /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react'
 import { RaisedButton, TextField, } from 'material-ui'
 import PropTypes from 'prop-types'
@@ -11,6 +11,14 @@ import { validateEmail } from './../../utils/validator'
 const styles = {
   container: {
     padding: Theme.padding.tiny
+  },
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start'
+  },
+  button: {
+    marginTop: '20px'
   }
 }
 
@@ -79,7 +87,7 @@ class ProfileSettings extends Component {
     const { user } = this.props
     if (user) {
       return (
-        <div>
+        <div style={styles.content}>
           <TextField
             floatingLabelText="Username"
             value={user.username}
@@ -101,7 +109,12 @@ class ProfileSettings extends Component {
             onChange={this.lastNameOnChange}
             value={lastName}
           />
-          <RaisedButton label="Save Changes" primary onClick={this.onSaveProfileSettings} />
+          <RaisedButton
+            label="Save Changes"
+            primary
+            onClick={this.onSaveProfileSettings}
+            style={styles.button}
+          />
           <Dialog
             onCancel={this.dialogClose}
             onContinue={this.dialogClose}
