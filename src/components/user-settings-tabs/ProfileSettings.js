@@ -1,4 +1,4 @@
- /* eslint-disable react/prefer-stateless-function */
+/* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react'
 import { RaisedButton, TextField, } from 'material-ui'
 import PropTypes from 'prop-types'
