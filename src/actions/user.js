@@ -26,7 +26,6 @@ export function updateUser(token, userId, user) {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
-      console.log('here')
       const { result, error } = await fetchClient.patch({
         url: `/users/${userId}`,
         body: user

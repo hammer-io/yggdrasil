@@ -48,9 +48,8 @@ class UserSettings extends Component {
   }
 
   async onSaveProfileSettings(newUser) {
-    console.log('In props save')
     const { session, updateUser } = this.props
-    const resp = await updateUser(session.authToken, session.user.id, newUser)
+    await updateUser(session.authToken, session.user.id, newUser)
   }
 
   handleChange = (value) => {
