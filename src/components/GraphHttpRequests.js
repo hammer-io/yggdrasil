@@ -2,63 +2,61 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Paper } from 'material-ui'
 import Divider from 'material-ui/Divider'
-import { List, ListItem } from 'material-ui/List'
-import {ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts'
+import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, Tooltip, Legend } from 'recharts'
 import Theme from '../../style/theme'
 
-class GraphHeartbeats extends React.PureComponent {
-  static renderItem(url, text, display) {
-    if (display) {
-      return (
-        <ListItem
-          href={url}
-          primaryText={text}
-        />
-      )
+class GraphHttpRequests extends React.PureComponent {
+  static renderTooltip(info) {
+    if (info.payload.length < 3) {
+      return null
     }
+    return (
+      <Paper style={{ padding: 10 }}>
+        <div style={{ verticalAlign: 'top' }}>{`Timestamp : ${new Date(info.payload[0].payload.timestamp).toLocaleString()}`}</div>
+        <div style={{ verticalAlign: 'top' }}>{`Response Time : ${info.payload[0].payload.responseTime}ms`}</div>
+        <div style={{ verticalAlign: 'top' }}>{`Request Size : ${info.payload[0].payload.requestSize}`}</div>
+        <div style={{ verticalAlign: 'top' }}>{`url : '${info.payload[0].payload.url}'`}</div>
+        <div style={{ verticalAlign: 'top' }}>{`Status : ${info.payload[0].payload.status}`}</div>
+        <div style={{ verticalAlign: 'top' }}>{`Method : ${info.payload[0].payload.method}`}</div>
+      </Paper>
+    )
   }
 
   render() {
+    const green = []
+    const yellow = []
+    const red = []
 
-    console.log('aardvark')
-    console.log(this.props.data)
-
-    const data = [{x: 100, y: 200, z: 200}, {x: 120, y: 100, z: 260},
-      {x: 170, y: 300, z: 400}, {x: 140, y: 250, z: 280},
-      {x: 150, y: 400, z: 500}, {x: 110, y: 280, z: 200}]
-
-    const response = Object.values(this.props.data).map(x => {
-      if(x.type!=="response") {
-        return {}
-      }
-      return {
-        x: x.timestamp,
-        size: 1,
-      }
-    })
-
-    const request = Object.values(this.props.data).map(x => {
-      if(x.type!=="request") {
-        return {}
-      }
-      return {
-        x: x.timestamp,
-        size: x.size,
+    Object.values(this.props.data).forEach((x) => {
+      if (x.status >= 200 && x.status < 400) {
+        green.push(x)
+      } else if (x.status >= 400 && x.status < 500) {
+        yellow.push(x)
+      } else if (x.status >= 500) {
+        red.push(x)
       }
     })
 
     return (
       <div>
         <Paper style={Theme.projectDetails.header}>
-          <div style={Theme.projectDetails.headerText}>Timeline of Http Requests</div>
+          <div style={Theme.projectDetails.headerText}>Recent Http Requests</div>
           <Divider />
-          <ScatterChart width={400} height={400} margin={{top: 20, right: 20, bottom: 20, left: 20}}>
-            <XAxis dataKey={'x'} type="number" name='Timestamp' domain={['dataMin','dataMax']}/>
-            <YAxis dataKey={"size"} type="number" name='Size'/>
-            <Scatter name='Response' data={response} fill='#ff0000'/>
-            <Scatter name='Request' data={request} fill='#00ff00'/>
+          <ScatterChart
+            width={400}
+            height={400}
+            margin={{
+              top: 20, right: 20, bottom: 20, left: 20
+            }}
+          >
+            <XAxis ticks={['a']} dataKey="timestamp" type="number" name="Timestamp" domain={['dataMin', 'dataMax']} />
+            <YAxis dataKey="responseTime" type="number" name="responseTime" unit="ms" />
+            <ZAxis dataKey="requestSize" range={[60, 400]} name="requestSize" />
+            <Scatter name="2xx,3xx" data={green} fill="#1fe500" />
+            <Scatter name="4xx" data={yellow} fill="#e9e709" />
+            <Scatter name="5xx" data={red} fill="#d70000" />
             <Legend />
-            <Tooltip cursor={{strokeDasharray: '3 3'}}/>
+            <Tooltip content={info => GraphHttpRequests.renderTooltip(info)} />
           </ScatterChart>
         </Paper>
       </div>
@@ -66,14 +64,12 @@ class GraphHeartbeats extends React.PureComponent {
   }
 }
 
-GraphHeartbeats.defaultProps = {
-  githubUrl: null,
-  travisUrl: null,
-  herokuUrl: null
+GraphHttpRequests.defaultProps = {
+  data: null
 }
 
-GraphHeartbeats.propTypes = {
+GraphHttpRequests.propTypes = {
   data: PropTypes.object,
 }
 
-export default GraphHeartbeats
+export default GraphHttpRequests

@@ -191,7 +191,7 @@ class ProjectOverview extends React.Component {
               <Flexbox
                 flexDirection="row"
                 flexWrap="wrap"
-                width="90%"
+                width="100%"
                 justifyContent="space-around"
                 alignItems="flex-start"
               >
