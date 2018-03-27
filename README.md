@@ -15,7 +15,7 @@ Connects the 9 worlds of microservices
 
 ## Configuration
 
-**TL;DR - You should copy the `config/default.json` file into all three config
+**TL;DR - You should copy the `config/default-example.json` file into all three config
 files listed in the table below, and then fill in the development config with
 real data.**
 

@@ -1,11 +1,12 @@
 import React from 'react'
-import { Dialog, FlatButton } from 'material-ui'
+import { Dialog as MUIDialog, FlatButton } from 'material-ui'
 import PropTypes from 'prop-types'
 
-const ProjectCreationDialog = ({
+const Dialog = ({
   onCancel,
   onContinue,
-  closeDialog
+  open,
+  text
 }) => {
   const actions = [
     <FlatButton
@@ -21,21 +22,21 @@ const ProjectCreationDialog = ({
   ]
 
   return (
-    <Dialog
+    <MUIDialog
       actions={actions}
       modal={false}
-      open={this.state.open}
-      onRequestClose={closeDialog}
+      open={open}
     >
-      Are you sure you want to continue? All changes will be lost.
-    </Dialog>
+      { text }
+    </MUIDialog>
   )
 }
 
-ProjectCreationDialog.propTypes = {
+Dialog.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onContinue: PropTypes.func.isRequired,
-  closeDialog: PropTypes.func.isRequired
+  open: PropTypes.bool.isRequired,
+  text: PropTypes.string.isRequired
 }
 
-export default ProjectCreationDialog
+export default Dialog
