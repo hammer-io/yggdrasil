@@ -10,15 +10,9 @@ import NotificationSettings from '../components/user-settings-tabs/NoficiationSe
 import PageWrap from '../components/PageWrap'
 import ProfileSettings from '../components/user-settings-tabs/ProfileSettings'
 import { getUserInvites } from '../actions/invite'
-
+import { updateUser } from '../actions/user'
 
 const tabValues = ['profile', 'invites', 'accounts', 'notification']
-
-
-// TODO
-function onSaveProfileSettings() {
-  console.log('TODO: Saving profile settings...')
-}
 
 const mapStateToProps = state => ({
   session: state.session,
@@ -27,7 +21,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-  getUserInvites
+  getUserInvites,
+  updateUser
 }
 
 class UserSettings extends Component {
@@ -36,6 +31,8 @@ class UserSettings extends Component {
     this.state = {
       value: props.match.params.tabValue
     }
+
+    this.onSaveProfileSettings = this.onSaveProfileSettings.bind(this)
   }
 
   async componentDidMount() {
@@ -48,6 +45,11 @@ class UserSettings extends Component {
     }
     const { session, getUserInvites } = this.props
     await getUserInvites(session.authToken)
+  }
+
+  async onSaveProfileSettings(newUser) {
+    const { session, updateUser } = this.props
+    await updateUser(session.authToken, session.user.id, newUser)
   }
 
   handleChange = (value) => {
@@ -67,7 +69,7 @@ class UserSettings extends Component {
             <Tab label="Profile" value="profile" containerElement={<Link to="/settings/profile" />}>
               <ProfileSettings
                 user={this.props.session.user}
-                onSaveProfileSettings={onSaveProfileSettings}
+                onSaveProfileSettings={this.onSaveProfileSettings}
               />
             </Tab>
             <Tab label="Invites" value="invites" containerElement={<Link to="/settings/invites" />}>
