@@ -45,16 +45,16 @@ class ProfileSettings extends Component {
     const { email, firstName, lastName } = this.state
     const { user } = this.props
     const validEmail = validateEmail(email)
-    if (validEmail) {
-      await this.props.onSaveProfileSettings({
-        email: (email !== user.email ? email : undefined),
-        firstName: (firstName !== user.firstName ? firstName : undefined),
-        lastName: (lastName !== user.lastName ? lastName : undefined)
-      })
-      this.setState({ dialogOpen: true })
-    } else {
+    if (typeof validEmail === 'string') {
       this.setState({ emailErrorText: validEmail })
+      return
     }
+    await this.props.onSaveProfileSettings({
+      email: (email !== user.email ? email : undefined),
+      firstName: (firstName !== user.firstName ? firstName : undefined),
+      lastName: (lastName !== user.lastName ? lastName : undefined)
+    })
+    this.setState({ dialogOpen: true })
   }
 
   emailOnChange(event, newValue) {
