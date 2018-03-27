@@ -8,7 +8,7 @@ import Theme from '../../style/theme'
 import BasicSpinner from './../components/BasicSpinner'
 import ProjectList from './../components/ProjectList'
 import ProjectsNotFound from './../components/ProjectsNotFound'
-import NewFloatingActionButton from '../components/NewFloatingActionButton'
+import FloatingActionButton from '../components/FloatingActionButton'
 
 const styles = {
   container: {
@@ -79,7 +79,7 @@ class Home extends Component {
         {
           this.renderProjects()
         }
-        <NewFloatingActionButton onClick={this.newProject} />
+        <FloatingActionButton onClick={this.newProject} />
       </div>
     )
   }
