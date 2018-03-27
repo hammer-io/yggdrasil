@@ -8,7 +8,7 @@ class FetchResponse {
 
 class FetchClient {
   constructor(baseURL) {
-    this.baseURL = baseURL || 'http://localhost:3000/api/v1'
+    this.baseURL = baseURL || CONFIG.endorBaseURL
   }
 
   setAuthToken(authToken) {
