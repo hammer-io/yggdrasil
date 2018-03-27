@@ -8,12 +8,9 @@ import { saveState } from '../../utils/localStorage'
 import Theme from '../../../style/theme'
 import BasicSpinner from '../misc/BasicSpinner'
 import { getSession, checkGithubToken, checkTravisToken, addTravisToken, deleteTravisToken, deleteGithubToken, checkHerokuToken, deleteHerokuToken } from '../../actions/session'
-import { externals } from '../../../webpack.config'
 import GithubLogo from '../svg/flat-colorizable/GithubLogo'
 import HerokuLogo from '../svg/flat-colorizable/HerokuLogo'
 import TravisLogo from '../svg/TravisLogo'
-
-const config = externals.config
 
 const styles = {
   card: {
@@ -234,7 +231,7 @@ class AccountSettings extends Component {
     })
 
     window.location = 'https://github.com/login/oauth/authorize?' +
-      `client_id=${config.github.clientId}&` +
+      `client_id=${CONFIG.github.clientId}&` +
       'scope=repo&' +
       `state=${state}`
   }
@@ -251,7 +248,7 @@ class AccountSettings extends Component {
     })
 
     window.location = 'https://id.heroku.com/oauth/authorize?' +
-      `client_id=${config.heroku.clientId}&` +
+      `client_id=${CONFIG.heroku.clientId}&` +
       'response_type=code&' +
       'scope=write&' +
       `state=${state}`

@@ -1,0 +1,22 @@
+# Artifacts that will be built during image creation
+node_modules
+npm-debug.log
+build
+
+# Other things that don't need to be in the image
+.dockerignore
+.eslintignore
+.eslintrc.js
+.git
+.gitignore
+.idea
+.npmignore
+.travis.yml
+CONTRIBUTING.md
+Dockerfile
+LICENSE
+PULL_REQUEST_TEMPLATE.MD
+README.md
+
+# Emacs backups
+*~

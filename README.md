@@ -20,7 +20,7 @@ files listed in the table below, and then fill in the development config with
 real data.**
 
 Project configuration is done in the `json` files in the `config` folder.
-The `webpack.config.js` pulls in these files depending on the NODE_ENV environment
+The `webpack.common.js` pulls in these files depending on the NODE_ENV environment
 variable.
 
 | NODE_ENV   | Config File Used          |

@@ -21,11 +21,8 @@ import HerokuRedirect from './containers/HerokuRedirect'
 import NotFound from './components/misc/PageNotFound'
 import TyrInfo from './containers/TyrInfo'
 import NewProject from './containers/NewProject'
-import { externals } from '../webpack.config'
 
-const config = externals.config
-
-firebase.initializeApp(config.firebase)
+firebase.initializeApp(CONFIG.firebase)
 
 const store = getStore()
 store.subscribe(_.throttle(() => {

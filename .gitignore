@@ -1,5 +1,6 @@
 .idea/
 node_modules/
+build/
 
 # Ignore all configuration files except default.json
 **/config/*
