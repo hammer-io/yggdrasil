@@ -35,7 +35,8 @@ const theme = {
     pickerHeaderColor: Colors.primary_u1,
     clockCircleColor: Colors.darkBlack,
     shadowColor: Colors.fullBlack,
-    bodyBackground: Colors.neutlight
+    bodyBackground: Colors.neutlight,
+    anchorColor: Colors.primary
   },
 
   // Setting default font family for all components
