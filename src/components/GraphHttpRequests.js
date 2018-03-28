@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Paper } from 'material-ui'
 import Divider from 'material-ui/Divider'
 import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, Tooltip, Legend } from 'recharts'
+import _ from 'lodash'
 import Theme from '../../style/theme'
 
 class GraphHttpRequests extends React.PureComponent {
@@ -27,7 +28,7 @@ class GraphHttpRequests extends React.PureComponent {
     const yellow = []
     const red = []
 
-    Object.values(this.props.data).forEach((x) => {
+    _.values(this.props.data).forEach((x) => {
       if (x.status >= 200 && x.status < 400) {
         green.push(x)
       } else if (x.status >= 400 && x.status < 500) {

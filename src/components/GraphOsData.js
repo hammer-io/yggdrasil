@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Paper } from 'material-ui'
 import Divider from 'material-ui/Divider'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
+import _ from 'lodash'
 import Theme from '../../style/theme'
 
 
@@ -21,7 +22,7 @@ class GraphOsData extends React.PureComponent {
   }
 
   render() {
-    const data = Object.values(this.props.data).map(x => ({
+    const data = _.values(this.props.data).map(x => ({
       time: x.timestamp,
       total: x.totalMemory,
       used: x.memoryUsed * x.totalMemory,

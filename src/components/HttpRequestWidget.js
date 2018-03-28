@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Paper } from 'material-ui'
 import Divider from 'material-ui/Divider'
+import _ from 'lodash'
 import Theme from '../../style/theme'
 
 class HttpRequestWidget extends React.PureComponent {
@@ -27,7 +28,7 @@ class HttpRequestWidget extends React.PureComponent {
 
     const yesterday = new Date().getTime() - 86400000
 
-    Object.values(this.props.data).forEach((request) => {
+    _.values(this.props.data).forEach((request) => {
       if (request.timestamp > yesterday) {
         badRequests += (request.status >= 400) ? 1 : 0
         numberOfRequests += 1
