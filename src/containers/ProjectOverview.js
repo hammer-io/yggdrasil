@@ -15,6 +15,7 @@ import ProjectMonitoring from './ProjectMonitoring'
 import Theme from '../../style/theme'
 import BasicSpinner from './../components/BasicSpinner'
 import HeartbeatCount from '../components/statistics/HeartbeatCount'
+import BreadcrumbNav from '../components/BreadcrumbNav'
 
 const styles = {
   headingContainer: {
@@ -23,6 +24,16 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: Theme.padding.regular
+  }
+}
+
+function getBreadcrumbData(project) {
+  return {
+    items: [
+      { location: '/home', text: 'Projects' },
+      { location: `/projects/${project.id}`, text: project.projectName }
+    ],
+    prefix: `${project.projectName}-breadcrumb`
   }
 }
 
@@ -61,8 +72,10 @@ class ProjectOverview extends React.Component {
       projectStatus: 'Healthy',
       ...project
     }
+    const breadcrumb = getBreadcrumbData(project)
     return (
       <div style={styles.headingContainer}>
+        <BreadcrumbNav items={breadcrumb.items} keyPrefix={breadcrumb.prefix} />
         <ProjectHeader {...projectDetails} />
         <Tabs style={{ width: '90%' }}>
           <Tab label="Overview" >
