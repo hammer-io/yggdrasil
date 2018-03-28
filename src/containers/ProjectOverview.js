@@ -11,6 +11,7 @@ import ProjectIssues from './ProjectIssues'
 import ProjectBuilds from './ProjectBuilds'
 import ProjectLinks from '../components/ProjectLinks'
 import ProjectContributors from './ProjectContributors'
+import ProjectMonitoring from './ProjectMonitoring'
 import Theme from '../../style/theme'
 import BasicSpinner from './../components/BasicSpinner'
 import HeartbeatCount from '../components/statistics/HeartbeatCount'
@@ -69,7 +70,7 @@ class ProjectOverview extends React.Component {
               <Flexbox
                 flexDirection="row"
                 flexWrap="wrap"
-                width="90%"
+                width="100%"
                 justifyContent="space-around"
                 alignItems="flex-start"
               >
@@ -104,7 +105,12 @@ class ProjectOverview extends React.Component {
               </Flexbox>
             </div>
           </Tab>
-          <Tab label="Members" >
+          <Tab label="Monitoring" >
+            <div>
+              <ProjectMonitoring projectId={params.id} />
+            </div>
+          </Tab>
+          <Tab label="Team Members" >
             <div>
               <ProjectContributors projectId={params.id} />
             </div>
