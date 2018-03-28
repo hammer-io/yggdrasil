@@ -303,7 +303,7 @@ class NewProject extends Component {
       return
     }
 
-    const sourceControlId = _.findKey(tools.all.allIds, (tool => this.state.githubSelected && tool.name === 'GitHub'))
+    const sourceControlId = _.findKey(tools.all.byId, (tool => this.state.githubSelected && tool.name === 'GitHub'))
     const ciId = _.findKey(tools.all.byId, (tool => this.state.travisSelected && tool.name === 'TravisCI'))
     const containerId = _.findKey(tools.all.byId, (tool => this.state.dockerSelected && tool.name === 'Docker'))
     const deployId = _.findKey(tools.all.byId, (tool => this.state.herokuSelected && tool.name === 'Heroku'))
@@ -316,7 +316,7 @@ class NewProject extends Component {
       license: this.state.dropDownText,
       author: this.state.author,
       version: this.state.version,
-      sourceControl: sourceControlId,
+      sourcecontrol: sourceControlId,
       ci: ciId,
       containerization: containerId,
       deployment: deployId,
