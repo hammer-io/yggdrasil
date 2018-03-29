@@ -1,52 +1,77 @@
 import React, { Component } from 'react'
+import { Chip, Avatar } from 'material-ui'
 import PropTypes from 'prop-types'
-import { Paper } from 'material-ui'
-import Healthy from 'material-ui/svg-icons/action/check-circle'
-import Warning from 'material-ui/svg-icons/content/report'
-import Failing from 'material-ui/svg-icons/navigation/cancel'
+import SvgIconPeople from 'material-ui/svg-icons/social/people'
+import SvgIconUpdate from 'material-ui/svg-icons/action/update'
+import SvgIconLanguage from 'material-ui/svg-icons/action/language'
+import SvgIconHealthy from 'material-ui/svg-icons/navigation/check'
+import SvgIconWarning from 'material-ui/svg-icons/notification/priority-high'
+import SvgIconFailing from 'material-ui/svg-icons/navigation/close'
 
-import { yellow500, red500, green500 } from 'material-ui/styles/colors'
+import Theme from '../../../style/theme'
 
 const styles = {
-  bold: {
-    fontWeight: 'bold',
-    display: 'inline'
-  },
-  header: {
-    width: '90%',
-    textAlign: 'center',
-    padding: 10
-  },
-  headerContainer: {
-    width: '100%',
+  container: {
+    padding: Theme.padding.tiny,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
   },
   ProjectNameFont: {
-    fontSize: 34,
-    display: 'inline'
+    fontSize: 34
   },
-  statusIcon: {
-    height: 24,
-    width: 24,
-    marginLeft: 20,
-    marginRight: 3
-  },
-  descriptionText: {
+  projectDescription: {
     fontSize: 16,
-    display: 'inline',
-    marginRight: 5,
-    marginLeft: 5
+    marginTop: Theme.padding.tiny,
+    marginBottom: Theme.padding.tiny,
+    fontStyle: 'italic',
+    letterSpacing: 1.5,
+    color: Theme.colors.neutdark_u1
+  },
+  chipWrapper: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  },
+  chip: {
+    margin: 4
   }
 }
 
-function descriptionTag(tag, value) {
-  if (value) {
+function renderDescription(description) {
+  if (description) {
+    return <div style={styles.projectDescription}>{description}</div>
+  }
+}
+
+function renderAuthors(authors) {
+  if (authors) {
     return (
-      <div style={styles.descriptionText}>
-        <div style={styles.bold}>{tag}</div>{value}
-      </div>
+      <Chip style={styles.chip}>
+        <Avatar icon={<SvgIconPeople />} />
+        {authors}
+      </Chip>
+    )
+  }
+}
+
+function renderLicense(license) {
+  if (license) {
+    return (
+      <Chip style={styles.chip}>
+        <Avatar icon={<SvgIconLanguage />} />
+        {license}
+      </Chip>
+    )
+  }
+}
+
+function renderVersion(version) {
+  if (version) {
+    return (
+      <Chip style={styles.chip}>
+        <Avatar size={32}>V</Avatar>
+        {version}
+      </Chip>
     )
   }
 }
@@ -56,24 +81,36 @@ class ProjectHeader extends Component {
     switch (this.props.projectStatus) {
       case 'Healthy':
         return (
-          <div style={styles.descriptionText}>
-            <Healthy style={styles.statusIcon} color={green500} />
-            <div style={styles.descriptionText}>App is healthy</div>
-          </div>
+          <Chip style={styles.chip} backgroundColor={Theme.colors.green200}>
+            <Avatar
+              icon={<SvgIconHealthy />}
+              color={Theme.colors.white}
+              backgroundColor={Theme.colors.green500}
+            />
+            Healthy
+          </Chip>
         )
       case 'Warning':
         return (
-          <div style={styles.descriptionText}>
-            <Warning style={styles.statusIcon} color={yellow500} />
-            <div style={styles.descriptionText}>Tests failing or something</div>
-          </div>
+          <Chip style={styles.chip} backgroundColor={Theme.colors.yellow500}>
+            <Avatar
+              icon={<SvgIconWarning />}
+              color={Theme.colors.white}
+              backgroundColor={Theme.colors.yellow800}
+            />
+          Failing Tests
+          </Chip>
         )
       case 'Failing':
         return (
-          <div style={styles.descriptionText}>
-            <Failing style={styles.statusIcon} color={red500} />
-            <div style={styles.descriptionText}>Something is broken</div>
-          </div>
+          <Chip style={styles.chip} backgroundColor={Theme.colors.red300}>
+            <Avatar
+              icon={<SvgIconFailing />}
+              color={Theme.colors.white}
+              backgroundColor={Theme.colors.red600}
+            />
+            Down
+          </Chip>
         )
       default:
     }
@@ -82,22 +119,19 @@ class ProjectHeader extends Component {
   render() {
     const updatedAtString = new Date(Date.parse(this.props.updatedAt)).toLocaleString()
     return (
-      <div style={styles.headerContainer}>
-        <Paper style={styles.header}>
-          <div>
-            <div style={styles.ProjectNameFont}>{this.props.projectName}</div>
-            {this.renderStatus()}
-          </div>
-          <div>
-            {descriptionTag('', this.props.description)}
-          </div>
-          {descriptionTag('Authors: ', this.props.authors)}
-          {descriptionTag('License: ', this.props.license)}
-          {descriptionTag('Version: ', this.props.version)}
-          {descriptionTag('Last Updated: ', updatedAtString)}
-
-
-        </Paper>
+      <div style={styles.container}>
+        <div style={styles.ProjectNameFont}>{this.props.projectName}</div>
+        {renderDescription(this.props.description)}
+        <div style={styles.chipWrapper}>
+          {this.renderStatus()}
+          {renderAuthors(this.props.authors)}
+          {renderLicense(this.props.license)}
+          {renderVersion(this.props.version)}
+          <Chip style={styles.chip}>
+            <Avatar icon={<SvgIconUpdate />} />
+            {updatedAtString}
+          </Chip>
+        </div>
       </div>
     )
   }

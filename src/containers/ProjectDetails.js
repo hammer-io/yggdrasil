@@ -88,7 +88,7 @@ class ProjectDetails extends React.Component {
     }
     const breadcrumb = getBreadcrumbData(project)
     return (
-      <PageWrap title={project.projectName}>
+      <PageWrap>
         <BreadcrumbNav items={breadcrumb.items} keyPrefix={breadcrumb.prefix} />
         <ProjectHeader {...projectDetails} />
         <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>

@@ -15,7 +15,6 @@ class ProjectDescription extends React.PureComponent {
     return (
       <div style={styles.container}>
         <Paper style={Theme.projectDetails.header}>
-          <div style={Theme.projectDetails.headerText}>Project Description</div>
           <div>
             <ReactMarkdown source={this.props.content} />
           </div>
