@@ -32,51 +32,51 @@ const styles = {
   }
 }
 
-const getExpirationDate = (invite) => {
-  const daysUntilExpiration = parseInt(invite.daysFromCreationUntilExpiration, 10)
-  const millisPerDay = 24 * 60 * 60 * 1000
-  const dateCreatedMillis = Date.parse(invite.createdAt)
-  return new Date(dateCreatedMillis + (millisPerDay * daysUntilExpiration))
-}
+class InvitesSettings extends Component {
+  static getExpirationDate(invite) {
+    const daysUntilExpiration = parseInt(invite.daysFromCreationUntilExpiration, 10)
+    const millisPerDay = 24 * 60 * 60 * 1000
+    const dateCreatedMillis = Date.parse(invite.createdAt)
+    return new Date(dateCreatedMillis + (millisPerDay * daysUntilExpiration))
+  }
 
-const getInviteActions = (statusOpen, onAcceptInvite, onDeclineInvite) => {
-  if (statusOpen) {
+  static getInviteActions(statusOpen, onAcceptInvite, onDeclineInvite) {
+    if (statusOpen) {
+      return (
+        <span>
+          <RaisedButton label="Accept" primary style={styles.acceptButton} onClick={onAcceptInvite} />
+          <RaisedButton label="Decline" secondary onClick={onDeclineInvite} />
+        </span>
+      )
+    }
+    return <span />
+  }
+
+  static getTableRow(invite) {
+    function acceptInvite() {
+      // TODO
+      console.log(`TODO: Accepting invite ${invite.id}...`)
+    }
+
+    function declineInvite() {
+      // TODO
+      console.log(`TODO: Declining invite ${invite.id}...`)
+    }
+
+    const statusOpen = (invite.status.toLowerCase() === 'open')
+    const rowStyles = (statusOpen) ? {} : styles.rowClosed
+    const inviteActions = InvitesSettings.getInviteActions(statusOpen, acceptInvite, declineInvite)
+    const expirationDate = InvitesSettings.getExpirationDate(invite)
     return (
-      <span>
-        <RaisedButton label="Accept" primary style={styles.acceptButton} onClick={onAcceptInvite} />
-        <RaisedButton label="Decline" secondary onClick={onDeclineInvite} />
-      </span>
+      <TableRow key={invite.id}>
+        <TableRowColumn style={rowStyles}>{invite.projectName}</TableRowColumn>
+        <TableRowColumn style={rowStyles}>{expirationDate.toDateString()}</TableRowColumn>
+        <TableRowColumn style={rowStyles}>{invite.status.toUpperCase()}</TableRowColumn>
+        <TableRowColumn style={rowStyles}>{inviteActions}</TableRowColumn>
+      </TableRow>
     )
   }
-  return <span />
-}
 
-const getTableRow = (invite) => {
-  function acceptInvite() {
-    // TODO
-    console.log(`TODO: Accepting invite ${invite.id}...`)
-  }
-
-  function declineInvite() {
-    // TODO
-    console.log(`TODO: Declining invite ${invite.id}...`)
-  }
-
-  const statusOpen = (invite.status.toLowerCase() === 'open')
-  const rowStyles = (statusOpen) ? {} : styles.rowClosed
-  const inviteActions = getInviteActions(statusOpen, acceptInvite, declineInvite)
-  const expirationDate = getExpirationDate(invite)
-  return (
-    <TableRow key={invite.id}>
-      <TableRowColumn style={rowStyles}>{invite.projectName}</TableRowColumn>
-      <TableRowColumn style={rowStyles}>{expirationDate.toDateString()}</TableRowColumn>
-      <TableRowColumn style={rowStyles}>{invite.status.toUpperCase()}</TableRowColumn>
-      <TableRowColumn style={rowStyles}>{inviteActions}</TableRowColumn>
-    </TableRow>
-  )
-}
-
-class InvitesSettings extends Component {
   renderContents() {
     if (this.props.invites) {
       const invites = _.values(this.props.invites.all.byId)
@@ -88,20 +88,20 @@ class InvitesSettings extends Component {
             style={styles.tableHeader}
           >
             <TableRow>
-              <TableHeaderColumn style={styles.tableHeaderColumn} tooltip="Name of the project you've been invited to">
+              <TableHeaderColumn style={styles.tableHeaderColumn}>
                 Project Name
               </TableHeaderColumn>
-              <TableHeaderColumn style={styles.tableHeaderColumn} tooltip="The date this invite will expire">
+              <TableHeaderColumn style={styles.tableHeaderColumn}>
                 Expiration
               </TableHeaderColumn>
-              <TableHeaderColumn style={styles.tableHeaderColumn} tooltip="Invite Status">
+              <TableHeaderColumn style={styles.tableHeaderColumn}>
                 Status
               </TableHeaderColumn>
-              <TableHeaderColumn style={styles.tableHeaderColumn} tooltip="Actions you can take on the invite" />
+              <TableHeaderColumn style={styles.tableHeaderColumn} />
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false} showRowHover>
-            {invites.map(getTableRow)}
+            {invites.map(InvitesSettings.getTableRow)}
           </TableBody>
         </Table>
       )
