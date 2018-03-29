@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 
 import BasicSpinner from '../misc/BasicSpinner'
 import Theme from '../../../style/theme'
-import HeartbeatCount from '../statistics/HeartbeatCount'
+import HeartbeatCount from './overview/HeartbeatCount'
 import ProjectIssues from './overview/ProjectIssues'
 import ProjectBuilds from './overview/ProjectBuilds'
 import ProjectLinks from './overview/ProjectLinks'
@@ -23,37 +23,23 @@ class OverviewTab extends Component {
     if (project) {
       return (
         <div>
-          <Flexbox
-            flexDirection="row"
-            flexWrap="wrap"
-            width="100%"
-            justifyContent="space-around"
-            alignItems="flex-start"
-          >
-            <Flexbox>
-              <HeartbeatCount projectId={project.id} />
-            </Flexbox>
-            <Flexbox>
-              <ProjectIssues
-                githubUrl={project.githubRepositoryName}
-                projectId={project.id}
-              />
-            </Flexbox>
-            <Flexbox>
-              <ProjectBuilds
-                travisUrl={project.travisRepositoryName}
-                projectId={project.id}
-              />
-            </Flexbox>
-            <Flexbox>
-              <ProjectLinks
-                travisUrl={project.travisRepositoryName}
-                githubUrl={project.githubRepositoryName}
-                herokuUrl={project.herokuApplicationName}
-              />
-            </Flexbox>
+          <Flexbox flexWrap="wrap">
+            <HeartbeatCount projectId={project.id} />
+            <ProjectIssues
+              githubUrl={project.githubRepositoryName}
+              projectId={project.id}
+            />
+            <ProjectBuilds
+              travisUrl={project.travisRepositoryName}
+              projectId={project.id}
+            />
+            <ProjectLinks
+              travisUrl={project.travisRepositoryName}
+              githubUrl={project.githubRepositoryName}
+              herokuUrl={project.herokuApplicationName}
+            />
           </Flexbox>
-          <Flexbox flexDirection="row" justifyContent="center">
+          <Flexbox>
             <ProjectDescription content={project.markdownDescription} />
           </Flexbox>
         </div>

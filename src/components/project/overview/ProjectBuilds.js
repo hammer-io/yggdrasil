@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Paper } from 'material-ui'
+import Flexbox from 'flexbox-react'
+import { Card, CardText, CardTitle } from 'material-ui'
 import { List, ListItem } from 'material-ui/List'
 import Done from 'material-ui/svg-icons/action/done'
 import EmptyHourglass from 'material-ui/svg-icons/action/hourglass-empty'
@@ -8,11 +9,9 @@ import Canceled from 'material-ui/svg-icons/content/block'
 import Failed from 'material-ui/svg-icons/content/clear'
 import Uncompleted from 'material-ui/svg-icons/alert/error-outline'
 import SeeMore from 'material-ui/svg-icons/navigation/more-horiz'
-import Divider from 'material-ui/Divider'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-import Theme from '../../../../style/theme'
 import { getBuildStatuses } from '../../../actions/project'
 import { addTravisToken } from '../../../actions/session'
 import BasicSpinner from '../../misc/BasicSpinner'
@@ -144,13 +143,14 @@ class ProjectBuilds extends Component {
       return null
     }
     return (
-      <div>
-        <Paper style={Theme.projectDetails.header}>
-          <div style={Theme.projectDetails.headerText}>Recent Travis Builds</div>
-          <Divider />
-          {this.renderBuildStatuses()}
-        </Paper>
-      </div>
+      <Flexbox flex="1">
+        <Card>
+          <CardTitle title="Recent Travis Builds" />
+          <CardText>
+            {this.renderBuildStatuses()}
+          </CardText>
+        </Card>
+      </Flexbox>
     )
   }
 }

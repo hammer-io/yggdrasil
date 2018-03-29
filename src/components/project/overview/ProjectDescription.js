@@ -1,25 +1,24 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Paper } from 'material-ui'
+import { Card, CardText } from 'material-ui'
 import ReactMarkdown from 'react-markdown'
 import Theme from '../../../../style/theme'
 
 const styles = {
   container: {
-    flex: 1
+    width: '100%',
+    margin: Theme.padding.tiny
   }
 }
 
 class ProjectDescription extends React.PureComponent {
   render() {
     return (
-      <div style={styles.container}>
-        <Paper style={Theme.projectDetails.header}>
-          <div>
-            <ReactMarkdown source={this.props.content} />
-          </div>
-        </Paper>
-      </div>
+      <Card style={styles.container}>
+        <CardText>
+          <ReactMarkdown source={this.props.content} />
+        </CardText>
+      </Card>
     )
   }
 }

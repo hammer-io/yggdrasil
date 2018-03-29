@@ -1,9 +1,17 @@
 import React, { Component } from 'react'
+import Flexbox from 'flexbox-react'
 import PropTypes from 'prop-types'
-import { Paper } from 'material-ui'
+import { Card, CardText, CardTitle } from 'material-ui'
 import * as firebase from 'firebase'
 
-import Theme from '../../../style/theme'
+import Theme from '../../../../style/theme'
+
+const styles = {
+  container: {
+    width: '100%',
+    margin: Theme.padding.tiny
+  }
+}
 
 class HeartbeatCount extends Component {
   constructor(props) {
@@ -50,11 +58,15 @@ class HeartbeatCount extends Component {
   }
   render() {
     return (
-      <Paper style={Theme.projectDetails.header}>
-        <div style={Theme.projectDetails.headerText}>Heartbeats</div>
-        <p>Total received: {this.state.heartbeatCount}</p>
-        <p>Last received: {this.state.lastHeartbeat}</p>
-      </Paper>
+      <Flexbox flex="1">
+        <Card style={styles.container}>
+          <CardTitle title="Heartbeats" />
+          <CardText>
+            <p>Total received: {this.state.heartbeatCount}</p>
+            <p>Last received: {this.state.lastHeartbeat}</p>
+          </CardText>
+        </Card>
+      </Flexbox>
     )
   }
 }

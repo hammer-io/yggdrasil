@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { Paper } from 'material-ui'
+import Flexbox from 'flexbox-react'
+import { Card, CardText, CardTitle } from 'material-ui'
 import { List, ListItem } from 'material-ui/List'
 import Merge from 'material-ui/svg-icons/communication/call-merge'
 import MergeRequest from 'material-ui/svg-icons/image/transform'
 import Completed from 'material-ui/svg-icons/action/assignment-turned-in'
 import Uncompleted from 'material-ui/svg-icons/action/assignment'
 import SeeMore from 'material-ui/svg-icons/navigation/more-horiz'
-import Divider from 'material-ui/Divider'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'
@@ -14,6 +14,13 @@ import Theme from '../../../../style/theme'
 import { getIssues } from '../../../actions/project'
 import { addGithubToken } from '../../../actions/session'
 import BasicSpinner from '../../misc/BasicSpinner'
+
+const styles = {
+  container: {
+    width: '100%',
+    margin: Theme.padding.tiny
+  }
+}
 
 const mapStateToProps = state => ({
   session: state.session,
@@ -134,13 +141,14 @@ class ProjectIssues extends Component {
       return null
     }
     return (
-      <div>
-        <Paper style={Theme.projectDetails.header}>
-          <div style={Theme.projectDetails.headerText}>Recent Github Activity</div>
-          <Divider />
-          {this.renderIssues()}
-        </Paper>
-      </div>
+      <Flexbox flex="1">
+        <Card style={styles.container}>
+          <CardTitle title="Recent GitHub Activity" />
+          <CardText>
+            {this.renderIssues()}
+          </CardText>
+        </Card>
+      </Flexbox>
     )
   }
 }
