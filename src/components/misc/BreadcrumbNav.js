@@ -25,42 +25,42 @@ const styles = {
 }
 
 class BreadcrumbNav extends Component {
-  getKey(index) {
-    return `${this.props.keyPrefix}-${index}`
+  constructor(props) {
+    super(props)
+    this.attachKey = this.attachKey.bind(this)
+    this.getNavItem = this.getNavItem.bind(this)
   }
 
-  render() {
-    const that = this
-
-    function attachKey(item, index) {
-      const itemPlus = item
-      itemPlus.key = that.getKey(index)
-      return itemPlus
-    }
-
-    function getNavItem(item, index) {
-      if (index === 0) {
-        return (
-          <Link
-            style={styles.anchor}
-            to={item.location}
-            key={item.key}
-            onClick={that.props.onClick}
-          >
-            <SvgIconBook style={styles.icon} />{item.text}&nbsp;
-          </Link>
-        )
-      }
+  getNavItem(item, index) {
+    if (index === 0) {
       return (
-        <Link style={styles.anchor} to={item.location} key={item.key} onClick={that.props.onClick}>
-          <SvgIconChevronRight style={styles.icon} />{item.text}
+        <Link
+          style={styles.anchor}
+          to={item.location}
+          key={item.key}
+          onClick={this.props.onClick}
+        >
+          <SvgIconBook style={styles.icon} />{item.text}&nbsp;
         </Link>
       )
     }
+    return (
+      <Link style={styles.anchor} to={item.location} key={item.key} onClick={this.props.onClick}>
+        <SvgIconChevronRight style={styles.icon} />{item.text}
+      </Link>
+    )
+  }
 
+  attachKey(item, index) {
+    const itemPlus = item
+    itemPlus.key = `${this.props.keyPrefix}-${index}`
+    return itemPlus
+  }
+
+  render() {
     return (
       <div style={styles.container}>
-        {this.props.items.map(attachKey).map(getNavItem)}
+        {this.props.items.map(this.attachKey).map(this.getNavItem)}
       </div>
     )
   }
