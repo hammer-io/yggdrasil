@@ -1,13 +1,20 @@
 import React from 'react'
 import Flexbox from 'flexbox-react'
 import { connect } from 'react-redux'
-import GraphHeartbeats from '../components/GraphHeartbeats'
-import GraphHttpRequests from '../components/GraphHttpRequests'
-import GraphOsData from '../components/GraphOsData'
-import GraphUrls from '../components/GraphUrls'
-import OsDataWidget from '../components/OsDataWidget'
-import HttpRequestWidget from '../components/HttpRequestWidget'
-import data from '../../test/ProjectMonitoringTestData'
+import GraphHeartbeats from '../GraphHeartbeats'
+import GraphHttpRequests from '../GraphHttpRequests'
+import GraphOsData from '../GraphOsData'
+import GraphUrls from '../GraphUrls'
+import OsDataWidget from '../OsDataWidget'
+import HttpRequestWidget from '../HttpRequestWidget'
+import data from '../../../test/ProjectMonitoringTestData'
+import Theme from '../../../style/theme'
+
+const styles = {
+  container: {
+    padding: Theme.padding.tiny
+  }
+}
 
 const mapStateToProps = state => ({
   session: state.session,
@@ -15,10 +22,10 @@ const mapStateToProps = state => ({
   projectMembers: state.projectMembers
 })
 
-function ProjectMonitoring() {
+function MonitoringTab() {
   console.log(data.mockData)
   return (
-    <div>
+    <div style={styles.container}>
       <Flexbox
         flexDirection="row"
         flexWrap="wrap"
@@ -62,12 +69,12 @@ function ProjectMonitoring() {
   )
 }
 
-ProjectMonitoring.propTypes = {
+MonitoringTab.propTypes = {
 }
 
-const ExportedProjectMonitoring = connect(
+const ExportedMonitoringTab = connect(
   mapStateToProps,
   null
-)(ProjectMonitoring)
+)(MonitoringTab)
 
-export default ExportedProjectMonitoring
+export default ExportedMonitoringTab

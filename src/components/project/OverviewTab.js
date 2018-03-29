@@ -6,8 +6,8 @@ import PropTypes from 'prop-types'
 import BasicSpinner from '../BasicSpinner'
 import Theme from '../../../style/theme'
 import HeartbeatCount from '../statistics/HeartbeatCount'
-import ProjectIssues from '../../containers/ProjectIssues'
-import ProjectBuilds from '../../containers/ProjectBuilds'
+import ProjectIssues from './ProjectIssues'
+import ProjectBuilds from './ProjectBuilds'
 import ProjectLinks from './ProjectLinks'
 import ProjectDescription from './ProjectDescription'
 
@@ -65,7 +65,6 @@ class OverviewTab extends Component {
   render() {
     return (
       <div style={styles.container}>
-        <h2>Project Overview</h2>
         { this.renderContents() }
       </div>
     )

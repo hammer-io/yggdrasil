@@ -12,9 +12,15 @@ import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import Checkbox from 'material-ui/Checkbox'
 import { connect } from 'react-redux'
-import { getProject, getProjectContributors, getProjectOwners, addContributor, removeContributor, addOwner, removeOwner } from '../actions/project'
-import { getUser } from '../actions/user'
-import Theme from '../../style/theme'
+import { getProject, getProjectContributors, getProjectOwners, addContributor, removeContributor, addOwner, removeOwner } from '../../actions/project'
+import { getUser } from '../../actions/user'
+import Theme from '../../../style/theme'
+
+const styles = {
+  container: {
+    padding: Theme.padding.tiny
+  }
+}
 
 const iconButtonElement = (
   <IconButton touch>
@@ -39,7 +45,7 @@ const mapDispatchToProps = {
   removeOwner
 }
 
-class ProjectContributors extends Component {
+class MembersTab extends Component {
   constructor(props) {
     super(props)
 
@@ -225,7 +231,7 @@ class ProjectContributors extends Component {
     const owners = _.values(this.props.projectMembers.owners.byId)
     const contributors = _.values(this.props.projectMembers.contributors.byId)
     return (
-      <div>
+      <div style={styles.container}>
         <Paper style={Theme.projectDetails.header}>
           <div style={{ fontWeight: 'bold' }}>
             Owners
@@ -248,7 +254,7 @@ class ProjectContributors extends Component {
   }
 }
 
-ProjectContributors.propTypes = {
+MembersTab.propTypes = {
   session: PropTypes.object.isRequired,
   projectMembers: PropTypes.object.isRequired,
   getProject: PropTypes.func.isRequired,
@@ -261,9 +267,9 @@ ProjectContributors.propTypes = {
   projectId: PropTypes.string.isRequired,
 }
 
-const ExportedProjectContributors = connect(
+const ExportedMembersTab = connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProjectContributors)
+)(MembersTab)
 
-export default ExportedProjectContributors
+export default ExportedMembersTab

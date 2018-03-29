@@ -7,24 +7,13 @@ import _ from 'lodash'
 import { getProject } from '../actions/project'
 import BreadcrumbNav from '../components/BreadcrumbNav'
 import ProjectHeader from '../components/project/ProjectHeader'
-import ProjectContributors from './ProjectContributors'
-import ProjectMonitoring from './ProjectMonitoring'
-import Theme from '../../style/theme'
+import MembersTab from '../components/project/MembersTab'
+import MonitoringTab from '../components/project/MonitoringTab'
 import BasicSpinner from './../components/BasicSpinner'
 import OverviewTab from '../components/project/OverviewTab'
 import PageWrap from '../components/PageWrap'
 
 const tabValues = ['overview', 'monitoring', 'members']
-
-const styles = {
-  headingContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: Theme.padding.regular
-  }
-}
 
 function getBreadcrumbData(project) {
   return {
@@ -107,14 +96,10 @@ class ProjectDetails extends React.Component {
             <OverviewTab project={project} />
           </Tab>
           <Tab label="Monitoring" value="monitoring" containerElement={<Link to={url.monitoring} />}>
-            <div>
-              <ProjectMonitoring projectId={params.id} />
-            </div>
+            <MonitoringTab projectId={params.id} />
           </Tab>
-          <Tab label="Team Members" value="members" containerElement={<Link to={url.members} />}>
-            <div>
-              <ProjectContributors projectId={params.id} />
-            </div>
+          <Tab label="Members" value="members" containerElement={<Link to={url.members} />}>
+            <MembersTab projectId={params.id} />
           </Tab>
         </Tabs>
       </PageWrap>
