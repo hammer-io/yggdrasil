@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, CardActions, CardTitle, CardText } from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 import PropTypes from 'prop-types'
-import Theme from './../../style/theme'
+import Theme from '../../../style/theme'
 
 const styles = {
   card: {

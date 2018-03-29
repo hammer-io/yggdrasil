@@ -41,13 +41,17 @@ const styles = {
   }
 }
 
-class ProjectHeader extends Component {
-  descriptionTag = (tag, value) => (
-    <div style={styles.descriptionText}>
-      <div style={styles.bold}>{tag}</div>{value}
-    </div>
-  )
+function descriptionTag(tag, value) {
+  if (value) {
+    return (
+      <div style={styles.descriptionText}>
+        <div style={styles.bold}>{tag}</div>{value}
+      </div>
+    )
+  }
+}
 
+class ProjectHeader extends Component {
   renderStatus() {
     switch (this.props.projectStatus) {
       case 'Healthy':
@@ -85,12 +89,12 @@ class ProjectHeader extends Component {
             {this.renderStatus()}
           </div>
           <div>
-            {this.descriptionTag('', this.props.description)}
+            {descriptionTag('', this.props.description)}
           </div>
-          {this.descriptionTag('Authors: ', this.props.authors)}
-          {this.descriptionTag('License: ', this.props.license)}
-          {this.descriptionTag('Version: ', this.props.version)}
-          {this.descriptionTag('Last Updated: ', updatedAtString)}
+          {descriptionTag('Authors: ', this.props.authors)}
+          {descriptionTag('License: ', this.props.license)}
+          {descriptionTag('Version: ', this.props.version)}
+          {descriptionTag('Last Updated: ', updatedAtString)}
 
 
         </Paper>
@@ -99,13 +103,19 @@ class ProjectHeader extends Component {
   }
 }
 
+ProjectHeader.defaultProps = {
+  authors: '',
+  description: '',
+  license: '',
+  version: ''
+}
 
 ProjectHeader.propTypes = {
-  authors: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  authors: PropTypes.string,
+  description: PropTypes.string,
   updatedAt: PropTypes.string.isRequired,
-  license: PropTypes.string.isRequired,
-  version: PropTypes.string.isRequired,
+  license: PropTypes.string,
+  version: PropTypes.string,
   projectName: PropTypes.string.isRequired,
   projectStatus: PropTypes.string.isRequired
 }

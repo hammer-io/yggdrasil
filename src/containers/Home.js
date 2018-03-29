@@ -6,8 +6,8 @@ import _ from 'lodash'
 import { getProjects, getUserProjects } from '../actions/project'
 import Theme from '../../style/theme'
 import BasicSpinner from './../components/BasicSpinner'
-import ProjectList from './../components/ProjectList'
-import ProjectsNotFound from './../components/ProjectsNotFound'
+import ProjectList from '../components/project/ProjectList'
+import ProjectsNotFound from '../components/project/ProjectsNotFound'
 import FloatingActionButton from '../components/FloatingActionButton'
 
 const styles = {

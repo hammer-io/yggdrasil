@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import React from 'react'
 import Icon from 'material-ui/svg-icons/file/folder-open'
-import Theme from './../../style/theme'
+import Theme from '../../../style/theme'
 
 const styles = {
   container: {

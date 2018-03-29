@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import ProjectOptionTile from './../components/ProjectOptionTile'
-import Divider from './../components/Divider'
-import Theme from './../../style/theme'
+import ProjectOptionTile from './ProjectOptionTile'
+import Divider from '../Divider'
+import Theme from '../../../style/theme'
 
 const styles = {
   container: {

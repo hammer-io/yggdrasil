@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import ProjectItem from './../components/ProjectItem'
+import ProjectItem from './ProjectItem'
 
 const ProjectList = ({ projects, viewProject }) => (
   projects.map(project =>
