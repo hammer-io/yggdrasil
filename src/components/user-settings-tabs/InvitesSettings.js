@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
-import { RaisedButton } from 'material-ui'
+import { RaisedButton, Snackbar } from 'material-ui'
 import PropTypes from 'prop-types'
 import {
   Table,
@@ -52,20 +52,25 @@ class InvitesSettings extends Component {
     return <span />
   }
 
-  static getTableRow(invite) {
-    function acceptInvite() {
-      // TODO
-      console.log(`TODO: Accepting invite ${invite.id}...`)
+  constructor(props) {
+    super(props)
+    this.state = {
+      snackOpen: false
     }
+    this.getTableRow = this.getTableRow.bind(this)
+    this.closeSnackbar = this.closeSnackbar.bind(this)
+    this.acceptInviteHandler = this.acceptInviteHandler.bind(this)
+    this.declineInviteHandler = this.declineInviteHandler.bind(this)
+  }
 
-    function declineInvite() {
-      // TODO
-      console.log(`TODO: Declining invite ${invite.id}...`)
-    }
-
+  getTableRow(invite) {
     const statusOpen = (invite.status.toLowerCase() === 'open')
     const rowStyles = (statusOpen) ? {} : styles.rowClosed
-    const inviteActions = InvitesSettings.getInviteActions(statusOpen, acceptInvite, declineInvite)
+    const inviteActions = InvitesSettings.getInviteActions(
+      statusOpen,
+      this.acceptInviteHandler(invite.id),
+      this.declineInviteHandler(invite.id)
+    )
     const expirationDate = InvitesSettings.getExpirationDate(invite)
     return (
       <TableRow key={invite.id}>
@@ -75,6 +80,24 @@ class InvitesSettings extends Component {
         <TableRowColumn style={rowStyles}>{inviteActions}</TableRowColumn>
       </TableRow>
     )
+  }
+
+  acceptInviteHandler(inviteId) {
+    return async () => {
+      await this.props.onAcceptInvite(inviteId)
+      this.setState({ snackOpen: true })
+    }
+  }
+
+  declineInviteHandler(inviteId) {
+    return async () => {
+      await this.props.onDeclineInvite(inviteId)
+      this.setState({ snackOpen: true })
+    }
+  }
+
+  closeSnackbar() {
+    this.setState({ snackOpen: false })
   }
 
   renderContents() {
@@ -101,7 +124,7 @@ class InvitesSettings extends Component {
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false} showRowHover>
-            {invites.map(InvitesSettings.getTableRow)}
+            {invites.map(this.getTableRow)}
           </TableBody>
         </Table>
       )
@@ -114,13 +137,23 @@ class InvitesSettings extends Component {
       <div style={styles.container}>
         <h2>Project Invites</h2>
         {this.renderContents()}
+        <Snackbar
+          open={this.state.snackOpen}
+          message="Changes have been saved successfully!"
+          autoHideDuration={3000}
+          onRequestClose={this.closeSnackbar}
+          action="Dismiss"
+          onActionClick={this.closeSnackbar}
+        />
       </div>
     )
   }
 }
 
 InvitesSettings.propTypes = {
-  invites: PropTypes.object.isRequired
+  invites: PropTypes.object.isRequired,
+  onAcceptInvite: PropTypes.func.isRequired,
+  onDeclineInvite: PropTypes.func.isRequired
 }
 
 export default InvitesSettings
