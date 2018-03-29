@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Paper } from 'material-ui'
 import { List, ListItem } from 'material-ui/List'
-import Theme from '../../../style/theme'
+import Theme from '../../../../style/theme'
 
 class ProjectLinks extends React.PureComponent {
   static renderItem(url, text, display) {

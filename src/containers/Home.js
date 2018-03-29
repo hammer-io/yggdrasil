@@ -5,10 +5,10 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import { getProjects, getUserProjects } from '../actions/project'
 import Theme from '../../style/theme'
-import BasicSpinner from './../components/BasicSpinner'
-import ProjectList from '../components/project/ProjectList'
-import ProjectsNotFound from '../components/project/ProjectsNotFound'
-import FloatingActionButton from '../components/FloatingActionButton'
+import BasicSpinner from '../components/misc/BasicSpinner'
+import ProjectList from '../components/home/ProjectList'
+import ProjectsNotFound from '../components/home/ProjectsNotFound'
+import FloatingActionButton from '../components/misc/FloatingActionButton'
 
 const styles = {
   container: {

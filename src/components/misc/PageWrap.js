@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Card, CardActions, CardMedia } from 'material-ui/Card'
 import PropTypes from 'prop-types'
-import Theme from './../../style/theme'
+import Theme from '../../../style/theme'
 
 const styles = {
   container: {

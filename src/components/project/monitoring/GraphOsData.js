@@ -4,7 +4,7 @@ import { Paper } from 'material-ui'
 import Divider from 'material-ui/Divider'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import _ from 'lodash'
-import Theme from '../../style/theme'
+import Theme from '../../../../style/theme'
 
 
 class GraphOsData extends React.PureComponent {

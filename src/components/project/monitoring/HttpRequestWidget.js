@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Paper } from 'material-ui'
 import Divider from 'material-ui/Divider'
 import _ from 'lodash'
-import Theme from '../../style/theme'
+import Theme from '../../../../style/theme'
 
 class HttpRequestWidget extends React.PureComponent {
   constructor(props) {

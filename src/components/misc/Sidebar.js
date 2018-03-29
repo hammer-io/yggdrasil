@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 import Home from 'material-ui/svg-icons/action/home'
 import Settings from 'material-ui/svg-icons/action/settings'
 import WebAsset from 'material-ui/svg-icons/av/web-asset'
-import Theme from '../../style/theme'
-import HammerLogo from './../assets/icons/Viking_Hammer_Logo_1.png'
+import Theme from '../../../style/theme'
+import HammerLogo from '../../assets/icons/Viking_Hammer_Logo_1.png'
 
 const styles = {
   cardMedia: {

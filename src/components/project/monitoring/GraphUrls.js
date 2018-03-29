@@ -4,8 +4,8 @@ import { Paper } from 'material-ui'
 import Divider from 'material-ui/Divider'
 import { PieChart, Pie, Tooltip } from 'recharts'
 import _ from 'lodash'
-import Theme from '../../style/theme'
-import BasicSpinner from './BasicSpinner'
+import Theme from '../../../../style/theme'
+import BasicSpinner from '../../misc/BasicSpinner'
 
 class GraphUrls extends React.PureComponent {
   constructor(props) {

@@ -2,7 +2,7 @@ import React from 'react'
 import { AppBar, IconMenu, MenuItem, IconButton } from 'material-ui'
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
 import PropTypes from 'prop-types'
-import HammerIO from './../assets/icons/hammer-logo-wide-light-small.png'
+import HammerIO from '../../assets/icons/hammer-logo-wide-light-small.png'
 
 const styles = {
   titleImg: {

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Paper } from 'material-ui'
 import ReactMarkdown from 'react-markdown'
-import Theme from '../../../style/theme'
+import Theme from '../../../../style/theme'
 
 const styles = {
   container: {

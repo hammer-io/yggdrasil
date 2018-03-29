@@ -1,5 +1,5 @@
 import React from 'react'
-import Theme from './../../style/theme'
+import Theme from '../../../style/theme'
 
 const styles = {
   container: {

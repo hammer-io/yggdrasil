@@ -4,7 +4,7 @@ import { Paper } from 'material-ui'
 import Divider from 'material-ui/Divider'
 import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, Tooltip, Legend } from 'recharts'
 import _ from 'lodash'
-import Theme from '../../style/theme'
+import Theme from '../../../../style/theme'
 
 class GraphHttpRequests extends React.PureComponent {
   static renderTooltip(info) {

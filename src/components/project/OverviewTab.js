@@ -3,13 +3,13 @@ import Flexbox from 'flexbox-react'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import BasicSpinner from '../BasicSpinner'
+import BasicSpinner from '../misc/BasicSpinner'
 import Theme from '../../../style/theme'
 import HeartbeatCount from '../statistics/HeartbeatCount'
-import ProjectIssues from './ProjectIssues'
-import ProjectBuilds from './ProjectBuilds'
-import ProjectLinks from './ProjectLinks'
-import ProjectDescription from './ProjectDescription'
+import ProjectIssues from './overview/ProjectIssues'
+import ProjectBuilds from './overview/ProjectBuilds'
+import ProjectLinks from './overview/ProjectLinks'
+import ProjectDescription from './overview/ProjectDescription'
 
 const styles = {
   container: {

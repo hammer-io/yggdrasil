@@ -3,7 +3,7 @@ import { withRouter, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { exchangeForHerokuToken } from '../actions/session'
-import BasicSpinner from '../components/BasicSpinner'
+import BasicSpinner from '../components/misc/BasicSpinner'
 import { loadState } from '../utils/localStorage'
 
 const mapStateToProps = state => ({

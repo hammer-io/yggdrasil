@@ -9,9 +9,9 @@ import BreadcrumbNav from '../components/BreadcrumbNav'
 import ProjectHeader from '../components/project/ProjectHeader'
 import MembersTab from '../components/project/MembersTab'
 import MonitoringTab from '../components/project/MonitoringTab'
-import BasicSpinner from './../components/BasicSpinner'
+import BasicSpinner from '../components/misc/BasicSpinner'
 import OverviewTab from '../components/project/OverviewTab'
-import PageWrap from '../components/PageWrap'
+import PageWrap from '../components/misc/PageWrap'
 
 const tabValues = ['overview', 'monitoring', 'members']
 

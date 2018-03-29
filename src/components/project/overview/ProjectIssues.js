@@ -10,10 +10,10 @@ import Divider from 'material-ui/Divider'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-import Theme from '../../../style/theme'
-import { getIssues } from '../../actions/project'
-import { addGithubToken } from '../../actions/session'
-import BasicSpinner from '../BasicSpinner'
+import Theme from '../../../../style/theme'
+import { getIssues } from '../../../actions/project'
+import { addGithubToken } from '../../../actions/session'
+import BasicSpinner from '../../misc/BasicSpinner'
 
 const mapStateToProps = state => ({
   session: state.session,

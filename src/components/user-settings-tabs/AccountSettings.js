@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { saveState } from '../../utils/localStorage'
 import Theme from '../../../style/theme'
-import BasicSpinner from '../../components/BasicSpinner'
+import BasicSpinner from '../misc/BasicSpinner'
 import { getSession, checkGithubToken, checkTravisToken, addTravisToken, deleteTravisToken, deleteGithubToken, checkHerokuToken, deleteHerokuToken } from '../../actions/session'
 import { externals } from '../../../webpack.config'
 
