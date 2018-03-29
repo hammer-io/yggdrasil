@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { saveState } from '../../utils/localStorage'
 import Theme from '../../../style/theme'
 import BasicSpinner from '../../components/BasicSpinner'
-import { checkGithubToken, checkTravisToken, addTravisToken, deleteTravisToken, deleteGithubToken, checkHerokuToken, deleteHerokuToken } from '../../actions/session'
+import { getSession, checkGithubToken, checkTravisToken, addTravisToken, deleteTravisToken, deleteGithubToken, checkHerokuToken, deleteHerokuToken } from '../../actions/session'
 import { externals } from '../../../webpack.config'
 
 const config = externals.config
@@ -28,7 +28,8 @@ const mapDispatchToProps = {
   deleteGithubToken,
   deleteHerokuToken,
   deleteTravisToken,
-  addTravisToken
+  addTravisToken,
+  getSession
 }
 
 class AccountSettings extends Component {
@@ -47,6 +48,11 @@ class AccountSettings extends Component {
   }
 
   componentDidMount() {
+    const {
+      getSession,
+      session
+    } = this.props
+    getSession(session.authToken)
     this.checkGithub()
     this.checkHeroku()
     this.checkTravis()
@@ -295,7 +301,8 @@ class AccountSettings extends Component {
 }
 
 AccountSettings.propTypes = {
-  session: PropTypes.object.isRequired
+  session: PropTypes.object.isRequired,
+  getSession: PropTypes.func.isRequired
 }
 
 const ExportedAccountSettings = connect(
