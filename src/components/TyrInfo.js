@@ -5,6 +5,7 @@ import Theme from './../../style/theme'
 import PageWrap from './PageWrap'
 import BasicSpinner from './BasicSpinner'
 import Divider from './Divider'
+import GithubLogo from './../components/svg/GithubLogo'
 
 const repositoryUrl = 'https://github.com/hammer-io/tyr'
 const readmeUrl = 'https://raw.githubusercontent.com/hammer-io/tyr/master/README.md'
@@ -15,7 +16,7 @@ function onClickVisitGitHub() {
 
 const styles = {
   button: {
-    width: 250,
+    width: '300px',
     marginLeft: 'auto',
     marginRight: 'auto',
     display: 'block',
@@ -26,6 +27,10 @@ const styles = {
     minWidth: 'inherit',
     maxWidth: 'inherit',
     width: 'inherit'
+  },
+  icon: {
+    fill: Theme.colors.white,
+    fontSize: '24px'
   }
 }
 
@@ -67,6 +72,7 @@ class TyrInfo extends Component {
             label="Visit the GitHub Repository"
             secondary
             onClick={onClickVisitGitHub}
+            icon={<GithubLogo style={styles.icon} height="24px" width="24px" />}
             style={styles.button}
           />
           <Divider />
