@@ -2,13 +2,10 @@ import * as firebase from 'firebase'
 import FetchClient from './../utils/fetchClient'
 import actionCreator from './../utils/actionCreator'
 import * as Constants from './../constants'
+import { setUser } from './user'
 
 export function setAccessToken(token) {
   return actionCreator(Constants.SET_AUTH_TOKEN, { token })
-}
-
-export function setUser(user) {
-  return actionCreator(Constants.SET_USER, { user })
 }
 
 export function setPreviousRoute(previousRoute) {
