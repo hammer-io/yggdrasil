@@ -37,46 +37,46 @@ const styles = {
   }
 }
 
-function renderDescription(description) {
-  if (description) {
-    return <div style={styles.projectDescription}>{description}</div>
-  }
-}
-
-function renderAuthors(authors) {
-  if (authors) {
-    return (
-      <Chip style={styles.chip}>
-        <Avatar icon={<SvgIconPeople />} />
-        {authors}
-      </Chip>
-    )
-  }
-}
-
-function renderLicense(license) {
-  if (license) {
-    return (
-      <Chip style={styles.chip}>
-        <Avatar icon={<SvgIconLanguage />} />
-        {license}
-      </Chip>
-    )
-  }
-}
-
-function renderVersion(version) {
-  if (version) {
-    return (
-      <Chip style={styles.chip}>
-        <Avatar size={32}>V</Avatar>
-        {version}
-      </Chip>
-    )
-  }
-}
-
 class ProjectHeader extends Component {
+  static renderDescription(description) {
+    if (description) {
+      return <div style={styles.projectDescription}>{description}</div>
+    }
+  }
+
+  static renderVersion(version) {
+    if (version) {
+      return (
+        <Chip style={styles.chip}>
+          <Avatar size={32}>V</Avatar>
+          {version}
+        </Chip>
+      )
+    }
+  }
+
+  static renderAuthors(authors) {
+    if (authors) {
+      return (
+        <Chip style={styles.chip}>
+          <Avatar icon={<SvgIconPeople />} />
+          {authors}
+        </Chip>
+      )
+    }
+  }
+
+  static renderLicense(license) {
+    if (license) {
+      return (
+        <Chip style={styles.chip}>
+          <Avatar icon={<SvgIconLanguage />} />
+          {license}
+        </Chip>
+      )
+    }
+  }
+
   renderStatus() {
     switch (this.props.projectStatus) {
       case 'Healthy':
@@ -121,12 +121,12 @@ class ProjectHeader extends Component {
     return (
       <div style={styles.container}>
         <div style={styles.ProjectNameFont}>{this.props.projectName}</div>
-        {renderDescription(this.props.description)}
+        {ProjectHeader.renderDescription(this.props.description)}
         <div style={styles.chipWrapper}>
           {this.renderStatus()}
-          {renderAuthors(this.props.authors)}
-          {renderLicense(this.props.license)}
-          {renderVersion(this.props.version)}
+          {ProjectHeader.renderAuthors(this.props.authors)}
+          {ProjectHeader.renderLicense(this.props.license)}
+          {ProjectHeader.renderVersion(this.props.version)}
           <Chip style={styles.chip}>
             <Avatar icon={<SvgIconUpdate />} />
             {updatedAtString}

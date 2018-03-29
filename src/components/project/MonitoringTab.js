@@ -23,7 +23,6 @@ const mapStateToProps = state => ({
 })
 
 function MonitoringTab() {
-  console.log(data.mockData)
   return (
     <div style={styles.container}>
       <Flexbox flexWrap="wrap" justifyContent="center">
