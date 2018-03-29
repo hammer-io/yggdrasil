@@ -1,10 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Paper } from 'material-ui'
-import Divider from 'material-ui/Divider'
+import { Card, CardText, CardTitle, Paper } from 'material-ui'
 import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, Tooltip, Legend } from 'recharts'
 import _ from 'lodash'
 import Theme from '../../../../style/theme'
+
+const styles = {
+  container: {
+    width: '100%',
+    margin: Theme.padding.tiny
+  }
+}
 
 class GraphHttpRequests extends React.PureComponent {
   static renderTooltip(info) {
@@ -39,16 +45,15 @@ class GraphHttpRequests extends React.PureComponent {
     })
 
     return (
-      <div>
-        <Paper style={Theme.projectDetails.header}>
-          <div style={Theme.projectDetails.headerText}>Recent Http Requests</div>
-          <Divider />
+      <Card style={styles.container}>
+        <CardTitle title="Recent Http Requests" />
+        <CardText>
           <ScatterChart
             width={400}
             height={400}
             margin={{
-              top: 20, right: 20, bottom: 20, left: 20
-            }}
+                top: 20, right: 20, bottom: 20, left: 20
+              }}
           >
             <XAxis ticks={['a']} dataKey="timestamp" type="number" name="Timestamp" domain={['dataMin', 'dataMax']} />
             <YAxis dataKey="responseTime" type="number" name="responseTime" unit="ms" />
@@ -59,8 +64,8 @@ class GraphHttpRequests extends React.PureComponent {
             <Legend />
             <Tooltip content={info => GraphHttpRequests.renderTooltip(info)} />
           </ScatterChart>
-        </Paper>
-      </div>
+        </CardText>
+      </Card>
     )
   }
 }

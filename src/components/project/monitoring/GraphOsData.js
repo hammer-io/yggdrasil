@@ -1,11 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Paper } from 'material-ui'
+import { Card, CardText, CardTitle, Paper } from 'material-ui'
 import Divider from 'material-ui/Divider'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import _ from 'lodash'
 import Theme from '../../../../style/theme'
 
+
+const styles = {
+  container: {
+    width: '100%',
+    margin: Theme.padding.tiny
+  }
+}
 
 class GraphOsData extends React.PureComponent {
   static renderTooltip(info) {
@@ -31,8 +38,9 @@ class GraphOsData extends React.PureComponent {
 
 
     return (
-      <div>
-        <Paper style={Theme.projectDetails.header}>
+      <Card style={styles.container}>
+        <CardTitle title="Recent Memory Usage" />
+        <CardText>
           <div style={Theme.projectDetails.headerText}>Recent Memory Usage</div>
           <Divider />
           <LineChart
@@ -54,8 +62,8 @@ class GraphOsData extends React.PureComponent {
             <Line type="monotone" dataKey="used" name="Memory Used" stroke="#8884d8" dot={false} />
             <Line type="monotone" dataKey="total" name="Total Memory" stroke="#ff0000" dot={false} />
           </LineChart>
-        </Paper>
-      </div>
+        </CardText>
+      </Card>
     )
   }
 }

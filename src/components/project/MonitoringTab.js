@@ -26,13 +26,7 @@ function MonitoringTab() {
   console.log(data.mockData)
   return (
     <div style={styles.container}>
-      <Flexbox
-        flexDirection="row"
-        flexWrap="wrap"
-        width="100%"
-        justifyContent="space-around"
-        alignItems="flex-start"
-      >
+      <Flexbox flexWrap="wrap" justifyContent="center">
         <Flexbox>
           <GraphHeartbeats
             data={data.mockData.heartbeats.testskaditest}

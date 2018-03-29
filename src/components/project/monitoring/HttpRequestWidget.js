@@ -1,9 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Paper } from 'material-ui'
-import Divider from 'material-ui/Divider'
+import { Card, CardText, CardTitle } from 'material-ui'
 import _ from 'lodash'
 import Theme from '../../../../style/theme'
+
+const styles = {
+  container: {
+    width: '100%',
+    margin: Theme.padding.tiny
+  }
+}
 
 class HttpRequestWidget extends React.PureComponent {
   constructor(props) {
@@ -63,13 +69,12 @@ class HttpRequestWidget extends React.PureComponent {
 
   render() {
     return (
-      <div>
-        <Paper style={Theme.projectDetails.header}>
-          <div style={Theme.projectDetails.headerText}>Recent Day Http Request Info</div>
-          <Divider />
+      <Card style={styles.container}>
+        <CardTitle title="Recent Day HTTP Request Info" />
+        <CardText>
           {this.renderInformation()}
-        </Paper>
-      </div>
+        </CardText>
+      </Card>
     )
   }
 }

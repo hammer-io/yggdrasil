@@ -1,11 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Paper } from 'material-ui'
-import Divider from 'material-ui/Divider'
+import { Card, CardText, CardTitle } from 'material-ui'
 import { PieChart, Pie, Tooltip } from 'recharts'
 import _ from 'lodash'
 import Theme from '../../../../style/theme'
 import BasicSpinner from '../../misc/BasicSpinner'
+
+const styles = {
+  container: {
+    width: '100%',
+    margin: Theme.padding.tiny
+  }
+}
 
 class GraphUrls extends React.PureComponent {
   constructor(props) {
@@ -53,13 +59,12 @@ class GraphUrls extends React.PureComponent {
 
   render() {
     return (
-      <div>
-        <Paper style={Theme.projectDetails.header}>
-          <div style={Theme.projectDetails.headerText}>Url Pie Chart</div>
-          <Divider />
+      <Card style={styles.container}>
+        <CardTitle title="URL Pie Chart" />
+        <CardText>
           {this.renderContent()}
-        </Paper>
-      </div>
+        </CardText>
+      </Card>
     )
   }
 }

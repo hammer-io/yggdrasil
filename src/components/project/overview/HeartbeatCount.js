@@ -58,7 +58,7 @@ class HeartbeatCount extends Component {
   }
   render() {
     return (
-      <Flexbox flex="1">
+      <Flexbox>
         <Card style={styles.container}>
           <CardTitle title="Heartbeats" />
           <CardText>

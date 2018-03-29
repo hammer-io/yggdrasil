@@ -141,7 +141,7 @@ class ProjectIssues extends Component {
       return null
     }
     return (
-      <Flexbox flex="1">
+      <Flexbox>
         <Card style={styles.container}>
           <CardTitle title="Recent GitHub Activity" />
           <CardText>

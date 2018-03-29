@@ -1,21 +1,25 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Paper } from 'material-ui'
-import Divider from 'material-ui/Divider'
+import { Card, CardText, CardTitle } from 'material-ui'
 import Theme from '../../../../style/theme'
 
+const styles = {
+  container: {
+    width: '100%',
+    margin: Theme.padding.tiny
+  }
+}
 
 class OsDataWidget extends React.PureComponent {
   render() {
     return (
-      <div>
-        <Paper style={Theme.projectDetails.header}>
-          <div style={Theme.projectDetails.headerText}>Current Memory Usage</div>
-          <Divider />
+      <Card style={styles.container}>
+        <CardTitle title="Current Memory Usage" />
+        <CardText>
           <p>{`Memory Used : ${this.props.memoryUsed}`}</p>
           <p>{`Memory Free : ${this.props.memoryFree}`}</p>
-        </Paper>
-      </div>
+        </CardText>
+      </Card>
     )
   }
 }

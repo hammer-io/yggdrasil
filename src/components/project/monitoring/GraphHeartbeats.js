@@ -1,11 +1,17 @@
 import React from 'react'
+import { Card, CardText, CardTitle } from 'material-ui'
 import PropTypes from 'prop-types'
-import { Paper } from 'material-ui'
-import Divider from 'material-ui/Divider'
 import { BarChart, Bar, Cell } from 'recharts'
 import _ from 'lodash'
 import Theme from '../../../../style/theme'
 import BasicSpinner from '../../misc/BasicSpinner'
+
+const styles = {
+  container: {
+    width: '100%',
+    margin: Theme.padding.tiny
+  }
+}
 
 class GraphHeartbeats extends React.PureComponent {
   static getColor(percent) {
@@ -114,13 +120,12 @@ class GraphHeartbeats extends React.PureComponent {
 
   render() {
     return (
-      <div>
-        <Paper style={Theme.projectDetails.header}>
-          <div style={Theme.projectDetails.headerText}>Heartbeats</div>
-          <Divider />
+      <Card style={styles.container}>
+        <CardTitle title="Heartbeats" />
+        <CardText>
           {this.renderContent()}
-        </Paper>
-      </div>
+        </CardText>
+      </Card>
     )
   }
 }

@@ -23,7 +23,7 @@ class OverviewTab extends Component {
     if (project) {
       return (
         <div>
-          <Flexbox flexWrap="wrap">
+          <Flexbox flexWrap="wrap" justifyContent="center">
             <HeartbeatCount projectId={project.id} />
             <ProjectIssues
               githubUrl={project.githubRepositoryName}

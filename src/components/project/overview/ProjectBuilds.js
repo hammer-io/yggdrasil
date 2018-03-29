@@ -143,7 +143,7 @@ class ProjectBuilds extends Component {
       return null
     }
     return (
-      <Flexbox flex="1">
+      <Flexbox>
         <Card>
           <CardTitle title="Recent Travis Builds" />
           <CardText>

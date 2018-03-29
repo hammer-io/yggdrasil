@@ -34,7 +34,7 @@ class ProjectLinks extends React.PureComponent {
       this.props.githubUrl || this.props.travisUrl || this.props.githubUrl
     )
     return (
-      <Flexbox flex="1">
+      <Flexbox>
         <Card style={styles.container}>
           <CardTitle title="Connected Services" />
           <CardText>
