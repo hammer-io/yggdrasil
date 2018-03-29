@@ -16,7 +16,6 @@ const tabValues = ['profile', 'invites', 'accounts', 'notification']
 
 const mapStateToProps = state => ({
   session: state.session,
-  user: state.user,
   invites: state.invites
 })
 

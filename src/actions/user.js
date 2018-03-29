@@ -1,5 +1,11 @@
 /* eslint import/prefer-default-export: 0 */
 import FetchClient from '../utils/fetchClient'
+import actionCreator from '../utils/actionCreator'
+import * as Constants from '../constants'
+
+export function setUser(user) {
+  return actionCreator(Constants.SET_USER, { user })
+}
 
 export function getUser(token, user) {
   return async () => {
@@ -22,7 +28,7 @@ export function getUser(token, user) {
 }
 
 export function updateUser(token, userId, user) {
-  return async () => {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -31,6 +37,7 @@ export function updateUser(token, userId, user) {
         body: user
       })
       if (result) {
+        dispatch(setUser(result))
         return { result, error }
       }
       console.error(error)

@@ -1,10 +1,9 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react'
-import { RaisedButton, TextField, } from 'material-ui'
+import { RaisedButton, TextField, Snackbar } from 'material-ui'
 import PropTypes from 'prop-types'
 
 import BasicSpinner from '../BasicSpinner'
-import Dialog from './../../components/Dialog'
 import Theme from '../../../style/theme'
 import { validateEmail } from './../../utils/validator'
 
@@ -27,7 +26,7 @@ class ProfileSettings extends Component {
     super(props)
 
     this.state = {
-      dialogOpen: false,
+      snackOpen: false,
       email: props.user.email || '',
       firstName: props.user.firstName || '',
       lastName: props.user.lastName || '',
@@ -38,7 +37,7 @@ class ProfileSettings extends Component {
     this.emailOnChange = this.emailOnChange.bind(this)
     this.firstNameOnChange = this.firstNameOnChange.bind(this)
     this.lastNameOnChange = this.lastNameOnChange.bind(this)
-    this.dialogClose = this.dialogClose.bind(this)
+    this.closeSnackbar = this.closeSnackbar.bind(this)
   }
 
   async onSaveProfileSettings() {
@@ -54,7 +53,7 @@ class ProfileSettings extends Component {
       firstName: (firstName !== user.firstName ? firstName : undefined),
       lastName: (lastName !== user.lastName ? lastName : undefined)
     })
-    this.setState({ dialogOpen: true })
+    this.setState({ snackOpen: true })
   }
 
   emailOnChange(event, newValue) {
@@ -70,15 +69,15 @@ class ProfileSettings extends Component {
     this.setState({ lastName: newValue })
   }
 
-  dialogClose() {
+  closeSnackbar() {
     this.setState({
-      dialogOpen: false
+      snackOpen: false
     })
   }
 
   renderContents() {
     const {
-      dialogOpen,
+      snackOpen,
       email,
       firstName,
       lastName,
@@ -115,11 +114,13 @@ class ProfileSettings extends Component {
             onClick={this.onSaveProfileSettings}
             style={styles.button}
           />
-          <Dialog
-            onCancel={this.dialogClose}
-            onContinue={this.dialogClose}
-            open={dialogOpen}
-            text="Changes have been saved successfully"
+          <Snackbar
+            open={snackOpen}
+            message="Changes have been saved successfully!"
+            autoHideDuration={3000}
+            onRequestClose={this.closeSnackbar}
+            action="Dismiss"
+            onActionClick={this.closeSnackbar}
           />
         </div>
       )
