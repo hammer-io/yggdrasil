@@ -46,7 +46,7 @@ class Home extends Component {
   }
 
   viewProject(projectId) {
-    this.props.history.push(`/projects/${projectId}`)
+    this.props.history.push(`/projects/${projectId}/overview`)
   }
 
   newProject() {

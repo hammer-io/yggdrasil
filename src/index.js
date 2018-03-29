@@ -13,7 +13,7 @@ import App from './containers/App'
 import Menu from './containers/Menu'
 import Home from './containers/Home'
 import Login from './containers/Login'
-import ProjectOverview from './containers/ProjectOverview'
+import ProjectDetails from './containers/ProjectDetails'
 import Register from './containers/Register'
 import UserSettings from './containers/UserSettings'
 import GithubRedirect from './containers/GithubRedirect'
@@ -49,11 +49,12 @@ const Root = () => (
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/projects/new" component={NewProject} />
-            <Route exact path="/projects/:id" component={ProjectOverview} />
+            <Route exact path="/projects/:id/:tabValue" component={ProjectDetails} />
+            <Route exact path="/projects/:id" component={ProjectDetails} />
             <Route exact path="/settings/:tabValue" component={UserSettings} />
+            <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
             <Route exact path="/githubAuth" component={GithubRedirect} />
             <Route exact path="/herokuAuth" component={HerokuRedirect} />
-            <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
             <Route exact path="/tyr" component={TyrInfo} />
             <Route component={NotFound} />
           </Switch>
