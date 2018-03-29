@@ -5,21 +5,37 @@ import PropTypes from 'prop-types'
 import { Tabs, Tab } from 'material-ui/Tabs'
 import _ from 'lodash'
 import { getProject } from '../actions/project'
-import BreadcrumbNav from '../components/BreadcrumbNav'
+import BreadcrumbNav from '../components/misc/BreadcrumbNav'
 import ProjectHeader from '../components/project/ProjectHeader'
 import MembersTab from '../components/project/MembersTab'
 import MonitoringTab from '../components/project/MonitoringTab'
 import BasicSpinner from '../components/misc/BasicSpinner'
 import OverviewTab from '../components/project/OverviewTab'
 import PageWrap from '../components/misc/PageWrap'
+import Theme from '../../style/theme'
 
 const tabValues = ['overview', 'monitoring', 'members']
+
+// The styles on the breadcrumb help it match the layout of
+// the PageWrap element without being in the PageWrap
+const styles = {
+  breadcrumbContainer: {
+    padding: Theme.padding.tiny,
+    paddingBottom: 0
+  },
+  breadcrumbContained: {
+    width: 'fluid',
+    maxWidth: 1200,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  }
+}
 
 function getBreadcrumbData(project) {
   return {
     items: [
       { location: '/home', text: 'Projects' },
-      { location: `/projects/${project.id}`, text: project.projectName }
+      { location: `/projects/${project.id}/overview`, text: project.projectName }
     ],
     prefix: `${project.projectName}-breadcrumb`
   }
@@ -65,6 +81,12 @@ class ProjectDetails extends React.Component {
     })
   }
 
+  handleBreadcrumbClick = () => {
+    this.setState({
+      tabValue: 'overview'
+    })
+  }
+
   render() {
     const projectList = _.values(this.props.projects.all.byId)
     let project
@@ -88,21 +110,31 @@ class ProjectDetails extends React.Component {
     }
     const breadcrumb = getBreadcrumbData(project)
     return (
-      <PageWrap>
-        <BreadcrumbNav items={breadcrumb.items} keyPrefix={breadcrumb.prefix} />
-        <ProjectHeader {...projectDetails} />
-        <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
-          <Tab label="Overview" value="overview" containerElement={<Link to={url.overview} />}>
-            <OverviewTab project={project} />
-          </Tab>
-          <Tab label="Monitoring" value="monitoring" containerElement={<Link to={url.monitoring} />}>
-            <MonitoringTab projectId={params.id} />
-          </Tab>
-          <Tab label="Members" value="members" containerElement={<Link to={url.members} />}>
-            <MembersTab projectId={params.id} />
-          </Tab>
-        </Tabs>
-      </PageWrap>
+      <div>
+        <div style={styles.breadcrumbContainer}>
+          <div style={styles.breadcrumbContained}>
+            <BreadcrumbNav
+              items={breadcrumb.items}
+              keyPrefix={breadcrumb.prefix}
+              onClick={this.handleBreadcrumbClick}
+            />
+          </div>
+        </div>
+        <PageWrap>
+          <ProjectHeader {...projectDetails} />
+          <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
+            <Tab label="Overview" value="overview" containerElement={<Link to={url.overview} />}>
+              <OverviewTab project={project} />
+            </Tab>
+            <Tab label="Monitoring" value="monitoring" containerElement={<Link to={url.monitoring} />}>
+              <MonitoringTab projectId={params.id} />
+            </Tab>
+            <Tab label="Members" value="members" containerElement={<Link to={url.members} />}>
+              <MembersTab projectId={params.id} />
+            </Tab>
+          </Tabs>
+        </PageWrap>
+      </div>
     )
   }
 }

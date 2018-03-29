@@ -27,10 +27,16 @@ class PageWrap extends Component {
     return ''
   }
 
+  getTitle() {
+    if (this.props.title) {
+      return <h2 style={styles.contained}>{this.props.title}</h2>
+    }
+  }
+
   render() {
     return (
       <div style={styles.container}>
-        <h2 style={styles.contained}>{this.props.title}</h2>
+        {this.getTitle()}
         <Card style={styles.contained}>
           <CardMedia>
             {
@@ -48,11 +54,12 @@ class PageWrap extends Component {
 
 PageWrap.propTypes = {
   children: PropTypes.node.isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   renderActions: PropTypes.func
 }
 
 PageWrap.defaultProps = {
+  title: null,
   renderActions: () => ''
 }
 

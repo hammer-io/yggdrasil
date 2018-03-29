@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom'
-import Icon from 'material-ui/svg-icons/action/book'
+import SvgIconBook from 'material-ui/svg-icons/action/book'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import SvgIconChevronRight from 'material-ui/svg-icons/navigation/chevron-right'
 
-import Theme from '../../style/theme'
+import Theme from '../../../style/theme'
 
 const styles = {
   container: {
     fontFamily: Theme.fontFamily,
     fontVariant: 'all-small-caps',
-    marginBottom: Theme.padding.small,
     textAlign: 'left'
   },
   anchor: {
@@ -41,15 +41,19 @@ class BreadcrumbNav extends Component {
     function getNavItem(item, index) {
       if (index === 0) {
         return (
-          <Link style={styles.anchor} to={item.location} key={item.key}>
-            <Icon style={styles.icon} />
-            {item.text} &nbsp;
+          <Link
+            style={styles.anchor}
+            to={item.location}
+            key={item.key}
+            onClick={that.props.onClick}
+          >
+            <SvgIconBook style={styles.icon} />{item.text}&nbsp;
           </Link>
         )
       }
       return (
-        <Link style={styles.anchor} to={item.location} key={item.key}>
-          &gt;&nbsp;&nbsp;{item.text}
+        <Link style={styles.anchor} to={item.location} key={item.key} onClick={that.props.onClick}>
+          <SvgIconChevronRight style={styles.icon} />{item.text}
         </Link>
       )
     }
@@ -64,7 +68,12 @@ class BreadcrumbNav extends Component {
 
 BreadcrumbNav.propTypes = {
   items: PropTypes.array.isRequired,
-  keyPrefix: PropTypes.string.isRequired
+  keyPrefix: PropTypes.string.isRequired,
+  onClick: PropTypes.func
+}
+
+BreadcrumbNav.defaultProps = {
+  onClick: () => {}
 }
 
 export default BreadcrumbNav
