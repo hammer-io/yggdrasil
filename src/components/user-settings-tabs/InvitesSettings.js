@@ -11,7 +11,7 @@ import {
   TableRowColumn,
 } from 'material-ui/Table'
 
-import BasicSpinner from '../BasicSpinner'
+import BasicSpinner from '../misc/BasicSpinner'
 import Theme from '../../../style/theme'
 
 const styles = {

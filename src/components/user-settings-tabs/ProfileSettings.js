@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { RaisedButton, TextField, Snackbar } from 'material-ui'
 import PropTypes from 'prop-types'
 
-import BasicSpinner from '../BasicSpinner'
+import BasicSpinner from '../misc/BasicSpinner'
 import Theme from '../../../style/theme'
 import { validateEmail } from './../../utils/validator'
 

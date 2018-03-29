@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { logout } from '../actions/session'
-import Navbar from '../components/Navbar'
-import Sidebar from '../components/Sidebar'
+import Navbar from '../components/misc/Navbar'
+import Sidebar from '../components/misc/Sidebar'
 
 const mapDispatchToProps = {
   logout
