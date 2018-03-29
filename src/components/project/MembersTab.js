@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Paper } from 'material-ui'
+import { Card, CardText, CardTitle } from 'material-ui'
 import { List, ListItem } from 'material-ui/List'
 import Flexbox from 'flexbox-react'
 import _ from 'lodash'
@@ -19,6 +19,13 @@ import Theme from '../../../style/theme'
 const styles = {
   container: {
     padding: Theme.padding.tiny
+  },
+  card: {
+    width: '100%',
+    margin: Theme.padding.tiny
+  },
+  addMemberButton: {
+    width: '100%'
   }
 }
 
@@ -188,42 +195,30 @@ class MembersTab extends Component {
       return
     }
     return (
-      <Paper style={Theme.projectDetails.header}>
-        <div style={{ fontWeight: 'bold' }}>
-          Add New Member
-        </div>
-        <Flexbox
-          flexDirection="row"
-          flexWrap="wrap"
-          width="100%"
-          justifyContent="flex-start"
-          alignItems="center"
-        >
-          <Flexbox
-            flexGrow={1}
-          >
-            <TextField
-              hintText="Username"
-              value={this.state.username}
-              onChange={this.usernameOnChange}
-            />
+      <Card style={styles.card}>
+        <CardTitle title="Add New Member" />
+        <CardText>
+          <Flexbox flexWrap="wrap" justifyContent="flex-start" alignItems="center">
+            <Flexbox flex="1">
+              <TextField
+                hintText="Username"
+                value={this.state.username}
+                onChange={this.usernameOnChange}
+              />
+            </Flexbox>
+            <Flexbox flex="1">
+              <Checkbox
+                label="Make Owner"
+                checked={this.state.makeOwner}
+                onCheck={this.makeOwnerOnChange}
+              />
+            </Flexbox>
+            <Flexbox flex="1">
+              <RaisedButton label="Add Member" primary onClick={this.submitForm} style={styles.addMemberButton} />
+            </Flexbox>
           </Flexbox>
-          <Flexbox
-            flexGrow={1}
-          >
-            <Checkbox
-              label="Make Owner"
-              checked={this.state.makeOwner}
-              onCheck={this.makeOwnerOnChange}
-            />
-          </Flexbox>
-          <Flexbox
-            flexGrow={1}
-          >
-            <RaisedButton label="Add Member" primary onClick={this.submitForm} />
-          </Flexbox>
-        </Flexbox>
-      </Paper>
+        </CardText>
+      </Card>
     )
   }
 
@@ -232,23 +227,31 @@ class MembersTab extends Component {
     const contributors = _.values(this.props.projectMembers.contributors.byId)
     return (
       <div style={styles.container}>
-        <Paper style={Theme.projectDetails.header}>
-          <div style={{ fontWeight: 'bold' }}>
-            Owners
-          </div>
-          <List>
-            {this.renderMembers(owners, true)}
-          </List>
-        </Paper>
-        <Paper style={Theme.projectDetails.header}>
-          <div style={{ fontWeight: 'bold' }}>
-            Contributors
-          </div>
-          <List>
-            {this.renderMembers(contributors, false)}
-          </List>
-        </Paper>
-        {this.renderAddMember()}
+        <Flexbox flexWrap="wrap">
+          <Flexbox flex="1">
+            <Card style={styles.card}>
+              <CardTitle title="Owners" />
+              <CardText>
+                <List>
+                  {this.renderMembers(owners, true)}
+                </List>
+              </CardText>
+            </Card>
+          </Flexbox>
+          <Flexbox flex="1">
+            <Card style={styles.card}>
+              <CardTitle title="Contributors" />
+              <CardText>
+                <List>
+                  {this.renderMembers(contributors, false)}
+                </List>
+              </CardText>
+            </Card>
+          </Flexbox>
+          <Flexbox flex="1">
+            {this.renderAddMember()}
+          </Flexbox>
+        </Flexbox>
       </div>
     )
   }
