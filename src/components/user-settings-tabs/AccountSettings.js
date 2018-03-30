@@ -1,6 +1,7 @@
 /* eslint-disable prefer-destructuring */
+import Flexbox from 'flexbox-react'
 import React, { Component } from 'react'
-import { RaisedButton } from 'material-ui'
+import { Card, CardHeader, CardText, RaisedButton } from 'material-ui'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { saveState } from '../../utils/localStorage'
@@ -9,20 +10,55 @@ import BasicSpinner from '../misc/BasicSpinner'
 import { getSession, checkGithubToken, checkTravisToken, addTravisToken, deleteTravisToken, deleteGithubToken, checkHerokuToken, deleteHerokuToken } from '../../actions/session'
 import { externals } from '../../../webpack.config'
 import GithubLogo from '../svg/flat-colorizable/GithubLogo'
-import HerokuFilledLogo from '../svg/flat-colorizable/HerokuFilledLogo'
-import TravisFilledLogo from '../svg/flat-colorizable/TravisFilledLogo'
+import HerokuLogo from '../svg/flat-colorizable/HerokuLogo'
+import TravisLogo from '../svg/TravisLogo'
 
 const config = externals.config
 
 const styles = {
+  card: {
+    margin: Theme.padding.tiny
+  },
   container: {
     padding: Theme.padding.tiny
   },
-  icon: {
-    fill: Theme.colors.white,
-    fontSize: 24
+  anchor: {
+    color: Theme.palette.primary1Color
+  },
+  accountContent: {
+    maxWidth: 400
   }
 }
+
+// To add any additional accounts, make sure to add the appropriate
+// information here and in the constructor state and actions variables.
+const accounts = [
+  {
+    title: 'GitHub',
+    identifier: 'github',
+    sessionUsername: 'githubUsername',
+    url: 'https://github.com',
+    avatar: <GithubLogo height="32px" width="32px" />,
+    content: null
+  },
+  {
+    title: 'Travis CI',
+    identifier: 'travis',
+    sessionUsername: 'githubUsername',
+    url: 'https://travis-ci.org',
+    avatar: <TravisLogo style={{ fontSize: 24 }} height="32px" width="32px" />,
+    content: null,
+    customInfo: 'A GitHub account must be linked before a Travis account can be linked.'
+  },
+  {
+    title: 'Heroku',
+    identifier: 'heroku',
+    sessionUsername: 'herokuEmail',
+    url: 'https://heroku.com/',
+    avatar: <HerokuLogo height="32px" width="32px" />,
+    content: null
+  }
+]
 
 const mapStateToProps = state => ({
   session: state.session
@@ -45,12 +81,72 @@ class AccountSettings extends Component {
       + Math.random().toString(36).substring(2, 15)
   }
 
+  static renderCard(data) {
+    const key = `linked-account-${data.identifier}`
+    return (
+      <Flexbox key={key}>
+        <Card style={styles.card}>
+          <CardHeader
+            title={data.title}
+            subtitle={<a style={styles.anchor} href={data.url} target="_blank" rel="noopener noreferrer">{data.url}</a>}
+            avatar={data.avatar}
+          />
+          <CardText>{data.content}</CardText>
+        </Card>
+      </Flexbox>
+    )
+  }
+
+  static renderContent(isAccountLinked, account, userAccountName, onConnect, onRemove, customInfo) {
+    if (isAccountLinked === 'spin') {
+      return <BasicSpinner />
+    }
+    if (isAccountLinked) {
+      return (
+        <div>
+          <p>Linked to account: <b>{userAccountName}</b></p>
+          <RaisedButton label="Disconnect" secondary onClick={onRemove} />
+        </div>
+      )
+    }
+    let info = `No account linked. Click the "Connect" button below to link your ${account} account to HammerIO. `
+    if (customInfo) {
+      info += customInfo
+    }
+    return (
+      <div>
+        <p>{info}</p>
+        <RaisedButton label="Connect" primary onClick={onConnect} />
+      </div>
+    )
+  }
+
   constructor(props) {
     super(props)
     this.state = {
       github: 'spin',
       travis: 'spin',
       heroku: 'spin'
+    }
+    this.redirectToGithub = this.redirectToGithub.bind(this)
+    this.addTravis = this.addTravis.bind(this)
+    this.redirectToHeroku = this.redirectToHeroku.bind(this)
+    this.removeGithub = this.removeGithub.bind(this)
+    this.removeTravis = this.removeTravis.bind(this)
+    this.removeHeroku = this.removeHeroku.bind(this)
+
+    // These actions are called dynamically during account card rendering
+    this.actions = {
+      add: {
+        github: this.redirectToGithub,
+        travis: this.addTravis,
+        heroku: this.redirectToHeroku
+      },
+      remove: {
+        github: this.removeGithub,
+        travis: this.removeTravis,
+        heroku: this.removeHeroku
+      }
     }
   }
 
@@ -60,9 +156,9 @@ class AccountSettings extends Component {
       session
     } = this.props
     getSession(session.authToken)
-    this.checkGithub()
-    this.checkHeroku()
-    this.checkTravis()
+    this.checkGithub().catch(console.error)
+    this.checkHeroku().catch(console.error)
+    this.checkTravis().catch(console.error)
   }
 
   async checkGithub() {
@@ -183,131 +279,25 @@ class AccountSettings extends Component {
       `state=${state}`
   }
 
-  renderGithubInfo() {
-    const gitHubLinked = this.state.github
-    const { session } = this.props
-
-    if (gitHubLinked === 'spin') {
-      return <BasicSpinner />
-    }
-    if (gitHubLinked) {
-      return (
-        <div>
-          <p>
-            Linked to account: <b>{session.user.githubUsername}</b>
-          </p>
-          <RaisedButton
-            label="Remove GitHub Access"
-            secondary
-            onClick={() => { this.removeGithub() }}
-            icon={<GithubLogo style={styles.icon} height="24px" width="24px" />}
-          />
-        </div>
-      )
-    }
-    return (
-      <div>
-        <p>
-          No account linked. Click the &quot;Connect&quot; button
-          below to link your GitHub account to Yggdrasil.
-        </p>
-        <RaisedButton
-          label="Connect to GitHub"
-          primary
-          onClick={(() => { this.redirectToGithub() })}
-          icon={<GithubLogo style={styles.icon} height="24px" width="24px" />}
-        />
-      </div>
-    )
-  }
-
-  renderHerokuInfo() {
-    const herokuLinked = this.state.heroku
-    const { session } = this.props
-    if (herokuLinked === 'spin') {
-      return <BasicSpinner />
-    }
-    if (herokuLinked) {
-      return (
-        <div>
-          <p>
-            Linked to account: <b>{session.user.herokuEmail}</b>
-          </p>
-          <RaisedButton
-            label="Remove Heroku Access"
-            secondary
-            onClick={() => { this.removeHeroku() }}
-            icon={<HerokuFilledLogo style={styles.icon} fill={Theme.colors.white} height="24px" width="24px" />}
-          />
-        </div>
-      )
-    }
-    return (
-      <div>
-        <p>
-          No account linked. Click the &quot;Connect&quot; button
-          below to link your Heroku account to Yggdrasil.
-        </p>
-        <RaisedButton
-          label="Connect to Heroku"
-          primary
-          onClick={(() => { this.redirectToHeroku() })}
-          icon={<HerokuFilledLogo style={styles.icon} fill={Theme.colors.white} height="24px" width="24px" />}
-        />
-      </div>
-    )
-  }
-
-  renderTravisInfo() {
-    const travisLinked = this.state.travis
-    const { session } = this.props
-    if (travisLinked === 'spin') {
-      return <BasicSpinner />
-    }
-    if (travisLinked) {
-      return (
-        <div>
-          <p>
-            Linked to account: <b>{session.user.githubUsername}</b>
-          </p>
-          <RaisedButton
-            label="Remove Travis Access"
-            secondary
-            onClick={() => { this.removeTravis() }}
-            icon={<TravisFilledLogo style={styles.icon} height="24px" width="24px" />}
-          />
-        </div>
-      )
-    }
-    return (
-      <div>
-        <p>
-          No account linked. Click the &quot;Connect&quot; button
-          below to automatically link the Travis account associated
-          with your GitHub account to Yggdrasil. A GitHub account
-          must be linked before a Travis account can be linked.
-        </p>
-        <RaisedButton
-          label="Connect to Travis"
-          primary
-          disabled={this.state.github !== true}
-          onClick={(() => { this.addTravis() })}
-          icon={<TravisFilledLogo style={styles.icon} height="24px" width="24px" />}
-        />
-      </div>
-    )
-  }
-
   render() {
+    // Generate the content to be rendered for each account card
+    for (let i = 0; i < accounts.length; i += 1) {
+      accounts[i].content = AccountSettings.renderContent(
+        this.state[accounts[i].identifier],
+        accounts[i].title,
+        this.props.session.user[accounts[i].sessionUsername],
+        this.actions.add[accounts[i].identifier],
+        this.actions.remove[accounts[i].identifier],
+        accounts[i].customInfo
+      )
+    }
+
     return (
       <div style={styles.container}>
         <h2>Linked Accounts</h2>
-        <h3>GitHub</h3>
-        {this.renderGithubInfo()}
-        <h3>Travis</h3>
-        {this.renderTravisInfo()}
-        <h3>Heroku</h3>
-        {this.renderHerokuInfo()}
+        <Flexbox flexWrap="wrap">
+          {accounts.map(AccountSettings.renderCard)}
+        </Flexbox>
       </div>
     )
   }
