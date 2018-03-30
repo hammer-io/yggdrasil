@@ -1,7 +1,7 @@
 /* eslint-disable prefer-destructuring */
 import Flexbox from 'flexbox-react'
 import React, { Component } from 'react'
-import { Card, CardHeader, CardText, RaisedButton } from 'material-ui'
+import { Card, CardActions, CardHeader, CardText, FlatButton } from 'material-ui'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { saveState } from '../../utils/localStorage'
@@ -91,7 +91,7 @@ class AccountSettings extends Component {
             subtitle={<a style={styles.anchor} href={data.url} target="_blank" rel="noopener noreferrer">{data.url}</a>}
             avatar={data.avatar}
           />
-          <CardText>{data.content}</CardText>
+          {data.content}
         </Card>
       </Flexbox>
     )
@@ -104,8 +104,10 @@ class AccountSettings extends Component {
     if (isAccountLinked) {
       return (
         <div>
-          <p>Linked to account: <b>{userAccountName}</b></p>
-          <RaisedButton label="Disconnect" secondary onClick={onRemove} />
+          <CardText>Linked to account: <b>{userAccountName}</b></CardText>
+          <CardActions>
+            <FlatButton label="Disconnect" secondary onClick={onRemove} />
+          </CardActions>
         </div>
       )
     }
@@ -115,8 +117,10 @@ class AccountSettings extends Component {
     }
     return (
       <div>
-        <p>{info}</p>
-        <RaisedButton label="Connect" primary onClick={onConnect} />
+        <CardText>{info}</CardText>
+        <CardActions>
+          <FlatButton label="Connect" primary onClick={onConnect} />
+        </CardActions>
       </div>
     )
   }
