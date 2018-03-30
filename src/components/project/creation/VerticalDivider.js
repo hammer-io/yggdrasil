@@ -1,5 +1,5 @@
 import React from 'react'
-import Theme from '../../../style/theme'
+import Theme from '../../../../style/theme'
 
 const styles = {
   container: {
@@ -11,8 +11,8 @@ const styles = {
   }
 }
 
-const Divider = () => (
+const VerticalDivider = () => (
   <div style={styles.container} />
 )
 
-export default Divider
+export default VerticalDivider
