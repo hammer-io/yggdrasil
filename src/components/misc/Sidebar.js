@@ -1,9 +1,9 @@
 import React from 'react'
-import { Drawer, MenuItem, Menu } from 'material-ui'
+import { Divider, Drawer, MenuItem, Menu } from 'material-ui'
 import PropTypes from 'prop-types'
-import Home from 'material-ui/svg-icons/action/home'
-import Settings from 'material-ui/svg-icons/action/settings'
-import WebAsset from 'material-ui/svg-icons/av/web-asset'
+import SvgIconHome from 'material-ui/svg-icons/action/home'
+import SvgIconSettings from 'material-ui/svg-icons/action/settings'
+import SvgIconTyr from 'material-ui/svg-icons/hardware/desktop-mac'
 import Theme from '../../../style/theme'
 import HammerLogo from '../../assets/icons/Viking_Hammer_Logo_1.png'
 
@@ -71,17 +71,18 @@ const Sidebar = ({
       <MenuItem
         style={getMenuStyle('/home', currentRoute)}
         primaryText="Home"
-        leftIcon={<Home style={getIconStyle('/home', currentRoute)} />}
-      />
-      <MenuItem
-        style={getMenuStyle('/tyr', currentRoute)}
-        primaryText="Tyr"
-        leftIcon={<WebAsset style={getIconStyle('/tyr', currentRoute)} />}
+        leftIcon={<SvgIconHome style={getIconStyle('/home', currentRoute)} />}
       />
       <MenuItem
         style={getMenuStyle('/settings', currentRoute)}
         primaryText="Settings"
-        leftIcon={<Settings style={getIconStyle('/settings', currentRoute)} />}
+        leftIcon={<SvgIconSettings style={getIconStyle('/settings', currentRoute)} />}
+      />
+      <Divider />
+      <MenuItem
+        style={getMenuStyle('/tyr', currentRoute)}
+        primaryText="Tyr CLI"
+        leftIcon={<SvgIconTyr style={getIconStyle('/tyr', currentRoute)} />}
       />
     </Menu>
   </Drawer>
