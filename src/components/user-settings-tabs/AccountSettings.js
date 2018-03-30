@@ -8,12 +8,19 @@ import Theme from '../../../style/theme'
 import BasicSpinner from '../misc/BasicSpinner'
 import { getSession, checkGithubToken, checkTravisToken, addTravisToken, deleteTravisToken, deleteGithubToken, checkHerokuToken, deleteHerokuToken } from '../../actions/session'
 import { externals } from '../../../webpack.config'
+import GithubLogo from '../svg/flat-colorizable/GithubLogo'
+import HerokuFilledLogo from '../svg/flat-colorizable/HerokuFilledLogo'
+import TravisFilledLogo from '../svg/flat-colorizable/TravisFilledLogo'
 
 const config = externals.config
 
 const styles = {
   container: {
     padding: Theme.padding.tiny
+  },
+  icon: {
+    fill: Theme.colors.white,
+    fontSize: 24
   }
 }
 
@@ -193,6 +200,7 @@ class AccountSettings extends Component {
             label="Remove GitHub Access"
             secondary
             onClick={() => { this.removeGithub() }}
+            icon={<GithubLogo style={styles.icon} height="24px" width="24px" />}
           />
         </div>
       )
@@ -207,6 +215,7 @@ class AccountSettings extends Component {
           label="Connect to GitHub"
           primary
           onClick={(() => { this.redirectToGithub() })}
+          icon={<GithubLogo style={styles.icon} height="24px" width="24px" />}
         />
       </div>
     )
@@ -228,6 +237,7 @@ class AccountSettings extends Component {
             label="Remove Heroku Access"
             secondary
             onClick={() => { this.removeHeroku() }}
+            icon={<HerokuFilledLogo style={styles.icon} fill={Theme.colors.white} height="24px" width="24px" />}
           />
         </div>
       )
@@ -242,6 +252,7 @@ class AccountSettings extends Component {
           label="Connect to Heroku"
           primary
           onClick={(() => { this.redirectToHeroku() })}
+          icon={<HerokuFilledLogo style={styles.icon} fill={Theme.colors.white} height="24px" width="24px" />}
         />
       </div>
     )
@@ -263,6 +274,7 @@ class AccountSettings extends Component {
             label="Remove Travis Access"
             secondary
             onClick={() => { this.removeTravis() }}
+            icon={<TravisFilledLogo style={styles.icon} height="24px" width="24px" />}
           />
         </div>
       )
@@ -280,6 +292,7 @@ class AccountSettings extends Component {
           primary
           disabled={this.state.github !== true}
           onClick={(() => { this.addTravis() })}
+          icon={<TravisFilledLogo style={styles.icon} height="24px" width="24px" />}
         />
       </div>
     )

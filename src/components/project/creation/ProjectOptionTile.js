@@ -7,8 +7,8 @@ import PropTypes from 'prop-types'
 import TravisIcon from '../../svg/TravisLogo'
 import MochaIcon from '../../svg/MochaLogo'
 import DockerIcon from '../../svg/DockerLogo'
-import GithubIcon from '../../svg/GithubLogo'
-import HerokuIcon from '../../svg/HerokuLogo'
+import GithubIcon from '../../svg/flat-colorizable/GithubLogo'
+import HerokuIcon from '../../svg/flat-colorizable/HerokuLogo'
 import SequelizeIcon from '../../svg/SequelizeLogo'
 import ExpressIcon from '../../svg/ExpressLogo'
 import Theme from '../../../../style/theme'
@@ -30,6 +30,12 @@ const styles = {
     height: '50px',
     width: '50px',
     marginLeft: '0px'
+  },
+  herokuIcon: {
+    height: '50px',
+    width: '50px',
+    marginLeft: '0px',
+    fill: '#6762a6'
   },
   label: {
     paddingTop: '20px',
@@ -73,7 +79,7 @@ const getIcon = (option, disabled, selected) => {
     case 'docker':
       return <DockerIcon style={styles.icon} />
     case 'heroku':
-      return <HerokuIcon style={styles.icon} />
+      return <HerokuIcon style={styles.herokuIcon} />
     case 'express':
       return <ExpressIcon style={styles.icon} />
     case 'sequelize':
