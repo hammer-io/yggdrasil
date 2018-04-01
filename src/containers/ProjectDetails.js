@@ -9,12 +9,13 @@ import BreadcrumbNav from '../components/misc/BreadcrumbNav'
 import ProjectHeader from '../components/project/ProjectHeader'
 import MembersTab from '../components/project/MembersTab'
 import MonitoringTab from '../components/project/MonitoringTab'
+import SettingsTab from '../components/project/SettingsTab'
 import BasicSpinner from '../components/misc/BasicSpinner'
 import OverviewTab from '../components/project/OverviewTab'
 import PageWrap from '../components/misc/PageWrap'
 import Theme from '../../style/theme'
 
-const tabValues = ['overview', 'monitoring', 'members']
+const tabValues = ['overview', 'monitoring', 'members', 'settings']
 
 // The styles on the breadcrumb help it match the layout of
 // the PageWrap element without being in the PageWrap
@@ -102,7 +103,8 @@ class ProjectDetails extends React.Component {
     const url = {
       overview: `/projects/${project.id}/overview`,
       monitoring: `/projects/${project.id}/monitoring`,
-      members: `/projects/${project.id}/members`
+      members: `/projects/${project.id}/members`,
+      settings: `/projects/${project.id}/settings`
     }
     const projectDetails = {
       projectStatus: 'Healthy',
@@ -131,6 +133,9 @@ class ProjectDetails extends React.Component {
             </Tab>
             <Tab label="Members" value="members" containerElement={<Link to={url.members} />}>
               <MembersTab projectId={params.id} />
+            </Tab>
+            <Tab label="Settings" value="settings" containerElement={<Link to={url.settings} />}>
+              <SettingsTab project={project} />
             </Tab>
           </Tabs>
         </PageWrap>
