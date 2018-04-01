@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import ProjectOptionTile from './ProjectOptionTile'
-import Divider from '../../misc/Divider'
+import VerticalDivider from './VerticalDivider'
 import Theme from '../../../../style/theme'
 
 const styles = {
@@ -63,7 +63,7 @@ const ProjectCreationOption2 = ({
         </div>
       </div>
     </div>
-    <Divider />
+    <VerticalDivider />
     <div style={styles.subContainer}>
       <h1>Deployment</h1>
       <div style={styles.optionsContainer}>

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import ProjectOptionTile from './ProjectOptionTile'
-import Divider from '../../misc/Divider'
+import VerticalDivider from './VerticalDivider'
 
 const styles = {
   container: {
@@ -46,7 +46,7 @@ const ProjectCreationOption3 = ({
         <ProjectOptionTile onClick={clickNoBackend} selected={noBackendSelected} option="none" />
       </div>
     </div>
-    <Divider />
+    <VerticalDivider />
     <div style={styles.subContainer}>
       <h1>Test Framework</h1>
       <div style={styles.optionsContainer}>
@@ -54,7 +54,7 @@ const ProjectCreationOption3 = ({
         <ProjectOptionTile onClick={clickNoTest} selected={noTestSelected} option="none" />
       </div>
     </div>
-    <Divider />
+    <VerticalDivider />
     <div style={styles.subContainer}>
       <h1>ORM Framework</h1>
       <div style={styles.optionsContainer}>

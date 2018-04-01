@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { RaisedButton } from 'material-ui'
+import { Divider, RaisedButton } from 'material-ui'
 import Theme from '../../style/theme'
 import PageWrap from '../components/misc/PageWrap'
 import BasicSpinner from '../components/misc/BasicSpinner'
