@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 
 import BasicSpinner from '../misc/BasicSpinner'
 import Theme from '../../../style/theme'
-import HeartbeatCount from './overview/HeartbeatCount'
 import ProjectIssues from './overview/ProjectIssues'
 import ProjectBuilds from './overview/ProjectBuilds'
 import ProjectLinks from './overview/ProjectLinks'
@@ -24,7 +23,6 @@ class OverviewTab extends Component {
       return (
         <div>
           <Flexbox flexWrap="wrap" justifyContent="center">
-            <HeartbeatCount projectId={project.id} />
             <ProjectIssues
               githubUrl={project.githubRepositoryName}
               projectId={project.id}
