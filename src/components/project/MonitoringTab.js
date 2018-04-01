@@ -1,13 +1,14 @@
 import React from 'react'
 import Flexbox from 'flexbox-react'
 import { connect } from 'react-redux'
+import firebase from 'firebase'
+import PropTypes from 'prop-types'
 import GraphHeartbeats from './monitoring/GraphHeartbeats'
 import GraphHttpRequests from './monitoring/GraphHttpRequests'
 import GraphOsData from './monitoring/GraphOsData'
 import GraphUrls from './monitoring/GraphUrls'
 import OsDataWidget from './monitoring/OsDataWidget'
 import HttpRequestWidget from './monitoring/HttpRequestWidget'
-import data from '../../../test/ProjectMonitoringTestData'
 import Theme from '../../../style/theme'
 
 const styles = {
@@ -22,47 +23,91 @@ const mapStateToProps = state => ({
   projectMembers: state.projectMembers
 })
 
-function MonitoringTab() {
-  return (
-    <div style={styles.container}>
-      <Flexbox flexWrap="wrap" justifyContent="center">
-        <Flexbox>
-          <GraphHeartbeats
-            data={data.mockData.heartbeats.testskaditest}
-          />
+class MonitoringTab extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.heartbeatRef = {}
+    this.httpRef = {}
+    this.osRef = {}
+    this.state = {
+      heartbeats: {},
+      http: {},
+      os: {}
+    }
+  }
+  componentDidMount() {
+    const { projectName } = this.props
+    this.heartbeatRef = firebase.database().ref(`heartbeats/${projectName}`)
+    this.httpRef = firebase.database().ref(`httpdata/${projectName}`)
+    this.osRef = firebase.database().ref(`osdata/${projectName}`)
+    this.heartbeatRef.on('value', (snapshot) => {
+      this.setState({
+        heartbeats: snapshot.val()
+      })
+    })
+    this.httpRef.on('value', (snapshot) => {
+      this.setState({
+        http: snapshot.val()
+      })
+    })
+    this.osRef.on('value', (snapshot) => {
+      this.setState({
+        os: snapshot.val()
+      })
+    })
+  }
+
+  componentWillUnmount() {
+    this.heartbeatRef.off()
+    this.httpRef.off()
+    this.osRef.off()
+  }
+
+  render() {
+    const { heartbeats, http, os } = this.state
+    return (
+      <div style={styles.container}>
+        <Flexbox flexWrap="wrap" justifyContent="center">
+          <Flexbox>
+            <GraphHeartbeats
+              data={heartbeats}
+            />
+          </Flexbox>
+          <Flexbox>
+            <OsDataWidget
+              memoryFree={20}
+              memoryUsed={10}
+            />
+          </Flexbox>
+          <Flexbox>
+            <HttpRequestWidget
+              data={http}
+            />
+          </Flexbox>
+          <Flexbox>
+            <GraphOsData
+              data={os}
+            />
+          </Flexbox>
+          <Flexbox>
+            <GraphHttpRequests
+              data={http}
+            />
+          </Flexbox>
+          <Flexbox>
+            <GraphUrls
+              data={http}
+            />
+          </Flexbox>
         </Flexbox>
-        <Flexbox>
-          <OsDataWidget
-            memoryFree={20}
-            memoryUsed={10}
-          />
-        </Flexbox>
-        <Flexbox>
-          <HttpRequestWidget
-            data={data.mockData.httpdata.testskaditest}
-          />
-        </Flexbox>
-        <Flexbox>
-          <GraphOsData
-            data={data.mockData.osdata.testskaditest}
-          />
-        </Flexbox>
-        <Flexbox>
-          <GraphHttpRequests
-            data={data.mockData.httpdata.testskaditest}
-          />
-        </Flexbox>
-        <Flexbox>
-          <GraphUrls
-            data={data.mockData.httpdata.testskaditest}
-          />
-        </Flexbox>
-      </Flexbox>
-    </div>
-  )
+      </div>
+    )
+  }
 }
 
 MonitoringTab.propTypes = {
+  projectName: PropTypes.string.isRequired
 }
 
 const ExportedMonitoringTab = connect(

@@ -13,23 +13,11 @@ const styles = {
   }
 }
 
-class GraphUrls extends React.PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = {
-      summaryData: {},
-      computed: false
-    }
-  }
+class GraphUrls extends React.Component {
+  static processData(props) {
+    const summaryData = {}
 
-  componentDidMount() {
-    this.processData()
-  }
-
-  processData() {
-    const { summaryData } = this.state
-
-    _.values(this.props.data).forEach((request) => {
+    _.values(props.data).forEach((request) => {
       const name = request.url
       if (name in summaryData) {
         summaryData[name].value += 1
@@ -39,7 +27,26 @@ class GraphUrls extends React.PureComponent {
         }
       }
     })
-    this.setState({ summaryData, computed: true })
+    return { summaryData, computed: true }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.data !== nextProps.data) {
+      const newState = GraphUrls.processData(nextProps)
+      return {
+        data: nextProps.data,
+        ...newState
+      }
+    }
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      data: props.data, // eslint-disable-line react/no-unused-state
+      summaryData: {},
+      computed: false
+    }
   }
 
   renderContent() {
