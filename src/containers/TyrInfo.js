@@ -4,7 +4,7 @@ import { Divider, RaisedButton } from 'material-ui'
 import Theme from '../../style/theme'
 import PageWrap from '../components/misc/PageWrap'
 import BasicSpinner from '../components/misc/BasicSpinner'
-import GithubLogo from './../components/svg/GithubLogo'
+import GithubLogo from '../components/svg/flat-colorizable/GithubLogo'
 
 const repositoryUrl = 'https://github.com/hammer-io/tyr'
 const readmeUrl = 'https://raw.githubusercontent.com/hammer-io/tyr/master/README.md'

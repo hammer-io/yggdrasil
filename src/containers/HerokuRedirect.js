@@ -74,7 +74,7 @@ class HerokuRedirect extends Component {
       )
     }
     return (
-      <Redirect to="/settings/accounts" />
+      <Redirect to="/settings/accounts" push />
     )
   }
 }
