@@ -130,7 +130,7 @@ class ProjectDetails extends React.Component {
               <OverviewTab project={project} />
             </Tab>
             <Tab label="Monitoring" value="monitoring" containerElement={<Link to={url.monitoring} />}>
-              <MonitoringTab projectName={project.projectName} />
+              <MonitoringTab projectId={params.id} />
             </Tab>
             <Tab label="Members" value="members" containerElement={<Link to={url.members} />}>
               <MembersTab projectId={params.id} />

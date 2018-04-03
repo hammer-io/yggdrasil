@@ -1,6 +1,6 @@
 {
   "heartbeats": {
-    "hammer-io": {
+    "b2": {
       "-L70SVTH_bP8FQmyJu8d": {
         "timestamp": 1520442934996
       },
@@ -2199,7 +2199,7 @@
     }
   },
   "httpdata": {
-    "hammer-io": {
+    "b2": {
       "-L8VKF3Yj5lDw5F4ErPn": {
         "method": "GET",
         "requestSize": 20,
@@ -2243,7 +2243,7 @@
     }
   },
   "osdata": {
-    "hammer-io": {
+    "b2": {
       "-L8XtNjk1EuxJ0HGhYCy": {
         "freeMemory": 290516992,
         "memoryUsed": 0.016910315,

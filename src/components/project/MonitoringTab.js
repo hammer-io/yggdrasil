@@ -37,10 +37,10 @@ class MonitoringTab extends React.Component {
     }
   }
   componentDidMount() {
-    const { projectName } = this.props
-    this.heartbeatRef = firebase.database().ref(`heartbeats/${projectName}`)
-    this.httpRef = firebase.database().ref(`httpdata/${projectName}`)
-    this.osRef = firebase.database().ref(`osdata/${projectName}`)
+    const { projectId } = this.props
+    this.heartbeatRef = firebase.database().ref(`heartbeats/${projectId}`)
+    this.httpRef = firebase.database().ref(`httpdata/${projectId}`)
+    this.osRef = firebase.database().ref(`osdata/${projectId}`)
     this.heartbeatRef.on('value', (snapshot) => {
       this.setState({
         heartbeats: snapshot.val()
@@ -107,7 +107,7 @@ class MonitoringTab extends React.Component {
 }
 
 MonitoringTab.propTypes = {
-  projectName: PropTypes.string.isRequired
+  projectId: PropTypes.string.isRequired
 }
 
 const ExportedMonitoringTab = connect(
