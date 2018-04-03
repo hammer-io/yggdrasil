@@ -13,7 +13,7 @@ const styles = {
   }
 }
 
-class GraphHeartbeats extends React.PureComponent {
+class GraphHeartbeats extends React.Component {
   static getColor(percent) {
     if (percent > 1) {
       return '#00E200'
@@ -32,25 +32,12 @@ class GraphHeartbeats extends React.PureComponent {
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
   }
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      activeIndex: 0,
-      summaryData: [],
-      computed: false
-    }
-  }
-
-  componentDidMount() {
-    this.processData()
-  }
-
-  processData() {
+  static processData(props) {
     const numberOfDaysToView = 90
 
     const today = new Date()
     const startToday = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0)
-    const { summaryData } = this.state
+    const summaryData = []
 
     for (let i = 0; i < numberOfDaysToView; i += 1) {
       const day = new Date(startToday.getTime() - (86400000 * i))
@@ -60,7 +47,7 @@ class GraphHeartbeats extends React.PureComponent {
       }
     }
 
-    _.values(this.props.data).forEach((heartbeat) => {
+    _.values(props.data).forEach((heartbeat) => {
       const day = new Date(heartbeat.timestamp)
       const dateString = day.toLocaleDateString()
       if (dateString in summaryData) {
@@ -73,7 +60,27 @@ class GraphHeartbeats extends React.PureComponent {
       }
     })
 
-    this.setState({ summaryData, computed: true })
+    return { summaryData, computed: true }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.data !== nextProps.data) {
+      const newState = GraphHeartbeats.processData(nextProps)
+      return {
+        data: nextProps.data,
+        ...newState
+      }
+    }
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      data: props.data, // eslint-disable-line react/no-unused-state
+      activeIndex: 0,
+      summaryData: [],
+      computed: false
+    }
   }
 
   handleClick(data, index) {

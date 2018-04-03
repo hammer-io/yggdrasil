@@ -111,6 +111,7 @@ class ProjectDetails extends React.Component {
       ...project
     }
     const breadcrumb = getBreadcrumbData(project)
+
     return (
       <div>
         <div style={styles.breadcrumbContainer}>
@@ -129,7 +130,7 @@ class ProjectDetails extends React.Component {
               <OverviewTab project={project} />
             </Tab>
             <Tab label="Monitoring" value="monitoring" containerElement={<Link to={url.monitoring} />}>
-              <MonitoringTab projectId={params.id} />
+              <MonitoringTab projectName={project.projectName} />
             </Tab>
             <Tab label="Members" value="members" containerElement={<Link to={url.members} />}>
               <MembersTab projectId={params.id} />

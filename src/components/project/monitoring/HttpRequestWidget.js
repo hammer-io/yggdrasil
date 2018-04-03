@@ -12,21 +12,7 @@ const styles = {
 }
 
 class HttpRequestWidget extends React.PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = {
-      badRequests: 0,
-      numberOfRequests: 0,
-      totalResponseTime: 0,
-      maxResponseTime: 0
-    }
-  }
-
-  componentDidMount() {
-    this.processData()
-  }
-
-  processData() {
+  static processData(props) {
     let badRequests = 0
     let numberOfRequests = 0
     let totalResponseTime = 0
@@ -34,7 +20,7 @@ class HttpRequestWidget extends React.PureComponent {
 
     const yesterday = new Date().getTime() - 86400000
 
-    _.values(this.props.data).forEach((request) => {
+    _.values(props.data).forEach((request) => {
       if (request.timestamp > yesterday) {
         badRequests += (request.status >= 400) ? 1 : 0
         numberOfRequests += 1
@@ -45,9 +31,30 @@ class HttpRequestWidget extends React.PureComponent {
       }
     })
 
-    this.setState({
+    return {
       badRequests, numberOfRequests, totalResponseTime, maxResponseTime
-    })
+    }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.data !== nextProps.data) {
+      const newState = HttpRequestWidget.processData(nextProps)
+      return {
+        data: nextProps.data,
+        ...newState
+      }
+    }
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      data: props.data, // eslint-disable-line react/no-unused-state
+      badRequests: 0,
+      numberOfRequests: 0,
+      totalResponseTime: 0,
+      maxResponseTime: 0
+    }
   }
 
   renderInformation() {
