@@ -1,4 +1,4 @@
-/* eslint-disable prefer-destructuring */
+/* eslint-disable prefer-destructuring,no-param-reassign,react/sort-comp */
 import Flexbox from 'flexbox-react'
 import React, { Component } from 'react'
 import { Card, CardActions, CardHeader, CardText, FlatButton } from 'material-ui'
@@ -94,34 +94,6 @@ class AccountSettings extends Component {
           {data.content}
         </Card>
       </Flexbox>
-    )
-  }
-
-  static renderContent(isAccountLinked, account, userAccountName, onConnect, onRemove, customInfo) {
-    if (isAccountLinked === 'spin') {
-      return <BasicSpinner />
-    }
-    if (isAccountLinked) {
-      return (
-        <div>
-          <CardText>Linked to account: <b>{userAccountName}</b></CardText>
-          <CardActions>
-            <FlatButton label="Disconnect" secondary onClick={onRemove} />
-          </CardActions>
-        </div>
-      )
-    }
-    let info = `No account linked. Click the "Connect" button below to link your ${account} account to HammerIO. `
-    if (customInfo) {
-      info += customInfo
-    }
-    return (
-      <div>
-        <CardText>{info}</CardText>
-        <CardActions>
-          <FlatButton label="Connect" primary onClick={onConnect} />
-        </CardActions>
-      </div>
     )
   }
 
@@ -283,18 +255,44 @@ class AccountSettings extends Component {
       `state=${state}`
   }
 
+  setAccountContent(account) {
+    const isAccountLinked = this.state[account.identifier]
+    const userAccountName = this.props.session.user[account.sessionUsername]
+    const onConnect = this.actions.add[account.identifier]
+    const onRemove = this.actions.remove[account.identifier]
+
+    if (isAccountLinked === 'spin') {
+      account.content = <BasicSpinner />
+      return
+    }
+    if (isAccountLinked) {
+      account.content = (
+        <div>
+          <CardText>Linked to account: <b>{userAccountName}</b></CardText>
+          <CardActions>
+            <FlatButton label="Disconnect" secondary onClick={onRemove} />
+          </CardActions>
+        </div>
+      )
+      return
+    }
+    let info = `No account linked. Click the "Connect" button below to link your ${account.title} account to HammerIO. `
+    if (account.customInfo) {
+      info += account.customInfo
+    }
+    account.content = (
+      <div>
+        <CardText>{info}</CardText>
+        <CardActions>
+          <FlatButton label="Connect" primary onClick={onConnect} />
+        </CardActions>
+      </div>
+    )
+  }
+
   render() {
     // Generate the content to be rendered for each account card
-    for (let i = 0; i < accounts.length; i += 1) {
-      accounts[i].content = AccountSettings.renderContent(
-        this.state[accounts[i].identifier],
-        accounts[i].title,
-        this.props.session.user[accounts[i].sessionUsername],
-        this.actions.add[accounts[i].identifier],
-        this.actions.remove[accounts[i].identifier],
-        accounts[i].customInfo
-      )
-    }
+    accounts.forEach(this.setAccountContent, this)
 
     return (
       <div style={styles.container}>

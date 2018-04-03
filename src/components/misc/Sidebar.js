@@ -60,7 +60,7 @@ const Sidebar = ({
 }) => (
   <Drawer
     docked={false}
-    width={300}
+    width={336}
     open={drawerOpen}
     onRequestChange={updateDrawerState}
   >
