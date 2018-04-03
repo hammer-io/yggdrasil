@@ -316,7 +316,7 @@ class NewProject extends Component {
       license: this.state.dropDownText,
       author: this.state.author,
       version: this.state.version,
-      sourcecontrol: sourceControlId,
+      sourceControl: sourceControlId,
       ci: ciId,
       containerization: containerId,
       deployment: deployId,
