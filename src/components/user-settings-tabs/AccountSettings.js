@@ -132,9 +132,11 @@ class AccountSettings extends Component {
       session
     } = this.props
     getSession(session.authToken)
-    this.checkGithub().catch(console.error)
-    this.checkHeroku().catch(console.error)
-    this.checkTravis().catch(console.error)
+    Promise.all([
+      this.checkGithub(),
+      this.checkHeroku(),
+      this.checkTravis()
+    ]).catch(console.error)
   }
 
   async checkGithub() {
