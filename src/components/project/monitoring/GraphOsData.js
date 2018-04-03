@@ -16,7 +16,7 @@ const styles = {
 
 class GraphOsData extends React.PureComponent {
   static renderTooltip(info) {
-    if (info.payload.length < 2) {
+    if (info.payload === null || info.payload.length < 2) {
       return null
     }
     return (
