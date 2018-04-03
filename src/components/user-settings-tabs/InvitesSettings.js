@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
-import { RaisedButton } from 'material-ui'
+import { RaisedButton, Snackbar } from 'material-ui'
 import PropTypes from 'prop-types'
 import {
   Table,
@@ -32,51 +32,74 @@ const styles = {
   }
 }
 
-const getExpirationDate = (invite) => {
-  const daysUntilExpiration = parseInt(invite.daysFromCreationUntilExpiration, 10)
-  const millisPerDay = 24 * 60 * 60 * 1000
-  const dateCreatedMillis = Date.parse(invite.createdAt)
-  return new Date(dateCreatedMillis + (millisPerDay * daysUntilExpiration))
-}
+class InvitesSettings extends Component {
+  static getExpirationDate(invite) {
+    const daysUntilExpiration = parseInt(invite.daysFromCreationUntilExpiration, 10)
+    const millisPerDay = 24 * 60 * 60 * 1000
+    const dateCreatedMillis = Date.parse(invite.createdAt)
+    return new Date(dateCreatedMillis + (millisPerDay * daysUntilExpiration))
+  }
 
-const getInviteActions = (statusOpen, onAcceptInvite, onDeclineInvite) => {
-  if (statusOpen) {
+  static getInviteActions(statusOpen, onAcceptInvite, onDeclineInvite) {
+    if (statusOpen) {
+      return (
+        <span>
+          <RaisedButton label="Accept" primary style={styles.acceptButton} onClick={onAcceptInvite} />
+          <RaisedButton label="Decline" secondary onClick={onDeclineInvite} />
+        </span>
+      )
+    }
+    return <span />
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      snackOpen: false
+    }
+    this.getTableRow = this.getTableRow.bind(this)
+    this.closeSnackbar = this.closeSnackbar.bind(this)
+    this.acceptInviteHandler = this.acceptInviteHandler.bind(this)
+    this.declineInviteHandler = this.declineInviteHandler.bind(this)
+  }
+
+  getTableRow(invite) {
+    const statusOpen = (invite.status.toLowerCase() === 'open')
+    const rowStyles = (statusOpen) ? {} : styles.rowClosed
+    const inviteActions = InvitesSettings.getInviteActions(
+      statusOpen,
+      this.acceptInviteHandler(invite.id),
+      this.declineInviteHandler(invite.id)
+    )
+    const expirationDate = InvitesSettings.getExpirationDate(invite)
     return (
-      <span>
-        <RaisedButton label="Accept" primary style={styles.acceptButton} onClick={onAcceptInvite} />
-        <RaisedButton label="Decline" secondary onClick={onDeclineInvite} />
-      </span>
+      <TableRow key={invite.id}>
+        <TableRowColumn style={rowStyles}>{invite.projectName}</TableRowColumn>
+        <TableRowColumn style={rowStyles}>{expirationDate.toDateString()}</TableRowColumn>
+        <TableRowColumn style={rowStyles}>{invite.status.toUpperCase()}</TableRowColumn>
+        <TableRowColumn style={rowStyles}>{inviteActions}</TableRowColumn>
+      </TableRow>
     )
   }
-  return <span />
-}
 
-const getTableRow = (invite) => {
-  function acceptInvite() {
-    // TODO
-    console.log(`TODO: Accepting invite ${invite.id}...`)
+  acceptInviteHandler(inviteId) {
+    return async () => {
+      await this.props.onAcceptInvite(inviteId)
+      this.setState({ snackOpen: true })
+    }
   }
 
-  function declineInvite() {
-    // TODO
-    console.log(`TODO: Declining invite ${invite.id}...`)
+  declineInviteHandler(inviteId) {
+    return async () => {
+      await this.props.onDeclineInvite(inviteId)
+      this.setState({ snackOpen: true })
+    }
   }
 
-  const statusOpen = (invite.status.toLowerCase() === 'open')
-  const rowStyles = (statusOpen) ? {} : styles.rowClosed
-  const inviteActions = getInviteActions(statusOpen, acceptInvite, declineInvite)
-  const expirationDate = getExpirationDate(invite)
-  return (
-    <TableRow key={invite.id}>
-      <TableRowColumn style={rowStyles}>{invite.projectName}</TableRowColumn>
-      <TableRowColumn style={rowStyles}>{expirationDate.toDateString()}</TableRowColumn>
-      <TableRowColumn style={rowStyles}>{invite.status.toUpperCase()}</TableRowColumn>
-      <TableRowColumn style={rowStyles}>{inviteActions}</TableRowColumn>
-    </TableRow>
-  )
-}
+  closeSnackbar() {
+    this.setState({ snackOpen: false })
+  }
 
-class InvitesSettings extends Component {
   renderContents() {
     if (this.props.invites) {
       const invites = _.values(this.props.invites.all.byId)
@@ -88,20 +111,20 @@ class InvitesSettings extends Component {
             style={styles.tableHeader}
           >
             <TableRow>
-              <TableHeaderColumn style={styles.tableHeaderColumn} tooltip="Name of the project you've been invited to">
+              <TableHeaderColumn style={styles.tableHeaderColumn}>
                 Project Name
               </TableHeaderColumn>
-              <TableHeaderColumn style={styles.tableHeaderColumn} tooltip="The date this invite will expire">
+              <TableHeaderColumn style={styles.tableHeaderColumn}>
                 Expiration
               </TableHeaderColumn>
-              <TableHeaderColumn style={styles.tableHeaderColumn} tooltip="Invite Status">
+              <TableHeaderColumn style={styles.tableHeaderColumn}>
                 Status
               </TableHeaderColumn>
-              <TableHeaderColumn style={styles.tableHeaderColumn} tooltip="Actions you can take on the invite" />
+              <TableHeaderColumn style={styles.tableHeaderColumn} />
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false} showRowHover>
-            {invites.map(getTableRow)}
+            {invites.map(this.getTableRow)}
           </TableBody>
         </Table>
       )
@@ -114,13 +137,23 @@ class InvitesSettings extends Component {
       <div style={styles.container}>
         <h2>Project Invites</h2>
         {this.renderContents()}
+        <Snackbar
+          open={this.state.snackOpen}
+          message="Changes have been saved successfully!"
+          autoHideDuration={3000}
+          onRequestClose={this.closeSnackbar}
+          action="Dismiss"
+          onActionClick={this.closeSnackbar}
+        />
       </div>
     )
   }
 }
 
 InvitesSettings.propTypes = {
-  invites: PropTypes.object.isRequired
+  invites: PropTypes.object.isRequired,
+  onAcceptInvite: PropTypes.func.isRequired,
+  onDeclineInvite: PropTypes.func.isRequired
 }
 
 export default InvitesSettings

@@ -9,7 +9,7 @@ import InvitesSettings from '../components/user-settings-tabs/InvitesSettings'
 import NotificationSettings from '../components/user-settings-tabs/NoficiationSettings'
 import PageWrap from '../components/misc/PageWrap'
 import ProfileSettings from '../components/user-settings-tabs/ProfileSettings'
-import { getUserInvites } from '../actions/invite'
+import { getUserInvites, acceptInvite, declineInvite } from '../actions/invite'
 import { updateUser } from '../actions/user'
 
 const tabValues = ['profile', 'invites', 'accounts', 'notification']
@@ -21,6 +21,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   getUserInvites,
+  acceptInvite,
+  declineInvite,
   updateUser
 }
 
@@ -32,6 +34,8 @@ class UserSettings extends Component {
     }
 
     this.onSaveProfileSettings = this.onSaveProfileSettings.bind(this)
+    this.onAcceptInvite = this.onAcceptInvite.bind(this)
+    this.onDeclineInvite = this.onDeclineInvite.bind(this)
   }
 
   async componentDidMount() {
@@ -44,6 +48,16 @@ class UserSettings extends Component {
     }
     const { session, getUserInvites } = this.props
     await getUserInvites(session.authToken)
+  }
+
+  async onAcceptInvite(inviteId) {
+    const { session, acceptInvite } = this.props
+    await acceptInvite(session.authToken, inviteId)
+  }
+
+  async onDeclineInvite(inviteId) {
+    const { session, declineInvite } = this.props
+    await declineInvite(session.authToken, inviteId)
   }
 
   async onSaveProfileSettings(newUser) {
@@ -72,7 +86,11 @@ class UserSettings extends Component {
               />
             </Tab>
             <Tab label="Invites" value="invites" containerElement={<Link to="/settings/invites" />}>
-              <InvitesSettings invites={this.props.invites} />
+              <InvitesSettings
+                invites={this.props.invites}
+                onAcceptInvite={this.onAcceptInvite}
+                onDeclineInvite={this.onDeclineInvite}
+              />
             </Tab>
             <Tab label="Accounts" value="accounts" containerElement={<Link to="/settings/accounts" />}>
               <AccountSettings />
