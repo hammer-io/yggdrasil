@@ -9,7 +9,8 @@
     "url": "https://github.com/hammer-io/yggdrasil.git"
   },
   "scripts": {
-    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --open --config webpack.dev.js",
+    "build": "node ./node_modules/webpack/bin/webpack.js --config webpack.prod.js && cp index.* build/",
     "lint": "eslint src/.",
     "lint:fix": "eslint src/. --fix",
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
@@ -26,6 +27,9 @@
     "url": "https://github.com/hammer-io/yggradsil/issues"
   },
   "homepage": "https://github.com/hammer-io/yggdrasil#readme",
+  "optionalDependencies": {
+    "fsevents": "*"
+  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.2.1",
@@ -50,7 +54,8 @@
     "svg-react-loader": "^0.4.5",
     "url-loader": "^1.0.1",
     "webpack": "3.10.0",
-    "webpack-dev-server": "2.11.1"
+    "webpack-dev-server": "2.11.1",
+    "webpack-merge": "^4.1.2"
   },
   "dependencies": {
     "babel-preset-stage-1": "^6.1.18",

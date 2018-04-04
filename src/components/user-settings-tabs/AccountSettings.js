@@ -8,12 +8,10 @@ import { saveState } from '../../utils/localStorage'
 import Theme from '../../../style/theme'
 import BasicSpinner from '../misc/BasicSpinner'
 import { getSession, checkGithubToken, checkTravisToken, addTravisToken, deleteTravisToken, deleteGithubToken, checkHerokuToken, deleteHerokuToken } from '../../actions/session'
-import { externals } from '../../../webpack.config'
 import GithubLogo from '../svg/flat-colorizable/GithubLogo'
 import HerokuLogo from '../svg/flat-colorizable/HerokuLogo'
 import TravisLogo from '../svg/TravisLogo'
-
-const config = externals.config
+import config from '../../utils/config'
 
 const styles = {
   card: {

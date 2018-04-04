@@ -20,5 +20,8 @@ module.exports = {
   "env": {
     "browser": true,
     "es6": true
+  },
+  "globals": {
+    "CONFIG": true // Defined in webpack.common.js
   }
 }

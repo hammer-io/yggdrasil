@@ -1,4 +1,5 @@
 {
+  "endorBaseURL": "http://localhost:3000/api/v1",
   "firebase": {
     "apiKey": "",
     "authDomain": "",

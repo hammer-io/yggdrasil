@@ -21,9 +21,7 @@ import HerokuRedirect from './containers/HerokuRedirect'
 import NotFound from './components/misc/PageNotFound'
 import TyrInfo from './containers/TyrInfo'
 import NewProject from './containers/NewProject'
-import { externals } from '../webpack.config'
-
-const config = externals.config
+import config from './utils/config'
 
 firebase.initializeApp(config.firebase)
 
