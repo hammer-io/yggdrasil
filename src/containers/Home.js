@@ -42,7 +42,6 @@ class Home extends Component {
 
   async componentDidMount() {
     const { session, getProjects, getUserProjects } = this.props
-    console.error(config.endorBaseURL)
     await getProjects(session.authToken)
     await getUserProjects(session.authToken)
   }
