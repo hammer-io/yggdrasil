@@ -9,7 +9,6 @@ import BasicSpinner from '../components/misc/BasicSpinner'
 import ProjectList from '../components/home/ProjectList'
 import ProjectsNotFound from '../components/home/ProjectsNotFound'
 import FloatingActionButton from '../components/misc/FloatingActionButton'
-import config from '../utils/config'
 
 const styles = {
   container: {
