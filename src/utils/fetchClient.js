@@ -1,3 +1,5 @@
+import config from '../utils/config'
+
 class FetchResponse {
   constructor(result, error, res) {
     this.result = result || null
@@ -8,7 +10,7 @@ class FetchResponse {
 
 class FetchClient {
   constructor(baseURL) {
-    this.baseURL = baseURL || CONFIG.endorBaseURL
+    this.baseURL = baseURL || config.endorBaseURL
   }
 
   setAuthToken(authToken) {

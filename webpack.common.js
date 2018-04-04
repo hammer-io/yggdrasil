@@ -1,5 +1,3 @@
-const ConfigWebpackPlugin = require('config-webpack')
-
 // These are the webpack configuration details common to both
 // dev and production environments. See webpack.dev.js and
 // webpack.prod.js for more configuration details.
@@ -14,11 +12,6 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js'
   },
-  plugins: [
-    // Defines the CONFIG variable that converts config file usage
-    // into string literals
-    new ConfigWebpackPlugin()
-  ],
   module: {
     rules: [
       {

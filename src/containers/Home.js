@@ -9,6 +9,7 @@ import BasicSpinner from '../components/misc/BasicSpinner'
 import ProjectList from '../components/home/ProjectList'
 import ProjectsNotFound from '../components/home/ProjectsNotFound'
 import FloatingActionButton from '../components/misc/FloatingActionButton'
+import config from '../utils/config'
 
 const styles = {
   container: {
@@ -41,6 +42,7 @@ class Home extends Component {
 
   async componentDidMount() {
     const { session, getProjects, getUserProjects } = this.props
+    console.error(config.endorBaseURL)
     await getProjects(session.authToken)
     await getUserProjects(session.authToken)
   }

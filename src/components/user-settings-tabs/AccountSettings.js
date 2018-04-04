@@ -11,6 +11,7 @@ import { getSession, checkGithubToken, checkTravisToken, addTravisToken, deleteT
 import GithubLogo from '../svg/flat-colorizable/GithubLogo'
 import HerokuLogo from '../svg/flat-colorizable/HerokuLogo'
 import TravisLogo from '../svg/TravisLogo'
+import config from '../../utils/config'
 
 const styles = {
   card: {
@@ -231,7 +232,7 @@ class AccountSettings extends Component {
     })
 
     window.location = 'https://github.com/login/oauth/authorize?' +
-      `client_id=${CONFIG.github.clientId}&` +
+      `client_id=${config.github.clientId}&` +
       'scope=repo&' +
       `state=${state}`
   }
@@ -248,7 +249,7 @@ class AccountSettings extends Component {
     })
 
     window.location = 'https://id.heroku.com/oauth/authorize?' +
-      `client_id=${CONFIG.heroku.clientId}&` +
+      `client_id=${config.heroku.clientId}&` +
       'response_type=code&' +
       'scope=write&' +
       `state=${state}`

@@ -21,8 +21,9 @@ import HerokuRedirect from './containers/HerokuRedirect'
 import NotFound from './components/misc/PageNotFound'
 import TyrInfo from './containers/TyrInfo'
 import NewProject from './containers/NewProject'
+import config from './utils/config'
 
-firebase.initializeApp(CONFIG.firebase)
+firebase.initializeApp(config.firebase)
 
 const store = getStore()
 store.subscribe(_.throttle(() => {
