@@ -40,7 +40,7 @@ export function login(credentials) {
     try {
       const fetchClient = new FetchClient()
       const { result, error } = await fetchClient.post({
-        url: '/oauth2/token',
+        url: '/auth/login',
         body: {
           ...credentials,
           grant_type: 'password'
