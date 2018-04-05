@@ -38,9 +38,10 @@ class MonitoringTab extends React.Component {
   }
   componentDidMount() {
     const { projectId } = this.props
-    this.heartbeatRef = firebase.database().ref(`heartbeats/${projectId}`)
-    this.httpRef = firebase.database().ref(`httpdata/${projectId}`)
-    this.osRef = firebase.database().ref(`osdata/${projectId}`)
+    const projectRef = firebase.database().ref(`projects/${projectId}`)
+    this.heartbeatRef = projectRef.child('heartbeats')
+    this.httpRef = projectRef.child('httpdata')
+    this.osRef = projectRef.child('osdata')
     this.heartbeatRef.on('value', (snapshot) => {
       this.setState({
         heartbeats: snapshot.val()
