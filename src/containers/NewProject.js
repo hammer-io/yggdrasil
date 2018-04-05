@@ -322,7 +322,7 @@ class NewProject extends Component {
       deployment: deployId,
       web: backendId,
       test: testId,
-      database: ormId
+      orm: ormId
     }
 
     const { result: project } = await addProject(session.authToken, newProject)
