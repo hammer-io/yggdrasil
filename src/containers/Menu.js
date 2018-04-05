@@ -6,9 +6,14 @@ import { logout } from '../actions/session'
 import Navbar from '../components/misc/Navbar'
 import Sidebar from '../components/misc/Sidebar'
 
+
 const mapDispatchToProps = {
   logout
 }
+
+const mapStateToProps = state => ({
+  session: state.session
+})
 
 class Menu extends Component {
   constructor(props) {
@@ -30,9 +35,9 @@ class Menu extends Component {
   }
 
   clickNavbarItem(event, item) {
-    const { history, logout } = this.props
+    const { session, history, logout } = this.props
     if (item.props.primaryText === 'Sign out') {
-      logout()
+      logout(session.authToken)
       history.push('/login')
     } else if (item.props.primaryText === 'New Project') {
       history.push('/projects/new')
@@ -79,13 +84,14 @@ class Menu extends Component {
 }
 
 Menu.propTypes = {
+  session: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired
 }
 
 const ExportedMenu = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Menu)
 
