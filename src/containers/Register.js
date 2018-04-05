@@ -87,6 +87,7 @@ class Register extends Component {
     if (result) {
       history.push('/home')
     } else {
+      console.log(error);
       if (error.error.type === 'Invalid Request') {
         error.error.errors.map((err) => {
           if (err.field === 'username') {
