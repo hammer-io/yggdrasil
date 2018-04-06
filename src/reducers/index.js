@@ -7,6 +7,7 @@ import projectMembers from './projectMembers'
 import projectIssues from './projectIssues'
 import projectBuilds from './projectBuilds'
 import invites from './invites'
+import error from './error'
 
 export default combineReducers({
   session,
@@ -15,5 +16,6 @@ export default combineReducers({
   projectMembers,
   projectIssues,
   projectBuilds,
-  invites
+  invites,
+  error
 })

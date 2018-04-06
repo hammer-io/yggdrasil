@@ -3,6 +3,7 @@ import FetchClient from './../utils/fetchClient'
 import actionCreator from './../utils/actionCreator'
 import * as Constants from './../constants'
 import { setUser } from './user'
+import logError from '../utils/error'
 
 export function setAccessToken(token) {
   return actionCreator(Constants.SET_AUTH_TOKEN, { token })
@@ -25,11 +26,11 @@ export function getSession(token) {
         dispatch(setAccessToken(token))
         dispatch(setUser(result))
       } else {
-        console.error(error)
+        logError(dispatch, error)
       }
       return { result, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -63,10 +64,10 @@ export function login(credentials) {
         }
         return response
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -79,7 +80,7 @@ export function logout() {
       dispatch(setAccessToken(null))
       dispatch(setUser(null))
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return error
     }
   }
@@ -103,17 +104,17 @@ export function register(credentials) {
         dispatch(setUser(result.user))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
 }
 
 export function addGithubToken(token, body) {
-  return async () => {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -124,17 +125,17 @@ export function addGithubToken(token, body) {
       if (result) {
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
 }
 
 export function addTravisToken(token, body) {
-  return async () => {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -145,17 +146,17 @@ export function addTravisToken(token, body) {
       if (result) {
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
 }
 
 export function checkGithubToken(token) {
-  return async () => {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -165,17 +166,17 @@ export function checkGithubToken(token) {
       if (result) {
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
 }
 
 export function checkTravisToken(token) {
-  return async () => {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -185,17 +186,17 @@ export function checkTravisToken(token) {
       if (result) {
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
 }
 
 export function checkHerokuToken(token) {
-  return async () => {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -205,10 +206,10 @@ export function checkHerokuToken(token) {
       if (result) {
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -216,7 +217,7 @@ export function checkHerokuToken(token) {
 
 
 export function exchangeForGithubToken(token, code, state) {
-  return async () => {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -230,17 +231,17 @@ export function exchangeForGithubToken(token, code, state) {
       if (result) {
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
 }
 
 export function exchangeForHerokuToken(token, code, state) {
-  return async () => {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -254,17 +255,17 @@ export function exchangeForHerokuToken(token, code, state) {
       if (result) {
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
 }
 
 export function deleteGithubToken(token) {
-  return async () => {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -274,17 +275,17 @@ export function deleteGithubToken(token) {
       if (result) {
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
 }
 
 export function deleteTravisToken(token) {
-  return async () => {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -294,17 +295,17 @@ export function deleteTravisToken(token) {
       if (result) {
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
 }
 
 export function deleteHerokuToken(token) {
-  return async () => {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -314,10 +315,10 @@ export function deleteHerokuToken(token) {
       if (result) {
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }

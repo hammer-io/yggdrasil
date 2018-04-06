@@ -22,6 +22,7 @@ import NotFound from './components/misc/PageNotFound'
 import TyrInfo from './containers/TyrInfo'
 import NewProject from './containers/NewProject'
 import config from './utils/config'
+import ErrorSnackbar from './components/misc/ErrorSnackbar'
 
 firebase.initializeApp(config.firebase)
 
@@ -40,6 +41,9 @@ const Root = () => (
           <Switch>
             <Route path={['/home', '/projects', '/projects/new']} component={Menu} />
             <Route path={['/home', '/projects/:id', '/settings', '/tyr']} component={Menu} />
+          </Switch>
+          <Switch>
+            <Route path="/" component={ErrorSnackbar} />
           </Switch>
           <Switch>
             <Route exact path="/" render={() => <Redirect to="/home" />} />

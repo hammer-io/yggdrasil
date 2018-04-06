@@ -21,3 +21,7 @@ export const SET_USER_INVITES = createConstant('SET_USER_INVITES')
 
 // Tools
 export const SET_TOOLS = createConstant('SET_TOOLS')
+
+// Error
+export const SET_ERROR = createConstant('SET_ERROR')
+export const HIDE_ERROR = createConstant('HIDE_ERROR')

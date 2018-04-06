@@ -2,6 +2,7 @@ import download from './../vendor/download'
 import FetchClient from './../utils/fetchClient'
 import actionCreator from './../utils/actionCreator'
 import * as Constants from './../constants'
+import logError from '../utils/error'
 
 export function setUserProjects(projects) {
   return actionCreator(Constants.SET_USER_PROJECTS, { projects })
@@ -41,10 +42,10 @@ export function getUserProjects(token) {
         dispatch(setUserProjects(result))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -62,10 +63,10 @@ export function getIssues(token, id, parameters) {
         dispatch(setIssues(result))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -83,10 +84,10 @@ export function getBuildStatuses(token, id, limit) {
         dispatch(setBuildStatuses(result))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -104,10 +105,10 @@ export function getProjectContributors(token, id) {
         dispatch(setProjectContributors(result))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -123,10 +124,10 @@ export function getProjectOwners(token, id) {
         dispatch(setProjectOwners(result))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -142,10 +143,10 @@ export function getProjects(token) {
         dispatch(setProjects(result))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -161,17 +162,17 @@ export function getProject(token, id) {
         dispatch(setProjects([result]))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
 }
 
 export function getProjectFiles(token, id) {
-  return async () => {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -186,10 +187,10 @@ export function getProjectFiles(token, id) {
         download(result, 'project.zip')
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -207,10 +208,10 @@ export function addContributor(token, info) {
         dispatch(setProjectContributors(result))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -228,10 +229,10 @@ export function addOwner(token, info) {
         dispatch(setProjectOwners(result))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -249,10 +250,10 @@ export function removeContributor(token, info) {
         dispatch(setProjectContributors(result))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -270,10 +271,10 @@ export function removeOwner(token, info) {
         dispatch(setProjectOwners(result))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -292,10 +293,10 @@ export function addProject(token, project) {
         dispatch(setProject(result))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }

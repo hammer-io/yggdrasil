@@ -1,6 +1,7 @@
 import FetchClient from './../utils/fetchClient'
 import actionCreator from './../utils/actionCreator'
 import * as Constants from './../constants'
+import logError from '../utils/error'
 
 export function setUserInvites(invites) {
   return actionCreator(Constants.SET_USER_INVITES, { invites })
@@ -16,10 +17,10 @@ export function getUserInvites(token) {
         dispatch(setUserInvites(result))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -37,10 +38,10 @@ function updateInvite(token, inviteId, action) {
         dispatch(setUserInvites([result]))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
