@@ -54,11 +54,9 @@ class GraphUrls extends React.Component {
     if (!this.state.computed) {
       return <BasicSpinner />
     }
-    const width = Math.min(this.props.windowSize.width - 150, 200)
-    const height = width / 2
     return (
       <div>
-        <PieChart width={width} height={height}>
+        <PieChart width={200} height={200}>
           <Pie dataKey="value" isAnimationActive={false} data={summaryData} cx={100} cy={100} outerRadius={80} fill="#2e839d" label />
           <Tooltip />
         </PieChart>
@@ -79,16 +77,11 @@ class GraphUrls extends React.Component {
 }
 
 GraphUrls.defaultProps = {
-  data: null,
-  windowSize: {
-    height: 0,
-    width: 0
-  }
+  data: null
 }
 
 GraphUrls.propTypes = {
   data: PropTypes.object,
-  windowSize: PropTypes.object
 }
 
 export default GraphUrls

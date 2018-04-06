@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Card, CardText, CardTitle, Paper } from 'material-ui'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
+import Divider from 'material-ui/Divider'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import _ from 'lodash'
 import Theme from '../../../../style/theme'
-import { convertBytesToString } from '../../../utils/stringFormatter'
+
 
 const styles = {
   container: {
@@ -15,14 +16,14 @@ const styles = {
 
 class GraphOsData extends React.PureComponent {
   static renderTooltip(info) {
-    if (info.payload === null || info.payload.length < 1) {
+    if (info.payload === null || info.payload.length < 2) {
       return null
     }
     return (
       <Paper style={{ padding: 10 }}>
         <p>{`${new Date(info.label).toLocaleString()}`}</p>
-        <p>{`Total Memory : ${convertBytesToString(info.payload[0].payload.total)}`}</p>
-        <p>{`Memory Used : ${convertBytesToString(info.payload[0].payload.used)} (${info.payload[0].payload.usedPercent.toFixed(2)}%)`}</p>
+        <p>{`Total Memory : ${info.payload[0].payload.total}`}</p>
+        <p>{`Memory Used : ${info.payload[0].payload.used}`}</p>
       </Paper>
     )
   }
@@ -32,20 +33,19 @@ class GraphOsData extends React.PureComponent {
       time: x.timestamp,
       total: x.totalMemory,
       used: x.memoryUsed * x.totalMemory,
-      usedPercent: x.memoryUsed * 100,
       free: x.freeMemory
     }))
 
-    const width = Math.min(this.props.windowSize.width - 200, 600)
-    const height = width / 2
 
     return (
       <Card style={styles.container}>
         <CardTitle title="Recent Memory Usage" />
         <CardText>
+          <div style={Theme.projectDetails.headerText}>Recent Memory Usage</div>
+          <Divider />
           <LineChart
-            width={width}
-            height={height}
+            width={600}
+            height={300}
             data={data}
             margin={{
               top: 5,
@@ -55,10 +55,12 @@ class GraphOsData extends React.PureComponent {
             }}
           >
             <XAxis ticks={['a']} dataKey="time" type="number" name="Timestamp" domain={['dataMin', 'dataMax']} />
-            <YAxis dataKey="usedPercent" unit="%" />
+            <YAxis hide />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip content={info => GraphOsData.renderTooltip(info)} />
-            <Line type="monotone" dataKey="usedPercent" name="Memory Used" stroke={Theme.colors.primary} dot={false} />
+            <Legend />
+            <Line type="monotone" dataKey="used" name="Memory Used" stroke="#8884d8" dot={false} />
+            <Line type="monotone" dataKey="total" name="Total Memory" stroke="#ff0000" dot={false} />
           </LineChart>
         </CardText>
       </Card>
@@ -67,16 +69,11 @@ class GraphOsData extends React.PureComponent {
 }
 
 GraphOsData.defaultProps = {
-  data: null,
-  windowSize: {
-    height: 0,
-    width: 0
-  }
+  data: null
 }
 
 GraphOsData.propTypes = {
   data: PropTypes.object,
-  windowSize: PropTypes.object
 }
 
 export default GraphOsData

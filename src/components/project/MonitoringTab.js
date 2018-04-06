@@ -33,13 +33,9 @@ class MonitoringTab extends React.Component {
     this.state = {
       heartbeats: {},
       http: {},
-      os: {},
-      width: 0,
-      height: 0
+      os: {}
     }
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
   }
-
   componentDidMount() {
     const { projectId } = this.props
     const projectRef = firebase.database().ref(`projects/${projectId}`)
@@ -61,35 +57,22 @@ class MonitoringTab extends React.Component {
         os: snapshot.val()
       })
     })
-    this.updateWindowDimensions()
-    window.addEventListener('resize', this.updateWindowDimensions)
   }
 
   componentWillUnmount() {
     this.heartbeatRef.off()
     this.httpRef.off()
     this.osRef.off()
-    window.removeEventListener('resize', this.updateWindowDimensions)
   }
-
-  updateWindowDimensions() {
-    this.setState({ width: window.innerWidth, height: window.innerHeight })
-  }
-
 
   render() {
     const { heartbeats, http, os } = this.state
-    const windowSize = {
-      width: this.state.width,
-      height: this.state.height
-    }
     return (
       <div style={styles.container}>
         <Flexbox flexWrap="wrap" justifyContent="center">
           <Flexbox>
             <GraphHeartbeats
               data={heartbeats}
-              windowSize={windowSize}
             />
           </Flexbox>
           <Flexbox>
@@ -106,19 +89,16 @@ class MonitoringTab extends React.Component {
           <Flexbox>
             <GraphOsData
               data={os}
-              windowSize={windowSize}
             />
           </Flexbox>
           <Flexbox>
             <GraphHttpRequests
               data={http}
-              windowSize={windowSize}
             />
           </Flexbox>
           <Flexbox>
             <GraphUrls
               data={http}
-              windowSize={windowSize}
             />
           </Flexbox>
         </Flexbox>
