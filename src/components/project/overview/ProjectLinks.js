@@ -21,6 +21,7 @@ class ProjectLinks extends React.PureComponent {
     if (display) {
       return (
         <ListItem
+          target="_blank"
           href={url}
           primaryText={text}
           style={styles.listItem}
