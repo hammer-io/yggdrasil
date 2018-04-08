@@ -72,12 +72,22 @@ export function login(credentials) {
   }
 }
 
-export function logout() {
+export function logout(token) {
   return async (dispatch) => {
     try {
-      await firebase.auth().signOut()
-      dispatch(setAccessToken(null))
-      dispatch(setUser(null))
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { result, error } = await fetchClient.delete({
+        url: '/auth/logout'
+      })
+      if (result) {
+        dispatch(setAccessToken(null))
+        dispatch(setUser(null))
+        await firebase.auth().signOut()
+      }
+
+      console.error(error)
+      return { result: null, error }
     } catch (error) {
       console.error(error)
       return error
