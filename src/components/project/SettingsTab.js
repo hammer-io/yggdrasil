@@ -4,6 +4,7 @@ import Flexbox from 'flexbox-react'
 import PropTypes from 'prop-types'
 import Theme from '../../../style/theme'
 import APIKey from './settings/APIKey'
+import ManageProject from './settings/ManageProject'
 
 const styles = {
   container: {
@@ -21,6 +22,7 @@ class SettingsTab extends Component {
       <div style={styles.container}>
         <Flexbox flexWrap="wrap">
           <APIKey apiKey={this.props.project.komaApiKey} />
+          <ManageProject project={this.props.project} />
         </Flexbox>
       </div>
     )

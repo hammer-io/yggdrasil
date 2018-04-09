@@ -154,6 +154,7 @@ export function getProjects(token) {
 export function getProject(token, id) {
   return async (dispatch) => {
     try {
+      console.log('getting project')
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
       const { result, error } = await fetchClient.get({ url: `/projects/${id}` })
@@ -166,6 +167,27 @@ export function getProject(token, id) {
     } catch (error) {
       console.error(error)
       return { result: null, error }
+    }
+  }
+}
+
+export function deleteProject(token, id) {
+  return async () => {
+    console.log('trying....')
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { error } = await fetchClient.delete({ url: `/projects/${id}` })
+      if (error == null) {
+        console.log('success')
+        return { error: null }
+      }
+
+      console.error(error)
+      return { error }
+    } catch (error) {
+      console.error(error)
+      return { error }
     }
   }
 }
