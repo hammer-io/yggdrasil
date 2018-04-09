@@ -153,7 +153,7 @@ class MembersTab extends Component {
 
   renderMember(info, owner) {
     let name
-    if (info.firstName === null || info.astName === null) {
+    if (info.firstName === null || info.lastName === null) {
       name = info.email
     } else {
       name = `${info.firstName} ${info.lastName}`
@@ -176,9 +176,17 @@ class MembersTab extends Component {
       return
     }
     if (owner) {
+      const isLastOwner = _.values(this.props.projectMembers.owners.byId).length <= 1
+
+
       return (
         <IconMenu iconButtonElement={iconButtonElement}>
-          <MenuItem onClick={() => this.removeMember(id, true)}>Remove</MenuItem>
+          <MenuItem
+            disabled={isLastOwner}
+            onClick={() => this.removeMember(id, true)}
+          >
+              Remove
+          </MenuItem>
         </IconMenu>
       )
     }
