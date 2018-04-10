@@ -3,6 +3,7 @@ import { withRouter, NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { TextField, RaisedButton, Paper } from 'material-ui'
 import PropTypes from 'prop-types'
+import DocumentTitle from 'react-document-title'
 import Theme from '../../style/theme'
 import { login, setPreviousRoute } from '../actions/session'
 import * as validator from './../utils/validator'
@@ -115,32 +116,34 @@ class Login extends Component {
 
   render() {
     return (
-      <form style={styles.container} onSubmit={this.submitForm}>
-        <Paper style={styles.form}>
-          <h4>Sign in to Hammer-io</h4>
-          <TextField
-            hintText="Username"
-            floatingLabelText="Username"
-            errorText={this.state.usernameErrorText}
-            onChange={this.usernameOnChange}
-          />
-          <TextField
-            type="password"
-            hintText="Password"
-            floatingLabelText="Password"
-            errorText={this.state.passwordErrorText}
-            onChange={this.passwordOnChange}
-          />
-          <RaisedButton
-            label="Sign in"
-            primary
-            type="submit"
-            onClick={this.submitForm}
-            style={styles.button}
-          />
-          <NavLink to="/register">Not a user?</NavLink>
-        </Paper>
-      </form>
+      <DocumentTitle title="Login">
+        <form style={styles.container} onSubmit={this.submitForm}>
+          <Paper style={styles.form}>
+            <h4>Sign in to Hammer-io</h4>
+            <TextField
+              hintText="Username"
+              floatingLabelText="Username"
+              errorText={this.state.usernameErrorText}
+              onChange={this.usernameOnChange}
+            />
+            <TextField
+              type="password"
+              hintText="Password"
+              floatingLabelText="Password"
+              errorText={this.state.passwordErrorText}
+              onChange={this.passwordOnChange}
+            />
+            <RaisedButton
+              label="Sign in"
+              primary
+              type="submit"
+              onClick={this.submitForm}
+              style={styles.button}
+            />
+            <NavLink to="/register">Not a user?</NavLink>
+          </Paper>
+        </form>
+      </DocumentTitle>
     )
   }
 }

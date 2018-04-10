@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import _ from 'lodash'
 import PropTypes from 'prop-types'
+import DocumentTitle from 'react-document-title'
 import {
   Step,
   Stepper,
@@ -619,60 +620,62 @@ class NewProject extends Component {
 
   render() {
     return (
-      <div style={styles.container}>
-        <Paper zDepth={1} rounded={false} style={styles.stepWrapper}>
-          <Paper zDepth={1} style={styles.stepHeader}>
-            <Stepper activeStep={this.state.stepIndex}>
-              <Step>
-                <StepLabel>Project information</StepLabel>
-              </Step>
-              <Step>
-                <StepLabel>Source control and continuous integration</StepLabel>
-              </Step>
-              <Step>
-                <StepLabel>Containerization and deployment</StepLabel>
-              </Step>
-              <Step>
-                <StepLabel>Frameworks</StepLabel>
-              </Step>
-            </Stepper>
+      <DocumentTitle title="New Project">
+        <div style={styles.container}>
+          <Paper zDepth={1} rounded={false} style={styles.stepWrapper}>
+            <Paper zDepth={1} style={styles.stepHeader}>
+              <Stepper activeStep={this.state.stepIndex}>
+                <Step>
+                  <StepLabel>Project information</StepLabel>
+                </Step>
+                <Step>
+                  <StepLabel>Source control and continuous integration</StepLabel>
+                </Step>
+                <Step>
+                  <StepLabel>Containerization and deployment</StepLabel>
+                </Step>
+                <Step>
+                  <StepLabel>Frameworks</StepLabel>
+                </Step>
+              </Stepper>
+            </Paper>
+            <div style={styles.stepContent}>
+              {
+                this.getStepContent()
+              }
+            </div>
+            <div style={styles.buttonWrapper}>
+              <FlatButton
+                label="Back"
+                style={{ margin: '5px' }}
+                onClick={this.clickBack}
+                disabled={this.state.backDisabled}
+              />
+              {
+                this.state.stepIndex === 3 ?
+                  <RaisedButton
+                    label="Create"
+                    primary
+                    style={{ margin: '5px' }}
+                    onClick={this.clickCreate}
+                  /> :
+                  <RaisedButton
+                    label="Next"
+                    primary
+                    style={{ margin: '5px' }}
+                    onClick={this.clickNext}
+                  />
+              }
+            </div>
           </Paper>
-          <div style={styles.stepContent}>
-            {
-              this.getStepContent()
-            }
-          </div>
-          <div style={styles.buttonWrapper}>
-            <FlatButton
-              label="Back"
-              style={{ margin: '5px' }}
-              onClick={this.clickBack}
-              disabled={this.state.backDisabled}
-            />
-            {
-              this.state.stepIndex === 3 ?
-                <RaisedButton
-                  label="Create"
-                  primary
-                  style={{ margin: '5px' }}
-                  onClick={this.clickCreate}
-                /> :
-                <RaisedButton
-                  label="Next"
-                  primary
-                  style={{ margin: '5px' }}
-                  onClick={this.clickNext}
-                />
-            }
-          </div>
-        </Paper>
-        <Dialog
-          onCancel={this.dialogClose}
-          onContinue={this.dialogClose}
-          open={this.state.dialogOpen}
-          text={this.state.dialogErrorText}
-        />
-      </div>
+          <Dialog
+            onCancel={this.dialogClose}
+            onContinue={this.dialogClose}
+            open={this.state.dialogOpen}
+            text={this.state.dialogErrorText}
+          />
+        </div>
+      </DocumentTitle>
     )
   }
 }

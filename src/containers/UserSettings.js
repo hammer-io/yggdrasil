@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 import { Tab, Tabs } from 'material-ui'
 import PropTypes from 'prop-types'
+import DocumentTitle from 'react-document-title'
 
 import AccountSettings from '../components/user-settings-tabs/AccountSettings'
 import InvitesSettings from '../components/user-settings-tabs/InvitesSettings'
@@ -65,6 +66,21 @@ class UserSettings extends Component {
     await updateUser(session.authToken, session.user.id, newUser)
   }
 
+  getDocumentTitle() {
+    switch (this.state.value) {
+      case 'profile':
+        return 'Your Profile'
+      case 'invites':
+        return 'Project Invites'
+      case 'accounts':
+        return 'Linked Accounts'
+      case 'notification':
+        return 'Notification Settings'
+      default:
+        return this.state.value
+    }
+  }
+
   handleChange = (value) => {
     this.setState({
       value
@@ -73,34 +89,36 @@ class UserSettings extends Component {
 
   render() {
     return (
-      <PageWrap title="Settings">
-        <div>
-          <Tabs
-            value={this.state.value}
-            onChange={this.handleChange}
-          >
-            <Tab label="Profile" value="profile" containerElement={<Link to="/settings/profile" />}>
-              <ProfileSettings
-                user={this.props.session.user}
-                onSaveProfileSettings={this.onSaveProfileSettings}
-              />
-            </Tab>
-            <Tab label="Invites" value="invites" containerElement={<Link to="/settings/invites" />}>
-              <InvitesSettings
-                invites={this.props.invites}
-                onAcceptInvite={this.onAcceptInvite}
-                onDeclineInvite={this.onDeclineInvite}
-              />
-            </Tab>
-            <Tab label="Accounts" value="accounts" containerElement={<Link to="/settings/accounts" />}>
-              <AccountSettings />
-            </Tab>
-            <Tab label="Notification" value="notification" containerElement={<Link to="/settings/notification" />}>
-              <NotificationSettings />
-            </Tab>
-          </Tabs>
-        </div>
-      </PageWrap>
+      <DocumentTitle title={this.getDocumentTitle()}>
+        <PageWrap>
+          <div>
+            <Tabs
+              value={this.state.value}
+              onChange={this.handleChange}
+            >
+              <Tab label="Profile" value="profile" containerElement={<Link to="/settings/profile" />}>
+                <ProfileSettings
+                  user={this.props.session.user}
+                  onSaveProfileSettings={this.onSaveProfileSettings}
+                />
+              </Tab>
+              <Tab label="Invites" value="invites" containerElement={<Link to="/settings/invites" />}>
+                <InvitesSettings
+                  invites={this.props.invites}
+                  onAcceptInvite={this.onAcceptInvite}
+                  onDeclineInvite={this.onDeclineInvite}
+                />
+              </Tab>
+              <Tab label="Accounts" value="accounts" containerElement={<Link to="/settings/accounts" />}>
+                <AccountSettings />
+              </Tab>
+              <Tab label="Notification" value="notification" containerElement={<Link to="/settings/notification" />}>
+                <NotificationSettings />
+              </Tab>
+            </Tabs>
+          </div>
+        </PageWrap>
+      </DocumentTitle>
     )
   }
 }

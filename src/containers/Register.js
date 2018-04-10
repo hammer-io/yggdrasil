@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import RaisedButton from 'material-ui/RaisedButton'
 import { TextField, Paper } from 'material-ui'
+import DocumentTitle from 'react-document-title'
 import { register } from './../actions/session'
 import * as validator from './../utils/validator'
 import Theme from './../../style/theme'
@@ -120,38 +121,40 @@ class Register extends Component {
 
   render() {
     return (
-      <form style={styles.container} onSubmit={this.submitForm}>
-        <Paper style={styles.form}>
-          <h4>Create an account</h4>
-          <TextField
-            hintText="Email"
-            floatingLabelText="Email"
-            errorText={this.state.emailErrorText}
-            onChange={this.emailOnChange}
-          />
-          <TextField
-            hintText="Username"
-            floatingLabelText="Username"
-            errorText={this.state.usernameErrorText}
-            onChange={this.usernameOnChange}
-          />
-          <TextField
-            type="password"
-            hintText="Password"
-            floatingLabelText="Password"
-            errorText={this.state.passwordErrorText}
-            onChange={this.passwordOnChange}
-          />
-          <RaisedButton
-            label="Register"
-            primary
-            type="submit"
-            onClick={this.submitForm}
-            style={styles.button}
-          />
-          <NavLink to="/login">Already a user?</NavLink>
-        </Paper>
-      </form>
+      <DocumentTitle title="Register">
+        <form style={styles.container} onSubmit={this.submitForm}>
+          <Paper style={styles.form}>
+            <h4>Create an account</h4>
+            <TextField
+              hintText="Email"
+              floatingLabelText="Email"
+              errorText={this.state.emailErrorText}
+              onChange={this.emailOnChange}
+            />
+            <TextField
+              hintText="Username"
+              floatingLabelText="Username"
+              errorText={this.state.usernameErrorText}
+              onChange={this.usernameOnChange}
+            />
+            <TextField
+              type="password"
+              hintText="Password"
+              floatingLabelText="Password"
+              errorText={this.state.passwordErrorText}
+              onChange={this.passwordOnChange}
+            />
+            <RaisedButton
+              label="Register"
+              primary
+              type="submit"
+              onClick={this.submitForm}
+              style={styles.button}
+            />
+            <NavLink to="/login">Already a user?</NavLink>
+          </Paper>
+        </form>
+      </DocumentTitle>
     )
   }
 }
