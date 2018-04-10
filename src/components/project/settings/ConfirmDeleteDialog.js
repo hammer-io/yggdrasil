@@ -39,7 +39,6 @@ class ConfirmDeleteDialog extends React.Component {
     const { error } =
       await this.props.deleteProject(this.props.session.authToken, this.props.project.id)
     if (error == null) {
-      console.log('success')
       this.props.history.push('/home')
     }
 
