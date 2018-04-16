@@ -171,6 +171,25 @@ export function getProject(token, id) {
   }
 }
 
+export function deleteProject(token, id) {
+  return async () => {
+    try {
+      const fetchClient = new FetchClient()
+      fetchClient.setAuthToken(token)
+      const { error } = await fetchClient.delete({ url: `/projects/${id}` })
+      if (error == null) {
+        return { error: null }
+      }
+
+      console.error(error)
+      return { error }
+    } catch (error) {
+      console.error(error)
+      return { error }
+    }
+  }
+}
+
 export function getProjectFiles(token, id) {
   return async (dispatch) => {
     try {

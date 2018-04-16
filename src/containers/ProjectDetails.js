@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Tabs, Tab } from 'material-ui/Tabs'
 import _ from 'lodash'
+import DocumentTitle from 'react-document-title'
 import { getProject } from '../actions/project'
 import BreadcrumbNav from '../components/misc/BreadcrumbNav'
 import ProjectHeader from '../components/project/ProjectHeader'
@@ -76,6 +77,23 @@ class ProjectDetails extends React.Component {
     await getProject(session.authToken, params.id)
   }
 
+  getDocumentTitle(projectName) {
+    let prefix = ''
+    switch (this.state.tabValue) {
+      case 'monitoring':
+        prefix = 'Monitoring · '
+        break
+      case 'members':
+        prefix = 'Members · '
+        break
+      case 'settings':
+        prefix = 'Settings · '
+        break
+      default:
+    }
+    return `${prefix}${projectName}`
+  }
+
   handleTabChange = (tabValue) => {
     this.setState({
       tabValue
@@ -113,34 +131,36 @@ class ProjectDetails extends React.Component {
     const breadcrumb = getBreadcrumbData(project)
 
     return (
-      <div>
-        <div style={styles.breadcrumbContainer}>
-          <div style={styles.breadcrumbContained}>
-            <BreadcrumbNav
-              items={breadcrumb.items}
-              keyPrefix={breadcrumb.prefix}
-              onClick={this.handleBreadcrumbClick}
-            />
+      <DocumentTitle title={this.getDocumentTitle(project.projectName)}>
+        <div>
+          <div style={styles.breadcrumbContainer}>
+            <div style={styles.breadcrumbContained}>
+              <BreadcrumbNav
+                items={breadcrumb.items}
+                keyPrefix={breadcrumb.prefix}
+                onClick={this.handleBreadcrumbClick}
+              />
+            </div>
           </div>
+          <PageWrap>
+            <ProjectHeader {...projectDetails} />
+            <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
+              <Tab label="Overview" value="overview" containerElement={<Link to={url.overview} />}>
+                <OverviewTab project={project} />
+              </Tab>
+              <Tab label="Monitoring" value="monitoring" containerElement={<Link to={url.monitoring} />}>
+                <MonitoringTab projectId={params.id} />
+              </Tab>
+              <Tab label="Members" value="members" containerElement={<Link to={url.members} />}>
+                <MembersTab projectId={params.id} />
+              </Tab>
+              <Tab label="Settings" value="settings" containerElement={<Link to={url.settings} />}>
+                <SettingsTab project={project} />
+              </Tab>
+            </Tabs>
+          </PageWrap>
         </div>
-        <PageWrap>
-          <ProjectHeader {...projectDetails} />
-          <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
-            <Tab label="Overview" value="overview" containerElement={<Link to={url.overview} />}>
-              <OverviewTab project={project} />
-            </Tab>
-            <Tab label="Monitoring" value="monitoring" containerElement={<Link to={url.monitoring} />}>
-              <MonitoringTab projectId={params.id} />
-            </Tab>
-            <Tab label="Members" value="members" containerElement={<Link to={url.members} />}>
-              <MembersTab projectId={params.id} />
-            </Tab>
-            <Tab label="Settings" value="settings" containerElement={<Link to={url.settings} />}>
-              <SettingsTab project={project} />
-            </Tab>
-          </Tabs>
-        </PageWrap>
-      </div>
+      </DocumentTitle>
     )
   }
 }

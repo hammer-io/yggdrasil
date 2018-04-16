@@ -31,7 +31,7 @@ const theme = {
     alternateTextColor: Colors.white,
     canvasColor: Colors.neutlight_u4,
     borderColor: Colors.neutlight,
-    disabledColor: Colors.darkBlack,
+    disabledColor: Colors.neutdark_u3,
     pickerHeaderColor: Colors.primary_u1,
     clockCircleColor: Colors.darkBlack,
     shadowColor: Colors.fullBlack,

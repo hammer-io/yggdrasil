@@ -65,6 +65,7 @@ class ProjectBuilds extends Component {
     const title = `Build #${info.buildNumber} ${info.state}`
     return (
       <ListItem
+        target="_blank"
         href={info.url}
         primaryText={title}
         secondaryText={
@@ -104,6 +105,7 @@ class ProjectBuilds extends Component {
 
     const seeMoreItem = (
       <ListItem
+        target="_blank"
         href={`https://travis-ci.org/${this.props.travisUrl}/builds`}
         primaryText="See more..."
         leftIcon={ProjectBuilds.getIssueIcon('SeeMore')}
@@ -111,6 +113,7 @@ class ProjectBuilds extends Component {
 
     const noBuilds = (
       <ListItem
+        target="_blank"
         href={`https://travis-ci.org/${this.props.travisUrl}/builds`}
         primaryText="No builds for this repository"
         leftIcon={ProjectBuilds.getIssueIcon('SeeMore')}

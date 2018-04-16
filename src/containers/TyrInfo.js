@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { Divider, RaisedButton } from 'material-ui'
+import DocumentTitle from 'react-document-title'
 import Theme from '../../style/theme'
 import PageWrap from '../components/misc/PageWrap'
 import BasicSpinner from '../components/misc/BasicSpinner'
@@ -65,19 +66,21 @@ class TyrInfo extends Component {
 
   render() {
     return (
-      <PageWrap title="Tyr - The HammerIO Command Line Tool">
-        <div style={styles.container}>
-          <RaisedButton
-            label="Visit the GitHub Repository"
-            secondary
-            onClick={onClickVisitGitHub}
-            icon={<GithubLogo style={styles.icon} height="24px" width="24px" />}
-            style={styles.button}
-          />
-          <Divider />
-          {this.renderContent()}
-        </div>
-      </PageWrap>
+      <DocumentTitle title="Tyr · Hammer-io">
+        <PageWrap title="Tyr - The HammerIO Command Line Tool">
+          <div style={styles.container}>
+            <RaisedButton
+              label="Visit the GitHub Repository"
+              secondary
+              onClick={onClickVisitGitHub}
+              icon={<GithubLogo style={styles.icon} height="24px" width="24px" />}
+              style={styles.button}
+            />
+            <Divider />
+            {this.renderContent()}
+          </div>
+        </PageWrap>
+      </DocumentTitle>
     )
   }
 }

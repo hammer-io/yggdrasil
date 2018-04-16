@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import * as firebase from 'firebase'
 import _ from 'lodash'
+import DocumentTitle from 'react-document-title'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import theme from '../style/theme'
@@ -35,6 +36,7 @@ store.subscribe(_.throttle(() => {
 
 const Root = () => (
   <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
+    <DocumentTitle title="Hammer-io">
     <Provider store={store}>
       <Router>
         <App>
@@ -63,6 +65,7 @@ const Root = () => (
         </App>
       </Router>
     </Provider>
+    </DocumentTitle>
   </MuiThemeProvider>
 )
 

@@ -103,6 +103,7 @@ class ProjectIssues extends Component {
 
     const seeMoreItem = (
       <ListItem
+        target="_blank"
         href={`https://github.com/${this.props.githubUrl}/issues`}
         primaryText="See more..."
         leftIcon={ProjectIssues.getIssueIcon('SeeMore')}
@@ -110,6 +111,7 @@ class ProjectIssues extends Component {
 
     const noIssues = (
       <ListItem
+        target="_blank"
         href={`https://github.com/${this.props.githubUrl}/issues`}
         primaryText="No issues in this repository"
         secondaryText="Click here to create your first issue"
