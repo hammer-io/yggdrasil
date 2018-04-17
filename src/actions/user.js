@@ -2,13 +2,14 @@
 import FetchClient from '../utils/fetchClient'
 import actionCreator from '../utils/actionCreator'
 import * as Constants from '../constants'
+import logError from '../utils/error'
 
 export function setUser(user) {
   return actionCreator(Constants.SET_USER, { user })
 }
 
 export function getUser(token, user) {
-  return async () => {
+  return async (dispatch) => {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
@@ -18,10 +19,10 @@ export function getUser(token, user) {
       if (result) {
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
@@ -40,10 +41,10 @@ export function updateUser(token, userId, user) {
         dispatch(setUser(result))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }

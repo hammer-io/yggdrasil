@@ -1,6 +1,7 @@
 import FetchClient from '../utils/fetchClient'
 import * as Constants from '../constants'
 import actionCreator from '../utils/actionCreator'
+import logError from '../utils/error'
 
 export function setTools(tools) {
   return actionCreator(Constants.SET_TOOLS, { tools })
@@ -16,10 +17,10 @@ export function getTools(token) {
         dispatch(setTools(result))
         return { result, error }
       }
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     } catch (error) {
-      console.error(error)
+      logError(dispatch, error)
       return { result: null, error }
     }
   }
