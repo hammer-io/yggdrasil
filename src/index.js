@@ -37,34 +37,34 @@ store.subscribe(_.throttle(() => {
 const Root = () => (
   <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
     <DocumentTitle title="Hammer-io">
-    <Provider store={store}>
-      <Router>
-        <App>
-          <Switch>
-            <Route path={['/home', '/projects', '/projects/new']} component={Menu} />
-            <Route path={['/home', '/projects/:id', '/settings', '/tyr']} component={Menu} />
-          </Switch>
-          <Switch>
-            <Route path="/" component={ErrorSnackbar} />
-          </Switch>
-          <Switch>
-            <Route exact path="/" render={() => <Redirect to="/home" />} />
-            <Route exact path="/home" component={Home} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/projects/new" component={NewProject} />
-            <Route exact path="/projects/:id/:tabValue" component={ProjectDetails} />
-            <Route exact path="/projects/:id" component={ProjectDetails} />
-            <Route exact path="/settings/:tabValue" component={UserSettings} />
-            <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
-            <Route exact path="/githubAuth" component={GithubRedirect} />
-            <Route exact path="/herokuAuth" component={HerokuRedirect} />
-            <Route exact path="/tyr" component={TyrInfo} />
-            <Route component={NotFound} />
-          </Switch>
-        </App>
-      </Router>
-    </Provider>
+      <Provider store={store}>
+        <Router>
+          <App>
+            <Switch>
+              <Route path={['/home', '/projects', '/projects/new']} component={Menu} />
+              <Route path={['/home', '/projects/:id', '/settings', '/tyr']} component={Menu} />
+            </Switch>
+            <Switch>
+              <Route path="/" component={ErrorSnackbar} />
+            </Switch>
+            <Switch>
+              <Route exact path="/" render={() => <Redirect to="/home" />} />
+              <Route exact path="/home" component={Home} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/register" component={Register} />
+              <Route exact path="/projects/new" component={NewProject} />
+              <Route exact path="/projects/:id/:tabValue" component={ProjectDetails} />
+              <Route exact path="/projects/:id" component={ProjectDetails} />
+              <Route exact path="/settings/:tabValue" component={UserSettings} />
+              <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
+              <Route exact path="/githubAuth" component={GithubRedirect} />
+              <Route exact path="/herokuAuth" component={HerokuRedirect} />
+              <Route exact path="/tyr" component={TyrInfo} />
+              <Route component={NotFound} />
+            </Switch>
+          </App>
+        </Router>
+      </Provider>
     </DocumentTitle>
   </MuiThemeProvider>
 )
