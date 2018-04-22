@@ -3,12 +3,16 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
+import { AutoRotatingCarousel, Slide } from 'material-auto-rotating-carousel'
 import { getProjects, getUserProjects } from '../actions/project'
 import Theme from '../../style/theme'
 import BasicSpinner from '../components/misc/BasicSpinner'
 import ProjectList from '../components/home/ProjectList'
 import FloatingActionButton from '../components/misc/FloatingActionButton'
 import FeatureDiscovery from '../components/home/feature-discovery'
+import WrenchIcon from './../assets/icons/wrench.png'
+import LaptopIcon from './../assets/icons/laptop.png'
+import StartupIcon from './../assets/icons/startup.png'
 
 const styles = {
   container: {
@@ -36,17 +40,30 @@ class Home extends Component {
     super(props)
 
     this.state = {
-      open: false
+      open: false,
+      carousel: false
     }
+
     this.viewProject = this.viewProject.bind(this)
     this.newProject = this.newProject.bind(this)
     this.closeFeatureDiscovery = this.closeFeatureDiscovery.bind(this)
+    this.closeCarousel = this.closeCarousel.bind(this)
   }
 
   async componentDidMount() {
     const { session, getProjects, getUserProjects } = this.props
     await getProjects(session.authToken)
     const { result: userProjects } = await getUserProjects(session.authToken)
+
+    // Could probably be done before fetching user projects
+    // Assuming that if users comes in from the register page
+    // they have no projects for sure
+    if (session.previousRoute === '/register') {
+      // eslint-disable-next-line react/no-did-mount-set-state
+      this.setState({ carousel: true })
+      return
+    }
+
     if (!userProjects.contributed.length && !userProjects.owned.length) {
       // eslint-disable-next-line react/no-did-mount-set-state
       this.setState({ open: true })
@@ -63,6 +80,13 @@ class Home extends Component {
 
   closeFeatureDiscovery() {
     this.setState({ open: false })
+  }
+
+  closeCarousel() {
+    this.setState({
+      carousel: false,
+      open: true
+    })
   }
 
   renderProjects() {
@@ -100,6 +124,34 @@ class Home extends Component {
         >
           <FloatingActionButton onClick={this.newProject} />
         </FeatureDiscovery>
+        <AutoRotatingCarousel
+          label="Get started"
+          open={this.state.carousel}
+          style={{ position: 'absolute' }}
+          onStart={this.closeCarousel}
+        >
+          <Slide
+            media={<img src={WrenchIcon} alt="build" />}
+            mediaBackgroundStyle={{ backgroundColor: Theme.colors.accent_u2 }}
+            contentStyle={{ backgroundColor: Theme.colors.accent }}
+            title="Build"
+            subtitle="Build microservice applications with ease"
+          />
+          <Slide
+            media={<img src={StartupIcon} alt="deploy" />}
+            mediaBackgroundStyle={{ backgroundColor: Theme.colors.cyan600 }}
+            contentStyle={{ backgroundColor: Theme.colors.cyan300 }}
+            title="Deploy"
+            subtitle="Deploy applications to the cloud instantly"
+          />
+          <Slide
+            media={<img src={LaptopIcon} alt="monitor" />}
+            mediaBackgroundStyle={{ backgroundColor: Theme.colors.primary_u2 }}
+            contentStyle={{ backgroundColor: Theme.colors.primary }}
+            title="Monitor"
+            subtitle="Easily monitor and maintain deployed applications"
+          />
+        </AutoRotatingCarousel>
       </div>
     )
   }
