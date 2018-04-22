@@ -6,9 +6,9 @@ import ContentAdd from 'material-ui/svg-icons/content/add'
 const styles = {
   button: {
     position: 'fixed',
-    right: '2.5%',
+    right: '50px',
     bottom: '5%',
-    zIndex: 1
+    zIndex: 2
   }
 }
 
