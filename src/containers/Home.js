@@ -7,8 +7,8 @@ import { getProjects, getUserProjects } from '../actions/project'
 import Theme from '../../style/theme'
 import BasicSpinner from '../components/misc/BasicSpinner'
 import ProjectList from '../components/home/ProjectList'
-import ProjectsNotFound from '../components/home/ProjectsNotFound'
 import FloatingActionButton from '../components/misc/FloatingActionButton'
+import FeatureDiscovery from '../components/home/feature-discovery'
 
 const styles = {
   container: {
@@ -35,14 +35,22 @@ class Home extends Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      open: false
+    }
     this.viewProject = this.viewProject.bind(this)
     this.newProject = this.newProject.bind(this)
+    this.closeFeatureDiscovery = this.closeFeatureDiscovery.bind(this)
   }
 
   async componentDidMount() {
     const { session, getProjects, getUserProjects } = this.props
     await getProjects(session.authToken)
-    await getUserProjects(session.authToken)
+    const { result: userProjects } = await getUserProjects(session.authToken)
+    if (!userProjects.contributed.length && !userProjects.owned.length) {
+      // eslint-disable-next-line react/no-did-mount-set-state
+      this.setState({ open: true })
+    }
   }
 
   viewProject(projectId) {
@@ -51,6 +59,10 @@ class Home extends Component {
 
   newProject() {
     this.props.history.push('/projects/new')
+  }
+
+  closeFeatureDiscovery() {
+    this.setState({ open: false })
   }
 
   renderProjects() {
@@ -66,7 +78,7 @@ class Home extends Component {
           </div>
         )
       }
-      return <ProjectsNotFound />
+      return null
     }
     return (
       <BasicSpinner />
@@ -79,7 +91,15 @@ class Home extends Component {
         {
           this.renderProjects()
         }
-        <FloatingActionButton onClick={this.newProject} />
+        <FeatureDiscovery
+          open={this.state.open}
+          title="Create a new project"
+          text="Click the button to create a new project and get started"
+          onClose={this.closeFeatureDiscovery}
+          backgroundColor={Theme.colors.primary}
+        >
+          <FloatingActionButton onClick={this.newProject} />
+        </FeatureDiscovery>
       </div>
     )
   }
