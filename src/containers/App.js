@@ -40,6 +40,7 @@ class App extends Component {
     }
 
     if (loggedIn && (location.pathname === '/login' || location.pathname === '/register')) {
+      setPreviousRoute(location.pathname)
       history.replace('/home')
     } else if (!loggedIn && location.pathname !== '/login' && location.pathname !== '/register') {
       setPreviousRoute(location.pathname)
