@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import RaisedButton from 'material-ui/RaisedButton'
 import { TextField, Paper } from 'material-ui'
 import DocumentTitle from 'react-document-title'
-import { register } from './../actions/session'
+import { setPreviousRoute, register } from './../actions/session'
 import * as validator from './../utils/validator'
 import Theme from './../../style/theme'
 
@@ -31,7 +31,8 @@ const styles = {
 }
 
 const mapDispatchToProps = {
-  register
+  register,
+  setPreviousRoute
 }
 
 class Register extends Component {
@@ -59,7 +60,7 @@ class Register extends Component {
     event.stopPropagation()
 
     const { username, password, email } = this.state
-    const { history, register } = this.props
+    const { history, register, setPreviousRoute } = this.props
 
     const validEmail = validator.validateEmail(email)
     if (typeof validEmail === 'string') {
@@ -86,6 +87,8 @@ class Register extends Component {
     }
     const { result, error } = await register(credentials)
     if (result) {
+      console.log('Here')
+      setPreviousRoute('/register')
       history.push('/home')
     } else {
       if (error.error.type === 'Invalid Request') {

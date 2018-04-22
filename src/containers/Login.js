@@ -96,10 +96,11 @@ class Login extends Component {
       return
     }
 
-    if (history.action === 'PUSH' && (session.previousRoute !== null)) {
-      setPreviousRoute(null)
+    if (history.action === 'PUSH' && (session.previousRoute !== '/register')) {
+      setPreviousRoute('/login')
       history.goBack()
     } else {
+      setPreviousRoute('/login')
       history.push('/home')
     }
   }
