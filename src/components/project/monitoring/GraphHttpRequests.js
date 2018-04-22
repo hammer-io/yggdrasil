@@ -43,24 +43,26 @@ class GraphHttpRequests extends React.PureComponent {
         red.push(x)
       }
     })
+    const width = Math.min(this.props.windowSize.width - 150, 400)
+    const height = width
 
     return (
       <Card style={styles.container}>
         <CardTitle title="Recent Http Requests" />
         <CardText>
           <ScatterChart
-            width={400}
-            height={400}
+            width={width}
+            height={height}
             margin={{
                 top: 20, right: 20, bottom: 20, left: 20
               }}
           >
             <XAxis ticks={['a']} dataKey="timestamp" type="number" name="Timestamp" domain={['dataMin', 'dataMax']} />
-            <YAxis dataKey="responseTime" type="number" name="responseTime" unit="ms" />
+            <YAxis dataKey="responseTime" type="number" name="responseTime" unit="ms" label={{ value: 'Response Time', angle: -90, position: 'insideLeft' }} />
             <ZAxis dataKey="requestSize" range={[60, 400]} name="requestSize" />
-            <Scatter name="2xx,3xx" data={green} fill="#1fe500" />
-            <Scatter name="4xx" data={yellow} fill="#e9e709" />
-            <Scatter name="5xx" data={red} fill="#d70000" />
+            <Scatter name="2xx,3xx" data={green} fill={Theme.colors.green500} />
+            <Scatter name="4xx" data={yellow} fill={Theme.colors.yellow500} />
+            <Scatter name="5xx" data={red} fill={Theme.colors.red500} />
             <Legend />
             <Tooltip content={info => GraphHttpRequests.renderTooltip(info)} />
           </ScatterChart>
@@ -71,11 +73,16 @@ class GraphHttpRequests extends React.PureComponent {
 }
 
 GraphHttpRequests.defaultProps = {
-  data: null
+  data: null,
+  windowSize: {
+    height: 0,
+    width: 0
+  }
 }
 
 GraphHttpRequests.propTypes = {
   data: PropTypes.object,
+  windowSize: PropTypes.object
 }
 
 export default GraphHttpRequests
