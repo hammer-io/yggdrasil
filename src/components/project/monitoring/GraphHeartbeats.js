@@ -98,6 +98,7 @@ class GraphHeartbeats extends React.Component {
         ...newState
       }
     }
+    return null
   }
 
   constructor(props) {
@@ -134,6 +135,7 @@ class GraphHeartbeats extends React.Component {
               {
                 summaryData.map((entry, index) => (
                   <Cell
+                    key={`GraphHeartbeat.${entry.id}`}
                     cursor="pointer"
                     stroke={index === activeIndex ? Theme.colors.black : ''}
                     strokeWidth={3}
