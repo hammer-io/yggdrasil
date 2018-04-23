@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --open --config webpack.dev.js",
-    "build": "node ./node_modules/webpack/bin/webpack.js --config webpack.prod.js && cp index.* build/",
+    "build": "node ./node_modules/webpack/bin/webpack.js --config webpack.prod.js && cp index.* build/ && cp favicons/* build/",
     "lint": "eslint src/.",
     "lint:fix": "eslint src/. --fix",
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
