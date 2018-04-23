@@ -21,6 +21,7 @@ RUN npm install
 
 # Bundle app source
 COPY index.html index.js ./
+COPY ./favicons ./favicons
 COPY ./src ./src
 COPY ./style ./style
 COPY .babelrc webpack.common.js webpack.prod.js ./
