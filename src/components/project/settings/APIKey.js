@@ -68,8 +68,12 @@ class APIKey extends React.PureComponent {
   }
 }
 
+APIKey.defaultProps = {
+  apiKey: null
+}
+
 APIKey.propTypes = {
-  apiKey: PropTypes.string.isRequired
+  apiKey: PropTypes.string
 }
 
 export default APIKey

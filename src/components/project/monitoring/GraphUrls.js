@@ -38,6 +38,7 @@ class GraphUrls extends React.Component {
         ...newState
       }
     }
+    return null
   }
 
   constructor(props) {

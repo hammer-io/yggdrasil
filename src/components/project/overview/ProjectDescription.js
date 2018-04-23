@@ -13,6 +13,9 @@ const styles = {
 
 class ProjectDescription extends React.PureComponent {
   render() {
+    if (!this.props.content) {
+      return null
+    }
     return (
       <Card style={styles.container}>
         <CardText>
@@ -23,8 +26,12 @@ class ProjectDescription extends React.PureComponent {
   }
 }
 
+ProjectDescription.defaultProps = {
+  content: null
+}
+
 ProjectDescription.propTypes = {
-  content: PropTypes.string.isRequired
+  content: PropTypes.string
 }
 
 export default ProjectDescription

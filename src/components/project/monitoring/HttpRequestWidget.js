@@ -44,6 +44,7 @@ class HttpRequestWidget extends React.PureComponent {
         ...newState
       }
     }
+    return null
   }
 
   constructor(props) {
