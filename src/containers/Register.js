@@ -87,7 +87,6 @@ class Register extends Component {
     }
     const { result, error } = await register(credentials)
     if (result) {
-      console.log('Here')
       setPreviousRoute('/register')
       history.push('/home')
     } else {

@@ -56,7 +56,7 @@ class Home extends Component {
     const { result: userProjects } = await getUserProjects(session.authToken)
 
     // Could probably be done before fetching user projects
-    // Assuming that if users comes in from the register page
+    // Assuming that if users come in from the register page
     // they have no projects for sure
     if (session.previousRoute === '/register') {
       // eslint-disable-next-line react/no-did-mount-set-state
