@@ -15,6 +15,7 @@ import config from '../../utils/config'
 
 const styles = {
   card: {
+    width: '100%',
     margin: Theme.padding.tiny
   },
   container: {
@@ -82,7 +83,7 @@ class AccountSettings extends Component {
   static renderCard(data) {
     const key = `linked-account-${data.identifier}`
     return (
-      <Flexbox key={key}>
+      <Flexbox key={key} flex="1">
         <Card style={styles.card}>
           <CardHeader
             title={data.title}
