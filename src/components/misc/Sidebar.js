@@ -3,7 +3,7 @@ import { Divider, Drawer, MenuItem, Menu } from 'material-ui'
 import PropTypes from 'prop-types'
 import SvgIconHome from 'material-ui/svg-icons/action/home'
 import SvgIconSettings from 'material-ui/svg-icons/action/settings'
-import SvgIconTyr from 'material-ui/svg-icons/hardware/desktop-mac'
+import SvgIconTyr from 'material-ui/svg-icons/av/web-asset'
 import Theme from '../../../style/theme'
 import HammerLogo from '../../assets/icons/Viking_Hammer_Logo_1.png'
 
