@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import { AutoRotatingCarousel, Slide } from 'material-auto-rotating-carousel'
 import { getProjects, getUserProjects } from '../actions/project'
+import { setPreviousRoute } from '../actions/session'
 import Theme from '../../style/theme'
 import BasicSpinner from '../components/misc/BasicSpinner'
 import ProjectList from '../components/home/ProjectList'
@@ -32,7 +33,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   getProjects,
-  getUserProjects
+  getUserProjects,
+  setPreviousRoute
 }
 
 class Home extends Component {
@@ -51,7 +53,12 @@ class Home extends Component {
   }
 
   async componentDidMount() {
-    const { session, getProjects, getUserProjects } = this.props
+    const {
+      session,
+      getProjects,
+      getUserProjects,
+      setPreviousRoute
+    } = this.props
     await getProjects(session.authToken)
     const { result: userProjects } = await getUserProjects(session.authToken)
 
@@ -61,6 +68,7 @@ class Home extends Component {
     if (session.previousRoute === '/register') {
       // eslint-disable-next-line react/no-did-mount-set-state
       this.setState({ carousel: true })
+      setPreviousRoute('/home')
       return
     }
 
@@ -68,6 +76,7 @@ class Home extends Component {
       // eslint-disable-next-line react/no-did-mount-set-state
       this.setState({ open: true })
     }
+    setPreviousRoute('/home')
   }
 
   viewProject(projectId) {
