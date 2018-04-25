@@ -72,6 +72,9 @@ const styles = {
     marginTop: 48,
     marginBottom: 12
   },
+  centered: {
+    textAlign: 'center'
+  },
   lowerTextPortion: {
     lineHeight: 2,
     maxWidth: 500,
@@ -114,7 +117,8 @@ class LandingPage extends Component {
               <Flexbox>
                 <Card style={styles.card}>
                   <CardMedia
-                    overlay={<CardTitle title="Build" subtitle="Build microservice applications with ease" />}
+                    overlay={<CardTitle title="Build" subtitle="Build microservice applications with ease"/>}
+                    overlayContentStyle={styles.centered}
                     mediaStyle={{ backgroundColor: Theme.colors.accent_u2 }}
                   >
                     <img src={WrenchIcon} alt="build" style={{ backgroundColor: Theme.colors.accent }} />
@@ -132,6 +136,7 @@ class LandingPage extends Component {
                 <Card style={styles.card}>
                   <CardMedia
                     overlay={<CardTitle title="Deploy" subtitle="Deploy applications to the cloud instantly" />}
+                    overlayContentStyle={styles.centered}
                     mediaStyle={{ backgroundColor: Theme.colors.cyan600 }}
                   >
                     <img src={StartupIcon} alt="deploy" style={{ backgroundColor: Theme.colors.cyan300 }} />
@@ -151,6 +156,7 @@ class LandingPage extends Component {
                 <Card style={styles.card}>
                   <CardMedia
                     overlay={<CardTitle title="Monitor" subtitle="See realtime statistics on deployed services" />}
+                    overlayContentStyle={styles.centered}
                     mediaStyle={{ backgroundColor: Theme.colors.primary_u2 }}
                   >
                     <img src={LaptopIcon} alt="monitor" style={{ backgroundColor: Theme.colors.primary }} />
