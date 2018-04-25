@@ -158,7 +158,7 @@ class Home extends Component {
             mediaBackgroundStyle={{ backgroundColor: Theme.colors.primary_u2 }}
             contentStyle={{ backgroundColor: Theme.colors.primary }}
             title="Monitor"
-            subtitle="Easily monitor and maintain deployed applications"
+            subtitle="Efficiently monitor and maintain deployed services"
           />
         </AutoRotatingCarousel>
       </div>
