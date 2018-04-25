@@ -6,6 +6,8 @@ import Theme from '../../style/theme'
 
 import { getSession, setAccessToken, setPreviousRoute } from '../actions/session'
 
+const allowableUrlsForNonUser = ['/', '/login', '/register', '/tyr']
+
 const mapStateToProps = state => ({
   session: state.session
 })
@@ -42,7 +44,7 @@ class App extends Component {
     if (loggedIn && (location.pathname === '/login' || location.pathname === '/register')) {
       setPreviousRoute(location.pathname)
       history.replace('/home')
-    } else if (!loggedIn && location.pathname !== '/login' && location.pathname !== '/register') {
+    } else if (!loggedIn && !allowableUrlsForNonUser.includes(location.pathname)) {
       setPreviousRoute(location.pathname)
       history.push('/login')
     }
