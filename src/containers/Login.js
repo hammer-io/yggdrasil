@@ -96,7 +96,9 @@ class Login extends Component {
       return
     }
 
-    if (history.action === 'PUSH' && (session.previousRoute !== '/register')) {
+    if (history.action === 'PUSH' && !['/register', '/home'].includes(session.previousRoute)) {
+      // If the user didn't come from the registration page or landing page, send them back
+      // to whatever they were originally trying to access
       setPreviousRoute('/login')
       history.goBack()
     } else {

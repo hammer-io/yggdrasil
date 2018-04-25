@@ -5,6 +5,17 @@ import { connect } from 'react-redux'
 import { exchangeForGithubToken } from '../actions/session'
 import BasicSpinner from '../components/misc/BasicSpinner'
 import { loadState } from '../utils/localStorage'
+import PageWrap from '../components/misc/PageWrap'
+import Theme from '../../style/theme'
+
+const styles = {
+  container: {
+    padding: Theme.padding.regular,
+    minWidth: 'inherit',
+    maxWidth: 'inherit',
+    width: 'inherit'
+  }
+}
 
 const mapStateToProps = state => ({
   session: state.session
@@ -29,7 +40,7 @@ class GithubRedirect extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      message: [<div>Storing credentials, redirecting shortly...</div>]
+      message: [<p key="github-redirect-1">Storing credentials, redirecting shortly...</p>]
     }
   }
   async componentDidMount() {
@@ -42,7 +53,7 @@ class GithubRedirect extends Component {
 
     if (myState.githubState !== query.state) {
       this.setState({
-        message: this.state.message.concat(<div>Improper redirect state. Process terminated.</div>)
+        message: this.state.message.concat(<p key="github-redirect-2">Improper redirect state. Process terminated.</p>)
       })
       return
     }
@@ -52,7 +63,7 @@ class GithubRedirect extends Component {
       session
     } = this.props
     this.setState({
-      message: this.state.message.concat(<div>Connecting account to Github...</div>)
+      message: this.state.message.concat(<p key="github-redirect-3">Connecting account to Github...</p>)
     })
     const { error } = await exchangeForGithubToken(
       session.authToken,
@@ -61,7 +72,7 @@ class GithubRedirect extends Component {
     )
 
     if (error) {
-      this.setState({ message: this.state.message.concat(<div>An error has occurred.</div>) })
+      this.setState({ message: this.state.message.concat(<p key="github-redirect-4">An error has occurred.</p>) })
     } else {
       this.setState({ message: false })
     }
@@ -71,7 +82,11 @@ class GithubRedirect extends Component {
     if (this.state.message) {
       return (
         <div>
-          {this.state.message}
+          <PageWrap>
+            <div style={styles.container}>
+              {this.state.message}
+            </div>
+          </PageWrap>
           <BasicSpinner />
         </div>
       )

@@ -59,7 +59,11 @@ class Menu extends Component {
   }
 
   clickHammerLogo() {
-    this.props.history.push('/')
+    if (this.props.session.authToken) {
+      this.props.history.push('/home')
+    } else {
+      this.props.history.push('/')
+    }
   }
 
   clickToggleDrawer() {

@@ -5,6 +5,17 @@ import { connect } from 'react-redux'
 import { exchangeForHerokuToken } from '../actions/session'
 import BasicSpinner from '../components/misc/BasicSpinner'
 import { loadState } from '../utils/localStorage'
+import PageWrap from '../components/misc/PageWrap'
+import Theme from '../../style/theme'
+
+const styles = {
+  container: {
+    padding: Theme.padding.regular,
+    minWidth: 'inherit',
+    maxWidth: 'inherit',
+    width: 'inherit'
+  }
+}
 
 const mapStateToProps = state => ({
   session: state.session
@@ -29,7 +40,7 @@ class HerokuRedirect extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      message: [<div>Storing credentials, redirecting shortly...</div>]
+      message: [<p key="heroku-redirect-1">Storing credentials, redirecting shortly...</p>]
     }
   }
 
@@ -43,13 +54,13 @@ class HerokuRedirect extends Component {
 
     if (myState.herokuState !== query.state) {
       this.setState({
-        message: this.state.message.concat(<div>Improper redirect state. Process terminated.</div>)
+        message: this.state.message.concat(<p key="heroku-redirect-2">Improper redirect state. Process terminated.</p>)
       })
       return
     }
 
     this.setState({
-      message: this.state.message.concat(<div>Connecting account to Heroku...</div>)
+      message: this.state.message.concat(<p key="heroku-redirect-3">Connecting account to Heroku...</p>)
     })
     const {
       exchangeForHerokuToken,
@@ -58,7 +69,7 @@ class HerokuRedirect extends Component {
     const { error } = await exchangeForHerokuToken(session.authToken, query.code)
 
     if (error) {
-      this.setState({ message: this.state.message.concat(<div>An error has occurred.</div>) })
+      this.setState({ message: this.state.message.concat(<p key="heroku-redirect-4">An error has occurred.</p>) })
     } else {
       this.setState({ message: false })
     }
@@ -68,7 +79,11 @@ class HerokuRedirect extends Component {
     if (this.state.message) {
       return (
         <div>
-          {this.state.message}
+          <PageWrap>
+            <div style={styles.container}>
+              {this.state.message}
+            </div>
+          </PageWrap>
           <BasicSpinner />
         </div>
       )
