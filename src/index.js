@@ -24,6 +24,7 @@ import TyrInfo from './containers/TyrInfo'
 import NewProject from './containers/NewProject'
 import config from './utils/config'
 import ErrorSnackbar from './components/misc/ErrorSnackbar'
+import LandingPage from './containers/LandingPage'
 
 firebase.initializeApp(config.firebase)
 
@@ -40,15 +41,10 @@ const Root = () => (
       <Provider store={store}>
         <Router>
           <App>
+            <Route component={Menu} />
+            <Route component={ErrorSnackbar} />
             <Switch>
-              <Route path={['/home', '/projects', '/projects/new']} component={Menu} />
-              <Route path={['/home', '/projects/:id', '/settings', '/tyr']} component={Menu} />
-            </Switch>
-            <Switch>
-              <Route path="/" component={ErrorSnackbar} />
-            </Switch>
-            <Switch>
-              <Route exact path="/" render={() => <Redirect to="/home" />} />
+              <Route exact path="/" component={LandingPage} />
               <Route exact path="/home" component={Home} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />

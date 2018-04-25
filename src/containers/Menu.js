@@ -1,11 +1,40 @@
+/* eslint-disable quote-props */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import { AppBar } from 'material-ui'
 import PropTypes from 'prop-types'
 import { logout } from '../actions/session'
-import Navbar from '../components/misc/Navbar'
 import Sidebar from '../components/misc/Sidebar'
+import HammerIO from '../assets/icons/hammer-logo-wide-light-small.png'
 
+const userMenuSelection = [
+  'Home',
+  'New Project',
+  'Settings',
+  'Sign Out',
+]
+const nonUserMenuSelection = [
+  'About',
+  'Login',
+  'Register'
+]
+const menuItemURIs = {
+  'Home': '/home',
+  'New Project': '/projects/new',
+  'Settings': '/settings',
+  'Sign Out': '/login',
+  'About': '/',
+  'Login': '/login',
+  'Register': '/register',
+}
+
+const styles = {
+  titleImg: {
+    height: 48,
+    marginTop: 8
+  }
+}
 
 const mapDispatchToProps = {
   logout
@@ -24,38 +53,37 @@ class Menu extends Component {
     }
 
     this.clickHammerLogo = this.clickHammerLogo.bind(this)
-    this.clickNavbarItem = this.clickNavbarItem.bind(this)
     this.clickToggleDrawer = this.clickToggleDrawer.bind(this)
     this.clickSidebarItem = this.clickSidebarItem.bind(this)
     this.updateDrawerState = this.updateDrawerState.bind(this)
   }
 
   clickHammerLogo() {
-    this.props.history.push('/home')
-  }
-
-  clickNavbarItem(event, item) {
-    const { session, history, logout } = this.props
-    if (item.props.primaryText === 'Sign out') {
-      logout(session.authToken)
-      history.push('/login')
-    } else if (item.props.primaryText === 'New Project') {
-      history.push('/projects/new')
-    }
+    this.props.history.push('/')
   }
 
   clickToggleDrawer() {
     this.setState({ drawerOpen: !this.state.drawerOpen })
   }
 
-  clickSidebarItem(event, item) {
+  navigateToPage(uri) {
     const { history, location } = this.props
-    if (item.props.primaryText === 'Home' && location.pathname !== '/home') {
-      history.push('/home')
-    } else if (item.props.primaryText === 'Settings' && location.pathname !== '/settings') {
-      history.push('/settings')
-    } else if (item.props.primaryText === 'Tyr CLI' && location.pathname !== '/tyr') {
-      history.push('/tyr')
+    if (location.pathname !== uri) {
+      history.push(uri)
+    }
+  }
+
+  clickSidebarItem(event, item) {
+    const { session, logout } = this.props
+    const itemClicked = item.props.primaryText
+
+    if (itemClicked === 'Sign Out') {
+      logout(session.authToken)
+    }
+    if (Object.keys(menuItemURIs).includes(itemClicked)) {
+      this.navigateToPage(menuItemURIs[itemClicked])
+    } else if (itemClicked === 'Tyr CLI') {
+      this.navigateToPage('/tyr')
     }
     this.clickToggleDrawer()
   }
@@ -65,14 +93,18 @@ class Menu extends Component {
   }
 
   render() {
+    const menuSelection = (this.props.session.authToken) ? userMenuSelection : nonUserMenuSelection
     return (
       <div>
-        <Navbar
-          clickHammerLogo={this.clickHammerLogo}
-          clickNavbarItem={this.clickNavbarItem}
-          clickToggleDrawer={this.clickToggleDrawer}
+        <AppBar
+          title={<img src={HammerIO} alt="hammer-io" style={styles.titleImg} />}
+          onTitleClick={this.clickHammerLogo}
+          className="hover-pointer"
+          onLeftIconButtonClick={this.clickToggleDrawer}
         />
         <Sidebar
+          menuItemURIs={menuItemURIs}
+          menuItemSelection={menuSelection}
           clickSidebarItem={this.clickSidebarItem}
           updateDrawerState={this.updateDrawerState}
           drawerOpen={this.state.drawerOpen}
