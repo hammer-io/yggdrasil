@@ -176,8 +176,9 @@ export function deleteProject(token, id) {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
-      const { error } = await fetchClient.delete({ url: `/projects/${id}` })
-      if (error == null) {
+      // eslint-disable-next-line no-unused-vars
+      const { result, error } = await fetchClient.delete({ url: `/projects/${id}` })
+      if (!error) {
         return { error: null }
       }
 

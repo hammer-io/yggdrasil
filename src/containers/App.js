@@ -41,7 +41,7 @@ class App extends Component {
       }
     }
 
-    if (loggedIn && (location.pathname === '/login' || location.pathname === '/register')) {
+    if (loggedIn && ['/login', '/register', '/'].includes(location.pathname)) {
       setPreviousRoute(location.pathname)
       history.replace('/home')
     } else if (!loggedIn && !allowableUrlsForNonUser.includes(location.pathname)) {

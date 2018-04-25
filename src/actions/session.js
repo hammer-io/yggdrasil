@@ -78,13 +78,16 @@ export function logout(token) {
     try {
       const fetchClient = new FetchClient()
       fetchClient.setAuthToken(token)
+      // This endpoint doesn't return anything upon success (result is always null)
+      // eslint-disable-next-line no-unused-vars
       const { result, error } = await fetchClient.delete({
         url: '/auth/logout'
       })
-      if (result) {
+      if (!error) {
         dispatch(setAccessToken(null))
         dispatch(setUser(null))
         await firebase.auth().signOut()
+        return
       }
 
       console.error(error)
@@ -282,7 +285,7 @@ export function deleteGithubToken(token) {
       const { result, error } = await fetchClient.delete({
         url: '/auth/github'
       })
-      if (result) {
+      if (!error) {
         return { result, error }
       }
       logError(dispatch, error)
@@ -302,7 +305,7 @@ export function deleteTravisToken(token) {
       const { result, error } = await fetchClient.delete({
         url: '/auth/travis'
       })
-      if (result) {
+      if (!error) {
         return { result, error }
       }
       logError(dispatch, error)
@@ -322,7 +325,7 @@ export function deleteHerokuToken(token) {
       const { result, error } = await fetchClient.delete({
         url: '/auth/heroku'
       })
-      if (result) {
+      if (!error) {
         return { result, error }
       }
       logError(dispatch, error)
