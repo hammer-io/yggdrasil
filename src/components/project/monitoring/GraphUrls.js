@@ -31,10 +31,11 @@ class GraphUrls extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.data !== nextProps.data) {
+    if (prevState.initialComputationRequired || prevState.data !== nextProps.data) {
       const newState = GraphUrls.processData(nextProps)
       return {
         data: nextProps.data,
+        initialComputationRequired: false,
         ...newState
       }
     }
@@ -46,7 +47,8 @@ class GraphUrls extends React.Component {
     this.state = {
       data: props.data, // eslint-disable-line react/no-unused-state
       summaryData: {},
-      computed: false
+      computed: false,
+      initialComputationRequired: true // eslint-disable-line react/no-unused-state
     }
   }
 
@@ -55,8 +57,8 @@ class GraphUrls extends React.Component {
     if (!this.state.computed) {
       return <BasicSpinner />
     }
-    const width = Math.min(this.props.windowSize.width - 150, 200)
-    const height = width / 2
+    const width = Math.min(this.props.windowSize.width - 150, 250)
+    const height = width
     return (
       <div>
         <PieChart width={width} height={height}>

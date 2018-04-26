@@ -79,6 +79,8 @@ class MonitoringTab extends React.Component {
 
   render() {
     const { heartbeats, http, os } = this.state
+    const recentOS = os[Object.keys(os)[Object.keys(os).length - 1]]
+
     const windowSize = {
       width: this.state.width,
       height: this.state.height
@@ -94,8 +96,8 @@ class MonitoringTab extends React.Component {
           </Flexbox>
           <Flexbox>
             <OsDataWidget
-              memoryFree={20}
-              memoryUsed={10}
+              memoryFree={recentOS.freeMemory}
+              memoryUsed={recentOS.memoryUsed * recentOS.totalMemory}
             />
           </Flexbox>
           <Flexbox>

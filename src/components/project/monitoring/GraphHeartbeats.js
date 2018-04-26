@@ -91,10 +91,11 @@ class GraphHeartbeats extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.data !== nextProps.data) {
+    if (prevState.initialComputationRequired || prevState.data !== nextProps.data) {
       const newState = GraphHeartbeats.processData(nextProps)
       return {
         data: nextProps.data,
+        initialComputationRequired: false,
         ...newState
       }
     }
@@ -107,7 +108,8 @@ class GraphHeartbeats extends React.Component {
       data: props.data, // eslint-disable-line react/no-unused-state
       activeIndex: 0,
       summaryData: [],
-      computed: false
+      computed: false,
+      initialComputationRequired: true // eslint-disable-line react/no-unused-state
     }
   }
 

@@ -37,10 +37,11 @@ class HttpRequestWidget extends React.PureComponent {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.data !== nextProps.data) {
+    if (prevState.initialComputationRequired || prevState.data !== nextProps.data) {
       const newState = HttpRequestWidget.processData(nextProps)
       return {
         data: nextProps.data,
+        initialComputationRequired: false,
         ...newState
       }
     }
@@ -54,7 +55,8 @@ class HttpRequestWidget extends React.PureComponent {
       badRequests: 0,
       numberOfRequests: 0,
       totalResponseTime: 0,
-      maxResponseTime: 0
+      maxResponseTime: 0,
+      initialComputationRequired: true // eslint-disable-line react/no-unused-state
     }
   }
 
