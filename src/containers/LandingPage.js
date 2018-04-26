@@ -35,7 +35,7 @@ const styles = {
   },
   bannerImg: {
     backgroundImage: 'url("http://aag.aero/wp-content/uploads/2015/05/placeholder-banner-emerald.png")',
-    height: 300,
+    height: 350,
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
@@ -72,6 +72,9 @@ const styles = {
     marginTop: 48,
     marginBottom: 12
   },
+  centered: {
+    textAlign: 'center'
+  },
   lowerTextPortion: {
     lineHeight: 2,
     maxWidth: 500,
@@ -81,17 +84,25 @@ const styles = {
   },
   hidden: {
     visibility: 'hidden'
+  },
+  headerButtons: {
+    margin: 10
   }
 }
 
 class LandingPage extends Component {
   constructor(props) {
     super(props)
-    this.onClickGetStarted = this.onClickGetStarted.bind(this)
+    this.onClickLogin = this.onClickLogin.bind(this)
+    this.onClickSignUp = this.onClickSignUp.bind(this)
   }
 
-  onClickGetStarted() {
+  onClickLogin() {
     this.props.history.push('/login')
+  }
+
+  onClickSignUp() {
+    this.props.history.push('/register')
   }
 
   render() {
@@ -104,7 +115,14 @@ class LandingPage extends Component {
             <p>
               An online platform to build, deploy, and monitor microservice applications in Node.js.
             </p>
-            <RaisedButton primary label="Get Started" onClick={this.onClickGetStarted} />
+            <Flexbox flexWrap="wrap" justifyContent="center">
+              <Flexbox>
+                <RaisedButton primary label="Login to Get Started" onClick={this.onClickLogin} style={styles.headerButtons} />
+              </Flexbox>
+              <Flexbox>
+                <RaisedButton primary label="Register for an Account" onClick={this.onClickSignUp} style={styles.headerButtons} />
+              </Flexbox>
+            </Flexbox>
           </div>
         </div>
         <PageWrap>
@@ -115,6 +133,7 @@ class LandingPage extends Component {
                 <Card style={styles.card}>
                   <CardMedia
                     overlay={<CardTitle title="Build" subtitle="Build microservice applications with ease" />}
+                    overlayContentStyle={styles.centered}
                     mediaStyle={{ backgroundColor: Theme.colors.accent_u2 }}
                   >
                     <img src={WrenchIcon} alt="build" style={{ backgroundColor: Theme.colors.accent }} />
@@ -132,6 +151,7 @@ class LandingPage extends Component {
                 <Card style={styles.card}>
                   <CardMedia
                     overlay={<CardTitle title="Deploy" subtitle="Deploy applications to the cloud instantly" />}
+                    overlayContentStyle={styles.centered}
                     mediaStyle={{ backgroundColor: Theme.colors.cyan600 }}
                   >
                     <img src={StartupIcon} alt="deploy" style={{ backgroundColor: Theme.colors.cyan300 }} />
@@ -151,6 +171,7 @@ class LandingPage extends Component {
                 <Card style={styles.card}>
                   <CardMedia
                     overlay={<CardTitle title="Monitor" subtitle="See realtime statistics on deployed services" />}
+                    overlayContentStyle={styles.centered}
                     mediaStyle={{ backgroundColor: Theme.colors.primary_u2 }}
                   >
                     <img src={LaptopIcon} alt="monitor" style={{ backgroundColor: Theme.colors.primary }} />
