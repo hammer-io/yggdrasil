@@ -126,7 +126,7 @@ class Register extends Component {
       <DocumentTitle title="Register">
         <form style={styles.container} onSubmit={this.submitForm}>
           <Paper style={styles.form}>
-            <h4>Create an account</h4>
+            <h4>Register for an account</h4>
             <TextField
               hintText="Email"
               floatingLabelText="Email"
